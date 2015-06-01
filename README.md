@@ -1,0 +1,246 @@
+chronosjs
+========
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![alt text][2]][1] [![alt text][4]][3] [![alt text][6]][5] [![alt text][8]][7]
+
+ [1]: http://teamcity/viewType.html?buildTypeId=bt3115
+ [2]: http://ctvr-ci:3000/?build=bt3115 ("Teamcity build Status")
+
+ [3]: http://teamcity/viewType.html?buildTypeId=bt3115&tab=buildTypeStatistics
+ [4]: http://ctvr-ci:3000/?build=bt3115&type=cov ("Coverage")
+
+ [5]: http://teamcity/viewType.html?buildTypeId=bt3115&tab=buildTypeStatistics
+ [6]: http://ctvr-ci:3000/?build=bt3115&type=test ("Tests")
+
+ [7]: http://teamcity/viewType.html?buildTypeId=bt3115
+ [8]: http://ctvr-ci:3000/?type=npm&artifact=lp-events ("NPM")
+
+> LivePerson's Generic JS Channels Mechanism (Events/Commands/ReqRes)
+
+Getting Started
+---------------
+Run ```npm install chronosjs```
+
+Overview
+-------------
+
+This library provides an ability to develop event driven applications using the included submodules of events, commands and request/response.
+Together with lpCourier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication. An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues. Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
+
+
+### LPEvents
+An events channel for binding and triggering events.
+Allows multiple listeners on a single event and wildcards (`"*"`) support.
+
+### LPCommands
+A command mechanism for complying and commanding and API call.
+Allows a single comelier per command.
+Supports async commands with an options to call a callback when done.
+
+### LPReqRes
+A request mechanism for replying and requesting and API call that returns a response.
+Allows a single replier per request.
+Supports async requests with an options to call a callback when done with a result.
+
+### LPEventChannel
+A Channel which includes all communication means (events, commands, requests). Implements the same API's as all means it contains
+
+### LPPostMessageCourier
+A generic implementation of LPEventChannel over postMessage API.
+Allows communication between cross domain IFRAMES "sharing" LPEventChannel.
+
+### Package Contents
+The package holds a few artifacts:
+- lpEvents.js: The events channel
+- lpCommands.js: The commands channel
+- lpReqres.js: The request/response channel
+- lpEventChannel.js: Combination of all 3 channel options
+- lpPostMessageCourierNoDep.js: Channel transport over postmessage
+- lpPostMessageCourier.js: Combination of all 3 channel options with channel transport over postmessage
+
+Usage examples
+---------------
+
+### LPEvents
+```javascript
+var events = new lpTag.channel.LPEvents();
+
+//Listen on the event only once
+events.once({
+    appName: "Your App Name",
+    eventName: "Your Event Name",
+    func: _yourCallBackFunction
+});
+
+//Regular bind on the event
+events.bind({
+    appName: "Your App Name",
+    eventName: "Your Event Name",
+    func: _yourCallBackFunction
+});
+
+//Unbind from the event
+events.unbind({
+    appName: "Your App Name",
+    eventName: "Your Event Name",
+    func: _yourCallBackFunction
+});
+
+//Trigger the event
+events.trigger({
+    appName: "Your App Name",
+    eventName: "Your Event Name",
+    data: {}
+});
+
+//Will return an array of fired events
+events.hasFired("Your App Name", "Your Event Name");
+```
+
+There is an option to pass `"*"` as event name and `"*"` as app name on all APIs which is an ALL indicator.
+
+### LPCommands
+```javascript
+var commands = new lpTag.channel.LPCommands();
+
+function _yourCommandExecution(data, cb) {
+    //Do something async with data and call cb when done.
+}
+
+//Comply to a command
+commands.comply({
+    appName: "Your App Name",
+    cmdName: "Your Command Name",
+    func: _yourCommandExecution
+});
+
+//Stop complying to a command
+commands.stopComplying({
+    appName: "Your App Name",
+    cmdName: "Your Command Name",
+    func: _yourCommandExecution
+});
+
+var cmd = {
+    appName: "Your App Name",
+    cmdName: "Your Event Name",
+    data: {}
+}
+function notifyWhenDone(err) {
+    if (!err) {
+        console.log('Done executing command');
+    }
+}
+//Issue the command
+commands.command(cmd, notifyWhenDone);
+
+//Will return an array of fired commands
+commands.hasFired("Your App Name", "Your Command Name");
+```
+
+The callback on the command is optional.
+
+### LPReqRes
+```javascript
+var reqres = new lpTag.channel.LPReqRes();
+
+function _yourRequestExecution(data, cb) {
+    //Do something async with data and call cb when done.
+    return 1; //Whatever you want to return
+}
+
+//Reply to a request
+reqres.reply({
+    appName: "Your App Name",
+    reqName: "Your Request Name",
+    func: _yourRequestExecution
+});
+
+//Stop replying to a request
+reqres.stopReplying({
+    appName: "Your App Name",
+    reqName: "Your Command Name",
+    func: _yourRequestExecution
+});
+
+var req = {
+    appName: "Your App Name",
+    reqName: "Your Request Name",
+    data: {}
+}
+function notifyWhenDoneWithResult(err, res) {
+    if (!err) {
+        console.log('Done executing request with result=' + JSON.stringify(res));
+    }
+}
+//Issue the request
+var res = reqres.command(req, notifyWhenDoneWithResult);
+
+//Will return an array of fired requests
+reqres.hasFired("Your App Name", "Your Request Name");
+```
+
+The callback on the request is optional.
+
+### LPPostMessageCourier
+```javascript
+// Initialize a new Courier
+var courier = lpTag.channel.LPPostMessageCourier({
+    target: {
+        url: "http://www.crossdomain.com/"
+    }
+});
+
+///// ---- BINDINGS ------ ////
+courier.bind({
+    appName: "host",
+    eventName: "multiply",
+    func: multiply
+});
+courier.comply({
+    appName: "host",
+    cmdName: "square",
+    func: square
+});
+courier.reply({
+    appName: "host",
+    reqName: "divide",
+    func: divide
+});
+
+///// ---- INVOCATION ------ ////
+courier.trigger({
+    appName: "frame",
+    eventName: "got_it",
+    data: data * 2
+});
+courier.command({
+    appName: "frame",
+    cmdName: "expect",
+    data: data
+}, function(err) {
+    if (err) {
+        console.log("Problem invoking command");
+    }
+});
+courier.request({
+    appName: "frame",
+    reqName: "askBack",
+    data: data
+}, function(err, data) {
+    if (err) {
+        console.log("Problem invoking request");
+	    return;
+	}
+	// Do Something with the data
+	console.log(data);
+});
+```
+####LIMITATIONS
+ 1. Only supports browsers which implements postMessage API and have native JSON implementation (IE8+, Chrome, FF, Safari, Opera, IOS, Opera Mini, Android)
+ 2. IE9-, FF & Opera Mini does not support MessageChannel and therefore we fallback to using basic postMessage. This makes the communication opened to any handler registered for messages on the same origin.
+ 4. All passDataByRef flags (in LPEventChannel) are obviously ignored
+ 5. In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to LPPostMessageCourier, All data is serialized using JSON.stringify/JSON.parse which means that Object data is limited to JSON which supports types like: strings, numbers, null, arrays, and objects (and does not allow circular references). Trying to serialize other types, will result in conversion to null (like Infinity or NaN) or to a string (Dates), that must be manually deserialized on the other side
+ 6. When IFRAME is managed outside of LPPostMessageCourier (passed by reference to the constructor), a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the LPPostMessageCourier at the IFRAME side, had also been initialized with a valid targetOrigin option)
+
+[LPPostMessageCourier API Doc](docs/src/courier/lpPostMessageCourier.md)

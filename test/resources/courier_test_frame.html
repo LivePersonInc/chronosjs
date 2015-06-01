@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Courier Tests</title>
+    <script type="text/javascript">
+        window.lpTag = window.lpTag || {};
+    </script>
+    <script type="text/javascript" src="../../src/util/lpEventsUtil.js"></script>
+    <script type="text/javascript" src="../../src/lpEvents.js"></script>
+    <script type="text/javascript" src="../../src/util/lpCommandUtil.js"></script>
+    <script type="text/javascript" src="../../src/lpCommands.js"></script>
+    <script type="text/javascript" src="../../src/lpReqres.js"></script>
+    <script type="text/javascript" src="../../src/lpEventChannel.js"></script>
+    <script type="text/javascript" src="../../node_modules/cacherjs/src/cacher.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpCircuitBreaker.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpPostMessageUtilities.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpPostMessagePromise.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpPostMessageMapper.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpPostMessageChannelPolyfill.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpPostMessageChannel.js"></script>
+    <script type="text/javascript" src="../../src/courier/lpPostMessageCourier.js"></script>
+    <script type="text/javascript">
+        var courier = new lpTag.channel.LPPostMessageCourier();
+
+        ///// ---- BINDINGS ------ ////
+        courier.bind({
+            appName: "host",
+            eventName: "multiply",
+            func: multiply
+        });
+        courier.comply({
+            appName: "host",
+            cmdName: "square",
+            func: square
+        });
+        courier.comply({
+            appName: "host",
+            cmdName: "command",
+            func: command
+        });
+        courier.reply({
+            appName: "host",
+            reqName: "divide",
+            func: divide
+        });
+
+        courier.bind({
+            appName: "host",
+            eventName: "Ma Shlomha?",
+            func: function(data) {
+                courier.trigger({
+                    appName: "iframe",
+                    eventName: "HAKOL TOV!",
+                    data: {
+                        text: (data && data.text || "")
+                    }
+                });
+            }
+        });
+        courier.comply({
+            appName: "host",
+            cmdName: "Ma Shlomha?",
+            func: function(data) {
+                if (data && data.text) {
+                    return data.text;
+                }
+            }
+        });
+        courier.reply({
+            appName: "host",
+            reqName: "Ma Shlomha?",
+            func: function(data) {
+                return data && data.text;
+            }
+        });
+        courier.reply({
+            appName: "host",
+            reqName: "Async Ma Shlomha?",
+            func: function(data) {
+                return new lpTag.channel.LPPostMessagePromise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve(data && data.text);
+                    }, 1000);
+                });
+            }
+        });
+        courier.reply({
+            appName: "host",
+            reqName: "Ask Async Ma Shlomha?",
+            func: function(data) {
+                return new lpTag.channel.LPPostMessagePromise(function(resolve, reject) {
+                    courier.request({
+                        appName: "iframe",
+                        reqName: "Ma Shlomha?",
+                        data: data
+                    }, function(err, data) {
+                        resolve(data && data.text);
+                    });
+                });
+            }
+        });
+
+        ///// ---- TRIGGERS ------ ////
+        function multiply(data) {
+            courier.trigger({
+                appName: "frame",
+                eventName: "got_it",
+                data: data * 2
+            });
+        }
+
+        function square(data) {
+            if (data && data.num) {
+                data.num *= data.num;
+                courier.command({
+                    appName: "frame",
+                    cmdName: "expect",
+                    data: data
+                });
+            }
+            else if (data[0]) {
+                data[0] *= data[0];
+                courier.command({
+                    appName: "frame",
+                    cmdName: "expect",
+                    data: data
+                });
+            } else if (data && data.error) {
+                throw new Error("Expected error to be thrown");
+            }
+        }
+
+        function divide(data, callback) {
+            if (data && data.num) {
+                data.num = 1;
+                courier.request({
+                    appName: "frame",
+                    reqName: "askBack",
+                    data: data
+                }, callback);
+            }
+        }
+
+        function command(data, callback) {
+            if (true === data.success) {
+                callback();
+            }
+            else {
+                throw new Error("Error in command");
+            }
+        }
+
+        if ("true" === lpTag.channel.LPPostMessageUtilities.getURLParameter("syncTrigger")) {
+            courier.trigger({
+                appName: "frame",
+                eventName: "loaded"
+            });
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

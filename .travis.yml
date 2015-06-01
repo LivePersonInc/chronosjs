@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+   - "0.10.36"
+addons:
+  code_climate:
+    repo_token: 866c7dcfd2343220baca5e19b752da9e42e753db35c0bedb982866cd14208b73
+after_script:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate < test/coverage/reports/lcov.info

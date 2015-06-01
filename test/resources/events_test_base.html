@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="../../node_modules/mocha/mocha.css"/>
+</head>
+<body>
+<script type="text/javascript" src="../../node_modules/mocha/mocha.js"></script>
+<script type="text/javascript" src="../../node_modules/requirejs/require.js" data-main="../lib/test-loader.js"></script>
+<div id="mocha"></div>
+<script type="text/javascript">
+    function _addEventListener(element, event, callback) {
+        if (element.addEventListener) {
+            element.addEventListener(event, callback, false);
+        }
+        else {
+            element.attachEvent("on" + event, callback);
+        }
+    }
+
+    function _getURLParameter(name) {
+        return decodeURIComponent((new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(document.location.search) || [void 0, ""])[1].replace(/\+/g, "%20")) || null;
+    }
+
+    function _loadScript(path, async, data, onload) {
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", path);
+
+        if (false === async) {
+            script.setAttribute("async", "false");
+            script.async = false;
+        }
+
+        if (data) {
+            for (var attr in data) {
+                if (data.hasOwnProperty(attr)) {
+                    script.setAttribute("data-" + attr, data[attr]);
+                }
+            }
+        }
+
+        if (onload) {
+            _addEventListener(script, "load", onload);
+        }
+
+        document.body.appendChild(script);
+    }
+
+    (function kickStart() {
+        var coverage = _getURLParameter("cov");
+
+        if ("false" !== coverage) {
+            _loadScript("../../node_modules/blanket/dist/qunit/blanket.min.js", false, { "cover-never": "['../lib/','../../src/../node_modules/','//^\w+test\.js$/gi']" }, function() {
+                _loadScript("../../node_modules/grunt-lp-blanket-mocha/support/mocha-blanket.js", false);
+            });
+        }
+    }());
+</script>
+</body>
+</html>

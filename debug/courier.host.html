@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Courier Tests</title>
+    <script type="text/javascript">
+        window.lpTag = window.lpTag || {};
+    </script>
+    <script type="text/javascript" src="../dist/lpPostMessageCourier.js"></script>
+    <script type="text/javascript">
+        var ignorePorts = ["80", "443", "0", ":"];
+        var protocol = window.location.protocol + "//";
+        var hostname = window.location.hostname === "localhost" ? "127.0.0.1" : "localhost";
+        var port = (-1 === ignorePorts.indexOf(window.location.port.toString())) ? ":" + window.location.port.replace(":", "") : "";
+        var target = {
+            url: protocol + hostname + port + "/lpEvents/debug/courier.frame.html",
+            style: {
+                width: "100px",
+                height: "100px"
+            }
+        };
+        var target2 = {
+            url: target.url,
+            style: {
+                width: target.style.width,
+                height: target.style.height
+            },
+            callback: function() {
+                kickStart();
+            }
+        };
+
+        var lpcourierHead = new lpTag.channel.LPPostMessageCourier({
+            target: target
+        });
+    </script>
+</head>
+<body>
+<button id="SendEvent">Event</button>
+<button id="SendCommand">Command</button>
+<button id="SendRequest">Request</button>
+
+<script type="text/javascript">
+    function addElementEventListener(element, event, callback) {
+        if ("undefined" !== typeof element.addEventListener) {
+            element.addEventListener(event, callback, false);
+        }
+        else {
+            element.attachEvent("on" + event, callback);
+        }
+    }
+
+    function createIFrame(options) {
+        var frame = document.createElement("IFRAME");
+
+        frame.setAttribute("id", "MyId");
+        frame.setAttribute("name", "MyName");
+        frame.setAttribute("tabindex", "-1");       // To prevent it getting focus when tabbing through the page
+        frame.setAttribute("aria-hidden", "true");  // To prevent it being picked up by screen-readers
+        frame.setAttribute("title", "");            // Adding an empty title at AT&Ts insistence
+        frame.setAttribute("role", "presentation"); // Adding a presentation role http://yahoodevelopers.tumblr.com/post/59489724815/easy-fixes-to-common-accessibility-problems
+        frame.setAttribute("allowTransparency", "true");
+
+        if (options && options.target && options.target.style) {
+            for (var attr in options.target.style) {
+                if (options.target.style.hasOwnProperty(attr)) {
+                    frame.style[attr] = options.target.style[attr];
+                }
+            }
+        }
+        else {
+            frame.style.width = "0px";
+            frame.style.height = "0px";
+            frame.style.position = "absolute";
+            frame.style.top = "-1000px";
+            frame.style.left = "-1000px";
+        }
+
+        document.body.appendChild(frame);
+
+        addElementEventListener(frame, "load", function() {
+            if (options && options.target && options.target.callback) {
+                options.target.callback(options.target.context);
+            }
+        }.bind(this));
+
+        document.body.appendChild(frame);
+
+        if (options && options.target && options.target.url) {
+            var src = options.target.url + (0 < options.target.url.indexOf("?") ? "&bust=" : "?bust=");
+            src += (new Date()).getTime();
+            src += ("&host=" + document.location.protocol + "//" + document.location.host);
+            frame.setAttribute("src", src);
+        }
+
+        return frame;
+    }
+
+    var lpchannel;
+    var lpcourier;
+    var lpcourier2;
+    var frame = createIFrame({ target: target2 });
+
+    function kickStart() {
+        lpchannel = new lpTag.channel.LPEventChannel();
+        lpcourier = new lpTag.channel.LPPostMessageCourier({
+            eventChannel: lpchannel,
+            target: frame,
+            targetOrigin: protocol + hostname + port
+        });
+        lpcourier2 = new lpTag.channel.LPPostMessageCourier({
+            target: target
+        });
+
+        lpchannel.bind("iframe", "Ma Hmaztav?", function (data) {
+            if (data && data.text) {
+                alert(data.text);
+            }
+            alert("SABABA!");
+        });
+        lpcourier2.bind("iframe", "Ma Hmaztav?", function (data) {
+            if (data && data.text) {
+                alert(data.text);
+            }
+            alert("SABABA2!");
+        });
+        lpcourier.bind({
+            appName: "iframe",
+            eventName: "Ma Hmaztav?",
+            aSync: true,
+            triggerOnce: true,
+            func: function (data) {
+                alert("BE-TABA!");
+            }
+        });
+        lpcourier.comply({
+            appName: "iframe",
+            cmdName: "console",
+            func: function (data) {
+                if (data && data.text) {
+                    console.log(data.text);
+                }
+            }
+        });
+        lpcourier.reply({
+            appName: "iframe",
+            reqName: "Your Name?",
+            func: function (data, callback) {
+                if (data && data.text) {
+                    alert(data.text);
+                }
+
+                setTimeout(function () {
+                    callback(null, "My Name is Host!");
+                }, 1000);
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    var btnEvent = document.getElementById("SendEvent");
+    var btnCommand = document.getElementById("SendCommand");
+    var btnRequest = document.getElementById("SendRequest");
+
+    btnEvent.onclick = function() {
+        lpcourier.trigger({
+            appName: "host",
+            eventName: "Ma Shlomha?",
+            data: {
+                text: "Just Asking (Ma Shlomha?)"
+            }
+        });
+    };
+
+    btnCommand.onclick = function() {
+        lpcourier.command({
+            appName: "host",
+            cmdName: "console",
+            data: {
+                text: "Log this from host"
+            }
+        });
+    };
+
+    btnRequest.onclick = function() {
+        lpcourier.request({
+            appName: "host",
+            reqName: "Your Name?",
+            data: {
+                text: "Just Asking (What is Your Name?)"
+            }
+        }, function(err, data) {
+            if (err) {
+                console.error("OOOOOOOOOOOOOOOOPS! Something happened");
+                return;
+            }
+            alert(data);
+        }, 1000);
+    };
+</script>
+</body>
+</html>

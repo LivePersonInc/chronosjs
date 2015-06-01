@@ -1,0 +1,21 @@
+{
+    "undef": true,
+    "eqnull": true,
+    "noarg": true,
+    "browser": true,
+    "evil": true,
+    "devel": false,
+    "laxcomma": true,
+    "es3": true,
+    "globals": {
+        "lpTag": true,
+        "Window": true,
+        "Promise": true,
+        "setImmediate": true,
+        "process": true,
+        "module": true,
+        "exports": true,
+        "define": true,
+        "require": true
+    }
+}

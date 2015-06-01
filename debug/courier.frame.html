@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Courier Tests</title>
+    <script type="text/javascript">
+        window.lpTag = window.lpTag || {};
+    </script>
+    <script type="text/javascript" src="../dist/lpPostMessageCourier.js"></script>
+    <script type="text/javascript">
+        var lpchannel = new lpTag.channel.LPEventChannel();
+        var lpcourier = new lpTag.channel.LPPostMessageCourier({
+            eventChannel: lpchannel
+        });
+
+        lpchannel.bind("host", "Ma Shlomha?", function(data) {
+            if (data && data.text) {
+                alert(data.text);
+            }
+            alert("HAKOL TOV!");
+        });
+        lpcourier.bind({
+            appName: "host",
+            eventName: "Ma Shlomha?",
+            aSync: true,
+            triggerOnce: true,
+            func: function(data) {
+                alert("TODA!");
+            }
+        });
+        lpcourier.comply({
+            appName: "host",
+            cmdName: "console",
+            func: function(data) {
+                if (data && data.text) {
+                    console.log(data.text);
+                }
+            }
+        });
+        lpcourier.reply({
+            appName: "host",
+            reqName: "Your Name?",
+            func: function(data) {
+                if (data && data.text) {
+                    alert(data.text);
+                }
+                return new Promise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve("My Name is IFrame!");
+                    }, 3000);
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+<button id="SendEvent">Event</button>
+<button id="SendCommand">Command</button>
+<button id="SendRequest">Request</button>
+
+<script type="text/javascript">
+    var btnEvent = document.getElementById("SendEvent");
+    var btnCommand = document.getElementById("SendCommand");
+    var btnRequest = document.getElementById("SendRequest");
+
+    btnEvent.onclick = function() {
+        lpcourier.trigger({
+            appName: "iframe",
+            eventName: "Ma Hmaztav?",
+            data: {
+                text: "Just Asking (Ma Hmaztav?)"
+            }
+        });
+    };
+
+    btnCommand.onclick = function() {
+        lpcourier.command({
+            appName: "iframe",
+            cmdName: "console",
+            data: {
+                text: "Log this from iframe"
+            }
+        });
+    };
+
+    btnRequest.onclick = function() {
+        lpcourier.request({
+            appName: "iframe",
+            reqName: "Your Name?",
+            data: {
+                text: "Just Asking (What is Your Name?)"
+            }
+        }, function(err, data) {
+            if (err) {
+                console.error("OOOOOOOOOOOOOOOOPS! Something happened");
+                return;
+            }
+
+            alert(data);
+        });
+    };
+</script>
+</body>
+</html>
