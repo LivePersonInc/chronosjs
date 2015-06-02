@@ -29,13 +29,14 @@
         //</lptag>
         return root;
     }
+    var define  = window.define;
 
     if ("function" === typeof define && define.amd) {
         // Browser globals
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessageCourier", ["exports", "lpPostMessageUtilities", "lpEventChannel", "cacher", "lpCircuitBreaker", "lpPostMessageChannel", "lpPostMessagePromise", "lpPostMessageMapper"], function (exports, LPPostMessageUtilities, LPEventChannel, Cacher, LPCircuitBreaker, LPPostMessageChannel, LPPostMessagePromise, LPPostMessageMapper) {
+        define("lpPostMessageCourier", ["exports", "lpPostMessageUtilities", "lpEventChannel", "cacher", "lpCircuitBreaker", "lpPostMessageChannel", "lpPostMessagePromise", "lpPostMessageMapper"], function () {
             if (!namespace.LPPostMessageCourier) {
                 factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPEventChannel, namespace.Cacher, namespace.LPCircuitBreaker, namespace.LPPostMessageChannel, namespace.LPPostMessagePromise, namespace.LPPostMessageMapper);
             }

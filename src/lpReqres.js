@@ -14,12 +14,14 @@
         return root;
     }
 
+    var define  = window.define;
+
     if ("function" === typeof define && define.amd) {
         // Browser globals
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpReqres", ["exports", "lpEventsUtil", "lpCommandUtil"], function (exports, evUtil, cmdUtil) {
+        define("lpReqres", ["exports", "lpEventsUtil", "lpCommandUtil"], function () {
             if (!namespace.LPReqRes) {
                 factory(root, namespace, namespace.lpEventsUtil, namespace.lpCommandUtil);
             }

@@ -13,13 +13,14 @@
         //</lptag>
         return root;
     }
+    var define  = window.define;
 
     if ("function" === typeof define && define.amd) {
         // Browser globals
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessagePromise", ["exports"], function (exports) {
+        define("lpPostMessagePromise", ["exports"], function () {
             if (!namespace.LPPostMessagePromise) {
                 factory(root, namespace);
             }
