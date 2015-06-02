@@ -3,14 +3,13 @@ define("conf", function() {
         "blanket": true,
         "blanketCoverOnly": "['../../src/','../../src/courier/']",
         "blanketCoverNever": "['../lib/','../../src/../node_modules/','//^\w+test\.js$/gi']",
-        "gruntReporterLocation": "../../node_modules/grunt-lp-blanket-mocha/support/grunt-reporter.js",
         "requireConfig": {
             //By default load any module IDs from src directory
-            baseUrl: "../../src",
+            baseUrl: "../coverage/instrument/src",
             paths: {
-                chai: "../node_modules/chai/chai",
-                sinon: "../node_modules/sinon/pkg/sinon",
-                cacher: "../node_modules/cacherjs/src/cacher",
+                chai: "../../../../node_modules/chai/chai",
+                sinon: "../../../../node_modules/sinon/pkg/sinon",
+                cacher: "../../../../node_modules/cacherjs/src/cacher",
                 lpEvents: "lpEvents",
                 lpEventsUtil: "util/lpEventsUtil",
                 lpCommands: "lpCommands",

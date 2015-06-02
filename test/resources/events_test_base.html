@@ -18,44 +18,6 @@
         }
     }
 
-    function _getURLParameter(name) {
-        return decodeURIComponent((new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(document.location.search) || [void 0, ""])[1].replace(/\+/g, "%20")) || null;
-    }
-
-    function _loadScript(path, async, data, onload) {
-        var script = document.createElement("script");
-        script.setAttribute("type", "text/javascript");
-        script.setAttribute("src", path);
-
-        if (false === async) {
-            script.setAttribute("async", "false");
-            script.async = false;
-        }
-
-        if (data) {
-            for (var attr in data) {
-                if (data.hasOwnProperty(attr)) {
-                    script.setAttribute("data-" + attr, data[attr]);
-                }
-            }
-        }
-
-        if (onload) {
-            _addEventListener(script, "load", onload);
-        }
-
-        document.body.appendChild(script);
-    }
-
-    (function kickStart() {
-        var coverage = _getURLParameter("cov");
-
-        if ("false" !== coverage) {
-            _loadScript("../../node_modules/blanket/dist/qunit/blanket.min.js", false, { "cover-never": "['../lib/','../../src/../node_modules/','//^\w+test\.js$/gi']" }, function() {
-                _loadScript("../../node_modules/grunt-lp-blanket-mocha/support/mocha-blanket.js", false);
-            });
-        }
-    }());
 </script>
 </body>
 </html>

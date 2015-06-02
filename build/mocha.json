@@ -1,0 +1,15 @@
+{
+    "test": {
+        "options": {
+            "log": true,
+            "quiet": false,
+            "threshold": 80,
+            "globalThreshold": 84,
+            "timeout": 10000,
+            "--web-security" : false,
+            "urls": [
+                "http://localhost:8000/test/resources/events_test_base.html"
+            ]
+        }
+    }
+}

@@ -5,19 +5,9 @@
 
         require.config(conf.requireConfig);
 
-        if ("undefined" !== typeof blanket) {
-            /* global blanket */
-            blanket.options("filter", conf.blanketCoverOnly);
-            blanket.options("antifilter", conf.blanketCoverNever);
-
-            if (window.PHANTOMJS) {
-                blanket.options("reporter", conf.gruntReporterLocation);
-            }
-        }
-
         require([
             "chai",
-            "sinon",
+            "sinon"
         ], function (chai, sinon) {
             window[conf.chaiLib] = chai[conf.chaiLib];
             window.sinon = sinon;
@@ -26,8 +16,15 @@
             mocha.timeout(conf.mochaTimeout);
 
             require(conf.tests, function () {
-                if (window.mochaPhantomJS) {
-                    mochaPhantomJS.run();
+                if (window.PHANTOMJS) {
+                    after(function(done) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/', false);
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                        xhr.send(JSON.stringify(window.__coverage__));
+                        done();
+                    });
+                    mocha.run();
                 }
                 else {
                     mocha.run();

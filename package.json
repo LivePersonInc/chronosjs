@@ -16,21 +16,26 @@
             "email": "itaik@liveperson.com"
         }
     ],
+    "dependencies": {
+        "cacherjs": "~0.0.3"
+    },
     "devDependencies": {
         "chai": "^2.1.0",
         "grunt": "0.4.x",
         "grunt-available-tasks": "^0.5.7",
         "grunt-concat-in-order": "0.1.x",
         "grunt-contrib-concat": "^0.5.0",
+        "grunt-contrib-connect": "^0.10.1",
         "grunt-contrib-jshint": "0.10.x",
         "grunt-env": "^0.4.4",
         "grunt-istanbul": "^0.5.0",
-        "grunt-mocha-test": "^0.12.7",
+        "grunt-mocha": "^0.4.12",
         "grunt-node-version": "^1.0.0",
         "grunt-replace": "0.7.x",
         "load-grunt-config": "^0.16.0",
-        "cacherjs": "~0.0.3",
+        "mkdirp": "^0.5.1",
         "mocha": "^2.1.0",
+        "requirejs": "^2.1.16",
         "sinon": "^1.12.2",
         "time-grunt": "^1.1.0"
     },
