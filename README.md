@@ -1,6 +1,14 @@
 chronosjs
 ========
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![Build Status](https://travis-ci.org/LivePersonInc/chronosjs.svg)](https://travis-ci.org/LivePersonInc/chronosjs)
+[![Test Coverage](https://codeclimate.com/github/LivePersonInc/chronosjs/badges/coverage.svg)](https://codeclimate.com/github/LivePersonInc/chronosjs/coverage)
+[![Code Climate](https://codeclimate.com/github/LivePersonInc/chronosjs/badges/gpa.svg)](https://codeclimate.com/github/LivePersonInc/chronosjs)
+[![npm version](https://badge.fury.io/js/chronosjs.svg)](http://badge.fury.io/js/chronosjs)
+[![Dependency Status](https://david-dm.org/LivePersonInc/chronosjs.svg?theme=shields.io)](https://david-dm.org/LivePersonInc/chronosjs)
+[![devDependency Status](https://david-dm.org/LivePersonInc/chronosjs/dev-status.svg?theme=shields.io)](https://david-dm.org/LivePersonInc/chronosjs#info=devDependencies)
+[![npm downloads](https://img.shields.io/npm/dm/chronosjs.svg)](https://img.shields.io/npm/dm/chronosjs.svg)
+[![NPM](https://nodei.co/npm/chronosjs.png)](https://nodei.co/npm/chronosjs/)
 
 > LivePerson's Generic JS Channels Mechanism (Events/Commands/ReqRes)
 
