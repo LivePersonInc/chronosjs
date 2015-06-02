@@ -25,7 +25,6 @@ module.exports = {
                         return next();
                     }
                 });
-
                 middlewares.unshift(connect.json());
 
                 return middlewares;
