@@ -27,7 +27,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
     var define  = window.define;
 
@@ -36,35 +37,35 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessageCourier", ["exports", "lpPostMessageUtilities", "lpEventChannel", "cacher", "lpCircuitBreaker", "lpPostMessageChannel", "lpPostMessagePromise", "lpPostMessageMapper"], function () {
-            if (!namespace.LPPostMessageCourier) {
-                factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPEventChannel, namespace.Cacher, namespace.LPCircuitBreaker, namespace.LPPostMessageChannel, namespace.LPPostMessagePromise, namespace.LPPostMessageMapper);
+        define("Chronos.PostMessageCourier", ["exports", "Chronos.PostMessageUtilities", "Chronos.Channels", "cacher", "lpCircuitBreaker", "Chronos.PostMessageChannel", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"], function () {
+            if (!namespace.PostMessageCourier) {
+                factory(root, namespace, namespace.PostMessageUtilities, namespace.Channels, namespace.Cacher, namespace.LPCircuitBreaker, namespace.PostMessageChannel, namespace.PostMessagePromise, namespace.PostMessageMapper);
             }
 
-            return namespace.LPPostMessageCourier;
+            return namespace.PostMessageCourier;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPPostMessageCourier) {
-            factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPEventChannel, namespace.Cacher, namespace.LPCircuitBreaker, namespace.LPPostMessageChannel, namespace.LPPostMessagePromise, namespace.LPPostMessageMapper);
+        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageCourier) {
+            factory(root, namespace, namespace.PostMessageUtilities, namespace.Channels, namespace.Cacher, namespace.LPCircuitBreaker, namespace.PostMessageChannel, namespace.PostMessagePromise, namespace.PostMessageMapper);
         }
         //</lptag>
     }
     /**
-     * @depend ../lpEventChannel.js
+     * @depend ../EventChannel.js
      * @depend ./lpCircuitBreaker.js
      * @depend ../../node_modules/cacherjs/src/cacher.js
-     * @depend ./lpPostMessageUtilities.js
-     * @depend ./lpPostMessageChannel.js
-     * @depend ./lpPostMessagePromise.js
-     * @depend ./lpPostMessageMapper.js
+     * @depend ./PostMessageUtilities.js
+     * @depend ./PostMessageChannel.js
+     * @depend ./PostMessagePromise.js
+     * @depend ./PostMessageMapper.js
      */
     else if ("object" !== typeof exports) {
             // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPEventChannel, namespace.Cacher, namespace.LPCircuitBreaker, namespace.LPPostMessageChannel, namespace.LPPostMessagePromise, namespace.LPPostMessageMapper);
+        factory(root, namespace, namespace.PostMessageUtilities, namespace.Channels, namespace.Cacher, namespace.LPCircuitBreaker, namespace.PostMessageChannel, namespace.PostMessagePromise, namespace.PostMessageMapper);
     }
-}(this, function (root, exports, LPPostMessageUtilities, LPEventChannel, Cacher, LPCircuitBreaker, LPPostMessageChannel, LPPostMessagePromise, LPPostMessageMapper) {
+}(this, function (root, exports, PostMessageUtilities, Channels, Cacher, LPCircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper) {
     "use strict";
 
     /*jshint validthis:true */
@@ -83,7 +84,7 @@
     var CACHE_EVICTION_INTERVAL = 1000;
 
     /**
-     * LPPostMessageCourier constructor
+     * PostMessageCourier constructor
      * @constructor
      * @param {Object} options - the configuration options for the instance
      * @param {Object} options.target - the target iframe or iframe configuration
@@ -127,16 +128,16 @@
      *     }
      * });
      */
-    function LPPostMessageCourier(options) {
+    function PostMessageCourier(options) {
         // For forcing new keyword
-        if (false === (this instanceof LPPostMessageCourier)) {
-            return new LPPostMessageCourier(options);
+        if (false === (this instanceof PostMessageCourier)) {
+            return new PostMessageCourier(options);
         }
 
         this.initialize(options);
     }
 
-    LPPostMessageCourier.prototype = (function () {
+    PostMessageCourier.prototype = (function () {
         /**
          * Method for initialization
          * @param {Object} options - the configuration options for the instance
@@ -187,12 +188,12 @@
 
                 // Define the serialize/deserialize methods to be used
                 if ("function" !== typeof options.serialize || "function" !== typeof options.deserialize) {
-                    if (this.useObjects && LPPostMessageUtilities.hasPostMessageObjectsSupport()) {
+                    if (this.useObjects && PostMessageUtilities.hasPostMessageObjectsSupport()) {
                         this.serialize = _de$serializeDummy;
                         this.deserialize = _de$serializeDummy;
                     }
                     else {
-                        this.serialize = LPPostMessageUtilities.stringify;
+                        this.serialize = PostMessageUtilities.stringify;
                         this.deserialize = JSON.parse;
                     }
 
@@ -205,12 +206,12 @@
                 }
 
                 // Grab the event channel and initialize a new mapper
-                this.eventChannel = options.eventChannel || new LPEventChannel({
+                this.eventChannel = options.eventChannel || new Channels({
                     events: options.events,
                     commands: options.commands,
                     reqres: options.reqres
                 });
-                this.mapper = new LPPostMessageMapper(this.eventChannel);
+                this.mapper = new PostMessageMapper(this.eventChannel);
 
                 // Bind the mapping method to the mapper
                 mapping = this.mapper.toEvent.bind(this.mapper);
@@ -218,22 +219,22 @@
                 onmessage = _createMessageHandler(mapping).bind(this);
 
                 // Initialize a message channel with the message handler
-                this.messageChannel = new LPPostMessageChannel(options, onmessage);
+                this.messageChannel = new PostMessageChannel(options, onmessage);
 
                 this.callbackCache = new Cacher({
-                    max: LPPostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY),
-                    ttl: LPPostMessageUtilities.parseNumber(options.timeout, DEFAULT_TIMEOUT),
+                    max: PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY),
+                    ttl: PostMessageUtilities.parseNumber(options.timeout, DEFAULT_TIMEOUT),
                     interval: CACHE_EVICTION_INTERVAL
                 });
 
-                messureTime = LPPostMessageUtilities.parseNumber(options.messureTime, DEFAULT_MESSURE_TIME);
+                messureTime = PostMessageUtilities.parseNumber(options.messureTime, DEFAULT_MESSURE_TIME);
                 this.circuit = new LPCircuitBreaker({
                     timeWindow: messureTime,
                     slidesNumber: Math.ceil(messureTime / 100),
-                    tolerance: LPPostMessageUtilities.parseNumber(options.messureTolerance, DEFAULT_MESSURE_TOLERANCE),
-                    calibration: LPPostMessageUtilities.parseNumber(options.messureCalibration, DEFAULT_MESSURE_CALIBRATION),
-                    onopen: LPPostMessageUtilities.parseFunction(options.ondisconnect, true),
-                    onclose: LPPostMessageUtilities.parseFunction(options.onreconnect, true)
+                    tolerance: PostMessageUtilities.parseNumber(options.messureTolerance, DEFAULT_MESSURE_TOLERANCE),
+                    calibration: PostMessageUtilities.parseNumber(options.messureCalibration, DEFAULT_MESSURE_CALIBRATION),
+                    onopen: PostMessageUtilities.parseFunction(options.ondisconnect, true),
+                    onclose: PostMessageUtilities.parseFunction(options.onreconnect, true)
                 });
 
                 // Dumb Proxy methods
@@ -386,7 +387,7 @@
          * @private
          */
         function _getUseObjectsUrlIndicator() {
-            var deserialize = LPPostMessageUtilities.getURLParameter("lpPMDeSerialize");
+            var deserialize = PostMessageUtilities.getURLParameter("lpPMDeSerialize");
 
             if ("true" === deserialize) {
                 return false;
@@ -469,7 +470,7 @@
         function _prepare(args, name, ontimeout) {
             var method;
             var ttl;
-            var id = LPPostMessageUtilities.createUniqueSequence(MESSAGE_PREFIX + name + LPPostMessageUtilities.SEQUENCE_FORMAT);
+            var id = PostMessageUtilities.createUniqueSequence(MESSAGE_PREFIX + name + PostMessageUtilities.SEQUENCE_FORMAT);
 
             args.unshift(id, name);
 
@@ -519,7 +520,7 @@
                     callback.call(null, new Error("Callback: Operation Timeout!"));
                 }
                 catch (ex) {
-                    LPPostMessageUtilities.log("Error while trying to handle the timeout using the callback", "ERROR", "PostMessageCourier");
+                    PostMessageUtilities.log("Error while trying to handle the timeout using the callback", "ERROR", "PostMessageCourier");
                 }
             }
         }
@@ -560,7 +561,7 @@
                                 callback.apply(null, args);
                             }
                             catch (ex) {
-                                LPPostMessageUtilities.log("Error while trying to handle the returned message from request/command", "ERROR", "PostMessageCourier");
+                                PostMessageUtilities.log("Error while trying to handle the returned message from request/command", "ERROR", "PostMessageCourier");
                             }
                         }
                     }
@@ -600,7 +601,7 @@
                             result = handler && handler();
                         }
                         catch (ex) {
-                            LPPostMessageUtilities.log("Error while trying to invoke the handler on the events channel", "ERROR", "PostMessageCourier");
+                            PostMessageUtilities.log("Error while trying to invoke the handler on the events channel", "ERROR", "PostMessageCourier");
 
                             if (_isTwoWay(name)) {
                                 params = [id, ACTION_TYPE.RETURN, { error: ex.toString() }];
@@ -612,7 +613,7 @@
                         // In case the method is two way and returned a result
                         if (_isTwoWay(name) && "undefined" !== typeof result) {
                             // If the result is async (promise) we need to defer the execution of the results data
-                            if (("undefined" !== typeof Promise && result instanceof Promise) || result instanceof LPPostMessagePromise) {
+                            if (("undefined" !== typeof Promise && result instanceof Promise) || result instanceof PostMessagePromise) {
                                 // Handle async using promises
                                 result.then(function(data) {
                                     params = [id, ACTION_TYPE.RETURN, null];
@@ -671,5 +672,5 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPPostMessageCourier = exports.LPPostMessageCourier || LPPostMessageCourier;
+    exports.PostMessageCourier = exports.PostMessageCourier || PostMessageCourier;
 }));

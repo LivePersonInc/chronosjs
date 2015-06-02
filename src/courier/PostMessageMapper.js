@@ -11,7 +11,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
     var define  = window.define;
 
@@ -20,48 +21,48 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessageMapper", ["exports", "lpPostMessageUtilities"], function () {
-            if (!namespace.LPPostMessageMapper) {
-                factory(root, namespace, namespace.LPPostMessageUtilities);
+        define("Chronos.PostMessageMapper", ["exports", "Chronos.PostMessageUtilities"], function () {
+            if (!namespace.PostMessageMapper) {
+                factory(root, namespace, namespace.PostMessageUtilities);
             }
 
-            return namespace.LPPostMessageMapper;
+            return namespace.PostMessageMapper;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPPostMessageMapper) {
-            factory(root, namespace, namespace.LPPostMessageUtilities);
+        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageMapper) {
+            factory(root, namespace, namespace.PostMessageUtilities);
         }
         //</lptag>
     }
     else if ("object" !== typeof exports) {
         /**
-         * @depend ./lpPostMessageUtilities.js
+         * @depend ./PostMessageUtilities.js
          */
         // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.LPPostMessageUtilities);
+        factory(root, namespace, namespace.PostMessageUtilities);
     }
-}(this, function (root, exports, LPPostMessageUtilities) {
+}(this, function (root, exports, PostMessageUtilities) {
     "use strict";
 
     /*jshint validthis:true */
 
     /**
-     * LPPostMessageMapper constructor
+     * PostMessageMapper constructor
      * @constructor
      * @param {LPEventChannel} [eventChannel] - the event channel on which events/commands/requests will be bind/triggered (must implement the LPEventChannel API)
      */
-    function LPPostMessageMapper(eventChannel) {
+    function PostMessageMapper(eventChannel) {
         // For forcing new keyword
-        if (false === (this instanceof LPPostMessageMapper)) {
-            return new LPPostMessageMapper(eventChannel);
+        if (false === (this instanceof PostMessageMapper)) {
+            return new PostMessageMapper(eventChannel);
         }
 
         this.initialize(eventChannel);
     }
 
-    LPPostMessageMapper.prototype = (function () {
+    PostMessageMapper.prototype = (function () {
         /**
          * Method for initialization
          * @param {LPPostMessageChannel} [eventChannel] - the event channel on which events/commands/requests will be bind/triggered (must implement the LPEventChannel API)
@@ -82,7 +83,7 @@
         function toEvent(message) {
             if (message) {
                 if (message.error) {
-                    LPPostMessageUtilities.log("Error on message: " + message.error, "ERROR", "PostMessageMapper");
+                    PostMessageUtilities.log("Error on message: " + message.error, "ERROR", "PostMessageMapper");
                     return function() {
                         return message;
                     };
@@ -119,7 +120,6 @@
          */
         function _getMappedMethod(message) {
             var method = message && message.method;
-            var id = method && method.id;
             var name = method && method.name;
             var args = method && method.args;
             var eventChannel = this.eventChannel;
@@ -129,7 +129,7 @@
                     return eventChannel[name].apply(eventChannel, args);
                 }
                 else {
-                    LPPostMessageUtilities.log("No channel exists", "ERROR", "PostMessageMapper");
+                    PostMessageUtilities.log("No channel exists", "ERROR", "PostMessageMapper");
                 }
             };
         }
@@ -143,5 +143,5 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPPostMessageMapper = exports.LPPostMessageMapper || LPPostMessageMapper;
+    exports.PostMessageMapper = exports.PostMessageMapper || PostMessageMapper;
 }));

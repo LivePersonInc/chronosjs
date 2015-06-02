@@ -11,7 +11,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
 
     var define  = window.define;
@@ -21,36 +22,36 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpEvents", ["exports", "lpEventsUtil"], function () {
-            if (!namespace.LPEvents) {
-                factory(root, namespace, namespace.lpEventsUtil);
+        define("Chronos.Events", ["exports", "Chronos.EventsUtil"], function () {
+            if (!namespace.Events) {
+                factory(root, namespace, namespace.EventsUtil);
             }
 
-            return namespace.LPEvents;
+            return namespace.Events;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPEvents) {
-            factory(root, namespace, namespace.lpEventsUtil);
+        if (root.lpTag && root.lpTag.taglets && !namespace.Events) {
+            factory(root, namespace, namespace.EventsUtil);
         }
         //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
-        factory(root, exports, require("util/lpEventsUtil"));
+        factory(root, exports, require("util/EventsUtil"));
     }
     else {
         /**
-         * @depend ./util/lpEventsUtil.js
+         * @depend ./util/EventsUtil.js
          */
         // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.lpEventsUtil);
+        factory(root, namespace, namespace.EventsUtil);
     }
 }(this, function (root, exports, evUtil) {
     "use strict";
 
-    function LPEvents(defaults) {
+    function Events(defaults) {
         var appName = "Events",
             attrName = "eventName",
             eventId = 0,
@@ -259,5 +260,5 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPEvents = exports.LPEvents || LPEvents;
+    exports.Events = exports.Events || Events;
 }));

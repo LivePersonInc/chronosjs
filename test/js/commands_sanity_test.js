@@ -1,18 +1,18 @@
-describe('LPCommands Sanity Tests', function () {
+describe('Commands Sanity Tests', function () {
     var commands;
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["lpCommands"], function(lpCommands) {
+            require(["Chronos.Commands"], function(Commands) {
                 done();
             });
         }
         else {
-            require("../../src/lpCommands")(done);
+            require("../../src/Commands")(done);
         }
     });
     beforeEach('Init ReqRes', function (done) {
-        commands = new lpTag.channel.LPCommands();
+        commands = new lpTag.channel.Commands();
         done();
     });
 
@@ -178,7 +178,7 @@ describe('LPCommands Sanity Tests', function () {
 
             expect(commands.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var commands2 = new lpTag.channel.LPCommands();
+            var commands2 = new lpTag.channel.Commands();
             expect(commands.hasFired('app1', 'ev1').length).to.equal(1);
         });
 
@@ -214,7 +214,7 @@ describe('LPCommands Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var commands2 = new lpTag.channel.LPCommands({
+            var commands2 = new lpTag.channel.Commands({
                 eventBufferLimit: 1
             });
             commands2.comply({
@@ -240,7 +240,7 @@ describe('LPCommands Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var commands2 = new lpTag.channel.LPCommands({
+            var commands2 = new lpTag.channel.Commands({
                 cloneEventData: true
             });
             commands2.comply({

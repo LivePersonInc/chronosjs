@@ -1,18 +1,18 @@
-describe('LPReqRes Sanity Tests', function () {
+describe('ReqRes Sanity Tests', function () {
     var reqres;
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["lpReqres"], function(lpReqres) {
+            require(["Chronos.Reqres"], function(Reqres) {
                 done();
             });
         }
         else {
-            require("../../src/lpReqres")(done);
+            require("../../src/Reqres")(done);
         }
     });
     beforeEach('Init ReqRes', function (done) {
-        reqres = new lpTag.channel.LPReqRes();
+        reqres = new lpTag.channel.ReqRes();
         done();
     });
 
@@ -180,7 +180,7 @@ describe('LPReqRes Sanity Tests', function () {
 
             expect(reqres.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var reqres2 = new lpTag.channel.LPReqRes();
+            var reqres2 = new lpTag.channel.ReqRes();
             expect(reqres.hasFired('app1', 'ev1').length).to.equal(1);
         });
     });
@@ -215,7 +215,7 @@ describe('LPReqRes Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var reqres2 = new lpTag.channel.LPReqRes({
+            var reqres2 = new lpTag.channel.ReqRes({
                 eventBufferLimit: 1
             });
             reqres2.reply({
@@ -241,7 +241,7 @@ describe('LPReqRes Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var reqres2 = new lpTag.channel.LPReqRes({
+            var reqres2 = new lpTag.channel.ReqRes({
                 cloneEventData: true
             });
             reqres2.reply({

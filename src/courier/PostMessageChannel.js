@@ -11,7 +11,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
     var define  = window.define;
 
@@ -20,30 +21,30 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessageChannel", ["exports", "lpPostMessageUtilities", "lpPostMessageChannelPolyfill"], function () {
-            if (!namespace.LPPostMessageChannel) {
-                factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPPostMessageChannelPolyfill);
+        define("Chronos.PostMessageChannel", ["exports", "Chronos.PostMessageUtilities", "Chronos.PostMessageChannelPolyfill"], function () {
+            if (!namespace.PostMessageChannel) {
+                factory(root, namespace, namespace.PostMessageUtilities, namespace.PostMessageChannelPolyfill);
             }
 
-            return namespace.LPPostMessageChannel;
+            return namespace.PostMessageChannel;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPPostMessageChannel) {
-            factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPPostMessageChannelPolyfill);
+        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageChannel) {
+            factory(root, namespace, namespace.PostMessageUtilities, namespace.PostMessageChannelPolyfill);
         }
         //</lptag>
     }
     else if ("object" !== typeof exports) {
         /**
-         * @depend ./lpPostMessageUtilities.js
-         * @depend ./lpPostMessageChannelPolyfill.js
+         * @depend ./PostMessageUtilities.js
+         * @depend ./PostMessageChannelPolyfill.js
          */
         // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.LPPostMessageUtilities, namespace.LPPostMessageChannelPolyfill);
+        factory(root, namespace, namespace.PostMessageUtilities, namespace.PostMessageChannelPolyfill);
     }
-}(this, function (root, exports, LPPostMessageUtilities, LPPostMessageChannelPolyfill) {
+}(this, function (root, exports, PostMessageUtilities, PostMessageChannelPolyfill) {
     "use strict";
 
     /*jshint validthis:true */
@@ -56,7 +57,7 @@
     var DEFAULT_BODY_LOAD_DELAY = 100;
 
     /**
-     * LPPostMessageChannel constructor
+     * PostMessageChannel constructor
      * @constructor
      * @param {Object} options the configuration options for the instance
      * @param {Object} options.target - the target iframe or iframe configuration
@@ -82,16 +83,16 @@
      * @param {String} [options.hostParam] - optional parameter of the host parameter name (default is lpHost)
      * @param {Function} onmessage - the handler for incoming messages
      */
-    function LPPostMessageChannel(options, onmessage) {
+    function PostMessageChannel(options, onmessage) {
         // For forcing new keyword
-        if (false === (this instanceof LPPostMessageChannel)) {
-            return new LPPostMessageChannel(options, onmessage);
+        if (false === (this instanceof PostMessageChannel)) {
+            return new PostMessageChannel(options, onmessage);
         }
 
         this.initialize(options, onmessage);
     }
 
-    LPPostMessageChannel.prototype = (function () {
+    PostMessageChannel.prototype = (function () {
         /**
          * Method for initialization
          * @param {Object} options the configuration options for the instance
@@ -144,7 +145,7 @@
 
                     // Swap Listeners
                     previous = this.removeListener.bind(this);
-                    this.removeListener = LPPostMessageUtilities.addEventListener(this.receiver, "message", handler);
+                    this.removeListener = PostMessageUtilities.addEventListener(this.receiver, "message", handler);
                     previous();
 
                     if (this.hosted && !this.ready) {
@@ -178,12 +179,12 @@
 
                 options = options || {};
 
-                this.serialize = LPPostMessageUtilities.parseFunction(options.serialize, LPPostMessageUtilities.stringify);
-                this.deserialize = LPPostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
+                this.serialize = PostMessageUtilities.parseFunction(options.serialize, PostMessageUtilities.stringify);
+                this.deserialize = PostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
                 this.targetOrigin = options.targetOrigin;
-                this.maxConcurrency = LPPostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
-                this.handshakeInterval = LPPostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
-                this.handshakeAttempts = LPPostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
+                this.maxConcurrency = PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
+                this.handshakeInterval = PostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
+                this.handshakeAttempts = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
                 this.hostParam = options.hostParam;
                 this.channel = "undefined" !== typeof options.channel ? options.channel : _getChannelUrlIndicator();
                 this.useObjects = options.useObjects;
@@ -204,11 +205,11 @@
                 }
                 else if (options.target.url) { // We've got the needed configuration for creating an iframe
                     this.targetUrl = options.target.url;
-                    this.targetOrigin = this.targetOrigin || LPPostMessageUtilities.getHost(options.target.url);
+                    this.targetOrigin = this.targetOrigin || PostMessageUtilities.getHost(options.target.url);
                 }
 
                 if (!this.hosted) {
-                    this.token = LPPostMessageUtilities.createUniqueSequence(TOKEN_PREFIX + LPPostMessageUtilities.SEQUENCE_FORMAT);
+                    this.token = PostMessageUtilities.createUniqueSequence(TOKEN_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
                 }
 
                 if (this.targetUrl) { // We've got the needed configuration for creating an iframe
@@ -218,7 +219,7 @@
                 }
 
                 if (!_isNativeMessageChannelSupported.call(this)) {
-                    this.receiver = new LPPostMessageChannelPolyfill(this.target, {
+                    this.receiver = new PostMessageChannelPolyfill(this.target, {
                         serialize: this.serialize,
                         deserialize: this.deserialize
                     });
@@ -227,7 +228,7 @@
 
                 if (this.hosted || !_isNativeMessageChannelSupported.call(this)) {
                     handleMessage = _handleMessage.bind(this);
-                    this.removeListener = LPPostMessageUtilities.addEventListener(root, "message", handleMessage);
+                    this.removeListener = PostMessageUtilities.addEventListener(root, "message", handleMessage);
                 }
                 else if (_isNativeMessageChannelSupported.call(this)) {
                     this.channelFactory();
@@ -244,7 +245,7 @@
                     if (!initiated) {
                         // Fallback to pure postMessage
                         this.channel = false;
-                        this.receiver = new LPPostMessageChannelPolyfill(this.target, {
+                        this.receiver = new PostMessageChannelPolyfill(this.target, {
                             serialize: this.serialize,
                             deserialize: this.deserialize
                         });
@@ -252,7 +253,7 @@
 
                         if (!this.hosted) {
                             handleMessage = _handleMessage.bind(this);
-                            this.removeListener = LPPostMessageUtilities.addEventListener(root, "message", handleMessage);
+                            this.removeListener = PostMessageUtilities.addEventListener(root, "message", handleMessage);
                         }
 
                         _handshake.call(this);
@@ -260,10 +261,10 @@
 
                     this.handshakeAttempts--;
 
-                    LPPostMessageUtilities.delay(function() {
+                    PostMessageUtilities.delay(function() {
                         if (!this.hosted && !this.ready) {
                             _addLoadHandler.call(this, this.target);
-                            this.timer = LPPostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
+                            this.timer = PostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
                         }
                     }.bind(this));
                 }
@@ -292,7 +293,7 @@
                         }
                     }
                     catch(ex) {
-                        LPPostMessageUtilities.log("Error while trying to remove the iframe from the container", "ERROR", "PostMessageChannel");
+                        PostMessageUtilities.log("Error while trying to remove the iframe from the container", "ERROR", "PostMessageChannel");
                     }
                 }
 
@@ -335,7 +336,7 @@
                     }
                 }
                 catch(ex) {
-                    LPPostMessageUtilities.log("Error while trying to post the message", "ERROR", "PostMessageChannel");
+                    PostMessageUtilities.log("Error while trying to post the message", "ERROR", "PostMessageChannel");
                     return false;
                 }
             }
@@ -358,7 +359,7 @@
          * @private
          */
         function _getChannelUrlIndicator() {
-            if ("true" === LPPostMessageUtilities.getURLParameter("lpPMCPolyfill")) {
+            if ("true" === PostMessageUtilities.getURLParameter("lpPMCPolyfill")) {
                 return false;
             }
         }
@@ -454,7 +455,7 @@
                         }
                         catch (ex) {
                             msgObject = message.data || message;
-                            LPPostMessageUtilities.log("Error while trying to handle the message", "ERROR", "PostMessageChannel");
+                            PostMessageUtilities.log("Error while trying to handle the message", "ERROR", "PostMessageChannel");
                         }
 
                         return msgObject || message;
@@ -485,7 +486,7 @@
 
             if (!this.ready) {
                 if (!_isNativeMessageChannelSupported.call(this)) {
-                    this.targetOrigin = this.targetOrigin || LPPostMessageUtilities.resolveOrigin(this.target) || "*";
+                    this.targetOrigin = this.targetOrigin || PostMessageUtilities.resolveOrigin(this.target) || "*";
                 }
 
                 if (!this.hosted) {
@@ -510,7 +511,7 @@
             if (!this.ready && retry) {
                 if (0 < this.handshakeAttempts) {
                     this.handshakeAttempts--;
-                    this.timer = LPPostMessageUtilities.delay(_handshake.bind(this, retry), retry);
+                    this.timer = PostMessageUtilities.delay(_handshake.bind(this, retry), retry);
                 }
                 else {
                     this.onready(new Error("Loading: Operation Timeout!"));
@@ -530,7 +531,7 @@
 
                 // Process queued messages if any
                 if (this.messageQueue && this.messageQueue.length) {
-                    LPPostMessageUtilities.delay(function() {
+                    PostMessageUtilities.delay(function() {
                         var message;
                         var parsed;
 
@@ -542,7 +543,7 @@
                                     this.receiver.postMessage(parsed);
                                 }
                                 catch(ex) {
-                                    LPPostMessageUtilities.log("Error while trying to post the message from queue", "ERROR", "PostMessageChannel");
+                                    PostMessageUtilities.log("Error while trying to post the message from queue", "ERROR", "PostMessageChannel");
                                 }
                             }
 
@@ -577,11 +578,11 @@
                     onready();
                 }
                 else {
-                    LPPostMessageUtilities.delay(_ready, delay || DEFAULT_BODY_LOAD_DELAY);
+                    PostMessageUtilities.delay(_ready, delay || DEFAULT_BODY_LOAD_DELAY);
                 }
             }
 
-            LPPostMessageUtilities.delay(_ready, delay || false);
+            PostMessageUtilities.delay(_ready, delay || false);
         }
 
         /**
@@ -602,7 +603,7 @@
          */
         function _createIFrame(options, container) {
             var frame = document.createElement("IFRAME");
-            var name = LPPostMessageUtilities.createUniqueSequence(IFRAME_PREFIX + LPPostMessageUtilities.SEQUENCE_FORMAT);
+            var name = PostMessageUtilities.createUniqueSequence(IFRAME_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
             var delay = options.delayLoad;
 
             frame.setAttribute("id", name);
@@ -647,7 +648,7 @@
          * @private
          */
         function _addLoadHandler(frame) {
-            LPPostMessageUtilities.addEventListener(frame, "load", function() {
+            PostMessageUtilities.addEventListener(frame, "load", function() {
                 this.loading = false;
 
                 _handshake.call(this, this.handshakeInterval);
@@ -670,7 +671,7 @@
                 src += (new Date()).getTime() + "&";
             }
 
-            src += ((this.hostParam ? "hostParam=" + this.hostParam + "&" + this.hostParam + "=" : "lpHost=") + encodeURIComponent(LPPostMessageUtilities.getHost(void 0, frame, true)));
+            src += ((this.hostParam ? "hostParam=" + this.hostParam + "&" + this.hostParam + "=" : "lpHost=") + encodeURIComponent(PostMessageUtilities.getHost(void 0, frame, true)));
 
             if (!_isNativeMessageChannelSupported.call(this)) {
                 src += "&lpPMCPolyfill=true";
@@ -692,5 +693,5 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPPostMessageChannel = LPPostMessageChannel;
+    exports.PostMessageChannel = PostMessageChannel;
 }));

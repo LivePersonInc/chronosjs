@@ -11,7 +11,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
     var define  = window.define;
 
@@ -20,52 +21,52 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessageChannelPolyfill", ["exports", "lpPostMessageUtilities"], function () {
-            if (!namespace.LPPostMessageChannelPolyfill) {
-                factory(root, namespace, namespace.LPPostMessageUtilities);
+        define("Chronos.PostMessageChannelPolyfill", ["exports", "Chronos.PostMessageUtilities"], function () {
+            if (!namespace.PostMessageChannelPolyfill) {
+                factory(root, namespace, namespace.PostMessageUtilities);
             }
 
-            return namespace.LPPostMessageChannelPolyfill;
+            return namespace.PostMessageChannelPolyfill;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPPostMessageChannelPolyfill) {
-            factory(root, namespace, namespace.LPPostMessageUtilities);
+        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageChannelPolyfill) {
+            factory(root, namespace, namespace.PostMessageUtilities);
         }
         //</lptag>
     }
     else if ("object" !== typeof exports) {
         /**
-         * @depend ./lpPostMessageUtilities.js
+         * @depend ./PostMessageUtilities.js
          */
         // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.LPPostMessageUtilities);
+        factory(root, namespace, namespace.PostMessageUtilities);
     }
-}(this, function (root, exports, LPPostMessageUtilities) {
+}(this, function (root, exports, PostMessageUtilities) {
     "use strict";
 
     /*jshint validthis:true */
     var PORT_PREFIX = "LPPort_";
 
     /**
-     * LPPostMessageChannelPolyfill constructor
+     * PostMessageChannelPolyfill constructor
      * @constructor
      * @param {Object} target - The DOM node of the target iframe or window
      * @param {Object} [options] the configuration options for the instance
      * @param {Function} [options.serialize = JSON.stringify] - optional serialization method for post message
      * @param {Function} [options.deserialize = JSON.parse] - optional deserialization method for post message
      */
-    function LPPostMessageChannelPolyfill(target, options) {
+    function PostMessageChannelPolyfill(target, options) {
         // For forcing new keyword
-        if (false === (this instanceof LPPostMessageChannelPolyfill)) {
-            return new LPPostMessageChannelPolyfill(target, options);
+        if (false === (this instanceof PostMessageChannelPolyfill)) {
+            return new PostMessageChannelPolyfill(target, options);
         }
 
         this.initialize(target, options);
     }
 
-    LPPostMessageChannelPolyfill.prototype = (function () {
+    PostMessageChannelPolyfill.prototype = (function () {
         /**
          * Method for initialization
          * @param {Object} target - The DOM node of the target iframe or window
@@ -79,9 +80,9 @@
 
                 this.target = target || root.top;
                 this.hosted = this.target === root || this.target === root.top;
-                this.portId = LPPostMessageUtilities.createUniqueSequence(PORT_PREFIX + LPPostMessageUtilities.SEQUENCE_FORMAT);
-                this.serialize = LPPostMessageUtilities.parseFunction(options.serialize, LPPostMessageUtilities.stringify);
-                this.deserialize = LPPostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
+                this.portId = PostMessageUtilities.createUniqueSequence(PORT_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
+                this.serialize = PostMessageUtilities.parseFunction(options.serialize, PostMessageUtilities.stringify);
+                this.deserialize = PostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
 
                 this.initialized = true;
             }
@@ -107,7 +108,7 @@
                     receiver.postMessage(parsed, origin);
                 }
                 catch(ex) {
-                    LPPostMessageUtilities.log("Error while trying to post the message", "ERROR", "PostMessageChannelPolyfill");
+                    PostMessageUtilities.log("Error while trying to post the message", "ERROR", "PostMessageChannelPolyfill");
                     return false;
                 }
             }
@@ -131,7 +132,7 @@
          */
         function _getOrigin() {
             if (!this.origin) {
-                this.origin = LPPostMessageUtilities.resolveOrigin(this.target);
+                this.origin = PostMessageUtilities.resolveOrigin(this.target);
             }
 
             return this.origin;
@@ -171,7 +172,7 @@
                     }
                 }
                 catch (ex) {
-                    LPPostMessageUtilities.log("Error while trying to deserialize the message", "ERROR", "PostMessageChannelPolyfill");
+                    PostMessageUtilities.log("Error while trying to deserialize the message", "ERROR", "PostMessageChannelPolyfill");
                 }
             }
 
@@ -187,5 +188,5 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPPostMessageChannelPolyfill = exports.LPPostMessageChannelPolyfill || LPPostMessageChannelPolyfill;
+    exports.PostMessageChannelPolyfill = exports.PostMessageChannelPolyfill || PostMessageChannelPolyfill;
 }));

@@ -11,25 +11,26 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
-    var define  = window.define;
+    var define = window.define;
 
     if ("function" === typeof define && define.amd) {
         // Browser globals
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpEventsUtil", ["exports"], function () {
-            if (!namespace.lpEventsUtil) {
+        define("Chronos.EventsUtil", ["exports"], function () {
+            if (!namespace.EventsUtil) {
                 factory(root, namespace);
             }
 
-            return namespace.lpEventsUtil;
+            return namespace.EventsUtil;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.lpEventsUtil) {
+        if (root.lpTag && root.lpTag.taglets && !namespace.EventsUtil) {
             factory(root, namespace);
         }
         //</lptag>
@@ -269,7 +270,7 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.lpEventsUtil = exports.lpEventsUtil || {
+    exports.EventsUtil = exports.EventsUtil || {
         getListeners: getListeners,
         log: log,
         unbind: unbind,

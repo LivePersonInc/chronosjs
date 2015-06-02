@@ -11,7 +11,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
     var define  = window.define;
 
@@ -20,16 +21,16 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessagePromise", ["exports"], function () {
-            if (!namespace.LPPostMessagePromise) {
+        define("Chronos.PostMessagePromise", ["exports"], function () {
+            if (!namespace.PostMessagePromise) {
                 factory(root, namespace);
             }
 
-            return namespace.LPPostMessagePromise;
+            return namespace.PostMessagePromise;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPPostMessagePromise) {
+        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessagePromise) {
             factory(root, namespace);
         }
         //</lptag>
@@ -50,21 +51,21 @@
     };
 
     /**
-     * LPPostMessagePromise constructor
+     * PostMessagePromise constructor
      * @constructor
      * @param {Function} [executor] - optional method to be invoked during initialization that will have
      *                   arguments of resolve and reject according to ES6 Promise A+ spec
      */
-    function LPPostMessagePromise(executer) {
+    function PostMessagePromise(executer) {
         // For forcing new keyword
-        if (false === (this instanceof LPPostMessagePromise)) {
-            return new LPPostMessagePromise(executer);
+        if (false === (this instanceof PostMessagePromise)) {
+            return new PostMessagePromise(executer);
         }
 
         this.initialize(executer);
     }
 
-    LPPostMessagePromise.prototype = (function () {
+    PostMessagePromise.prototype = (function () {
         /**
          * Method for initialization
          * @param {Function} [executor] - optional method to be invoked during initialization that will have
@@ -198,13 +199,13 @@
     /**
      * Method for polyfilling Promise support if not exist
      */
-    LPPostMessagePromise.polyfill = function() {
+    PostMessagePromise.polyfill = function() {
         if (!root.Promise) {
-            root.Promise = LPPostMessagePromise;
+            root.Promise = PostMessagePromise;
         }
     };
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPPostMessagePromise = exports.LPPostMessagePromise || LPPostMessagePromise;
+    exports.PostMessagePromise = exports.PostMessagePromise || PostMessagePromise;
 }));

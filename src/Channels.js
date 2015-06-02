@@ -13,8 +13,8 @@
 
             return root.lpTag.channel;
         }
-        //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
 
     var define  = window.define;
@@ -24,42 +24,42 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpEventChannel", ["exports", "lpEvents", "lpCommands", "lpReqres"], function () {
-            if (!namespace.LPEventChannel) {
-                factory(root, namespace, namespace.LPEvents, namespace.LPCommands, namespace.LPReqRes);
+        define("Chronos.Channels", ["exports", "Chronos.Events", "Chronos.Commands", "Chronos.Reqres"], function () {
+            if (!namespace.Channels) {
+                factory(root, namespace, namespace.Events, namespace.Commands, namespace.ReqRes);
             }
 
-            return namespace.LPEventChannel;
+            return namespace.Channels;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPEventChannel) {
-            factory(root, namespace, namespace.LPEvents, namespace.LPCommands, namespace.LPReqRes);
+        if (root.lpTag && root.lpTag.taglets && !namespace.Channels) {
+            factory(root, namespace, namespace.Events, namespace.Commands, namespace.ReqRes);
         }
         //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
-        factory(root, exports, require("./lpEvents"), require("./lpCommands"), require("./lpReqres"));
+        factory(root, exports, require("./Events"), require("./Commands"), require("./Reqres"));
     }
     else {
         /**
-         * @depend ./lpEvents.js
-         * @depend ./lpCommands.js
-         * @depend ./lpReqres.js
+         * @depend ./Events.js
+         * @depend ./Commands.js
+         * @depend ./Reqres.js
          */
         // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.LPEvents, namespace.LPCommands, namespace.LPReqRes);
+        factory(root, namespace, namespace.Events, namespace.Commands, namespace.ReqRes);
     }
-}(this, function (root, exports, LPEvents, LPCommands, LPReqRes) {
-    function LPEventChannel(options) {
+}(this, function (root, exports, Events, Commands, ReqRes) {
+    function Channels(options) {
 
         options = options || {};
 
-        var events = options.events || new LPEvents();
-        var commands = options.commands || new LPCommands();
-        var reqres = options.reqres || new LPReqRes();
+        var events = options.events || new Events();
+        var commands = options.commands || new Commands();
+        var reqres = options.reqres || new ReqRes();
 
 
         this.once = events.once;
@@ -83,5 +83,5 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPEventChannel = exports.LPEventChannel || LPEventChannel;
+    exports.Channels = exports.Channels || Channels;
 }));

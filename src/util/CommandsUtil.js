@@ -11,40 +11,42 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
-    var define  = window.define;
+
+    var define = window.define;
 
     if ("function" === typeof define && define.amd) {
         // Browser globals
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpCommandUtil", ["exports", "lpEventsUtil"], function () {
-            if (!namespace.lpCommandUtil) {
-                factory(root, namespace, namespace.lpEventsUtil);
+        define("Chronos.CommandsUtil", ["exports", "Chronos.EventsUtil"], function () {
+            if (!namespace.CommandsUtil) {
+                factory(root, namespace, namespace.EventsUtil);
             }
 
-            return namespace.lpCommandUtil;
+            return namespace.CommandsUtil;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.lpCommandUtil) {
-            factory(root, namespace, namespace.lpEventsUtil);
+        if (root.lpTag && root.lpTag.taglets && !namespace.CommandsUtil) {
+            factory(root, namespace, namespace.EventsUtil);
         }
         //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
-        factory(root, exports, require("util/lpEventsUtil"));
+        factory(root, exports, require("util/EventsUtil"));
     }
     else {
         /**
-         * @depend ./lpEventsUtil.js
+         * @depend ./EventsUtil.js
          */
-        // Browser globals
+            // Browser globals
         namespace = getNamespace();
-        factory(root, namespace, namespace.lpEventsUtil);
+        factory(root, namespace, namespace.EventsUtil);
     }
 }(this, function (root, exports, evUtil) {
     "use strict";
@@ -90,8 +92,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.lpCommandUtil = exports.lpCommandUtil || {
-        bind: bind,
-        valid: valid
-    };
+    exports.CommandsUtil = exports.CommandsUtil || {
+            bind: bind,
+            valid: valid
+        };
 }));

@@ -6,22 +6,22 @@
     <script type="text/javascript">
         window.lpTag = window.lpTag || {};
     </script>
-    <script type="text/javascript" src="../../src/util/lpEventsUtil.js"></script>
-    <script type="text/javascript" src="../../src/lpEvents.js"></script>
-    <script type="text/javascript" src="../../src/util/lpCommandUtil.js"></script>
-    <script type="text/javascript" src="../../src/lpCommands.js"></script>
-    <script type="text/javascript" src="../../src/lpReqres.js"></script>
-    <script type="text/javascript" src="../../src/lpEventChannel.js"></script>
+    <script type="text/javascript" src="../../src/util/EventsUtil.js"></script>
+    <script type="text/javascript" src="../../src/Events.js"></script>
+    <script type="text/javascript" src="../../src/util/CommandsUtil.js"></script>
+    <script type="text/javascript" src="../../src/Commands.js"></script>
+    <script type="text/javascript" src="../../src/Reqres.js"></script>
+    <script type="text/javascript" src="../../src/Channels.js"></script>
     <script type="text/javascript" src="../../node_modules/cacherjs/src/cacher.js"></script>
     <script type="text/javascript" src="../../src/courier/lpCircuitBreaker.js"></script>
-    <script type="text/javascript" src="../../src/courier/lpPostMessageUtilities.js"></script>
-    <script type="text/javascript" src="../../src/courier/lpPostMessagePromise.js"></script>
-    <script type="text/javascript" src="../../src/courier/lpPostMessageMapper.js"></script>
-    <script type="text/javascript" src="../../src/courier/lpPostMessageChannelPolyfill.js"></script>
-    <script type="text/javascript" src="../../src/courier/lpPostMessageChannel.js"></script>
-    <script type="text/javascript" src="../../src/courier/lpPostMessageCourier.js"></script>
+    <script type="text/javascript" src="../../src/courier/PostMessageUtilities.js"></script>
+    <script type="text/javascript" src="../../src/courier/PostMessagePromise.js"></script>
+    <script type="text/javascript" src="../../src/courier/PostMessageMapper.js"></script>
+    <script type="text/javascript" src="../../src/courier/PostMessageChannelPolyfill.js"></script>
+    <script type="text/javascript" src="../../src/courier/PostMessageChannel.js"></script>
+    <script type="text/javascript" src="../../src/courier/PostMessageCourier.js"></script>
     <script type="text/javascript">
-        var courier = new lpTag.channel.LPPostMessageCourier();
+        var courier = new lpTag.channel.PostMessageCourier();
 
         ///// ---- BINDINGS ------ ////
         courier.bind({
@@ -78,7 +78,7 @@
             appName: "host",
             reqName: "Async Ma Shlomha?",
             func: function(data) {
-                return new lpTag.channel.LPPostMessagePromise(function(resolve, reject) {
+                return new lpTag.channel.PostMessagePromise(function(resolve, reject) {
                     setTimeout(function() {
                         resolve(data && data.text);
                     }, 1000);
@@ -89,7 +89,7 @@
             appName: "host",
             reqName: "Ask Async Ma Shlomha?",
             func: function(data) {
-                return new lpTag.channel.LPPostMessagePromise(function(resolve, reject) {
+                return new lpTag.channel.PostMessagePromise(function(resolve, reject) {
                     courier.request({
                         appName: "iframe",
                         reqName: "Ma Shlomha?",
@@ -151,7 +151,7 @@
             }
         }
 
-        if ("true" === lpTag.channel.LPPostMessageUtilities.getURLParameter("syncTrigger")) {
+        if ("true" === lpTag.channel.PostMessageUtilities.getURLParameter("syncTrigger")) {
             courier.trigger({
                 appName: "frame",
                 eventName: "loaded"

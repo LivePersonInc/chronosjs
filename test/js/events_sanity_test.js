@@ -1,18 +1,18 @@
-describe('LPEvents Sanity Tests', function () {
+describe('Events Sanity Tests', function () {
     var events;
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["lpEvents"], function(lpEvents) {
+            require(["Chronos.Events"], function(Events) {
                 done();
             });
         }
         else {
-            require("../../src/lpEvents")(done);
+            require("../../src/Events")(done);
         }
     });
-    beforeEach('Init lpEvents', function (done) {
-        events = new lpTag.channel.LPEvents();
+    beforeEach('Init Events', function (done) {
+        events = new lpTag.channel.Events();
         done();
     });
 
@@ -219,7 +219,7 @@ describe('LPEvents Sanity Tests', function () {
 
             expect(events.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var events2 = new lpTag.channel.LPEvents();
+            var events2 = new lpTag.channel.Events();
             expect(events.hasFired('app1', 'ev1').length).to.equal(1);
         });
 
@@ -311,7 +311,7 @@ describe('LPEvents Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var events2 = new lpTag.channel.LPEvents({
+            var events2 = new lpTag.channel.Events({
                 eventBufferLimit: 1
             });
             events2.bind({
@@ -338,7 +338,7 @@ describe('LPEvents Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var events2 = new lpTag.channel.LPEvents({
+            var events2 = new lpTag.channel.Events({
                 cloneEventData: true
             });
             events2.bind({

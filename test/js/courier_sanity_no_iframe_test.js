@@ -1,4 +1,4 @@
-describe("LPPostMessageCourier Sanity Tests with iFrame creation from the outside", function () {
+describe("PostMessageCourier Sanity Tests with iFrame creation from the outside", function () {
     var courierLocal;
     var msgChannel;
     var evChannel;
@@ -19,12 +19,12 @@ describe("LPPostMessageCourier Sanity Tests with iFrame creation from the outsid
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["lpPostMessageCourier"], function (lpPostMessageCourier) {
+            require(["Chronos.PostMessageCourier"], function (lpPostMessageCourier) {
                 done();
             });
         } else {
             // Do not use new deliberately to test if component is adding it
-            require("../../src/courier/lpPostMessageCourier")(done);
+            require("../../src/courier/PostMessageCourier")(done);
         }
     });
     beforeEach("Init Courier & iFrame", function (done) {
@@ -34,7 +34,7 @@ describe("LPPostMessageCourier Sanity Tests with iFrame creation from the outsid
         var target = {
             url: url + (0 < url.indexOf("?") ? "&" : "?") + "_d=" + buster++,
             callback: function() {
-                courierLocal = new lpTag.channel.LPPostMessageCourier({
+                courierLocal = new lpTag.channel.PostMessageCourier({
                     target: frame,
                     targetOrigin: protocol + hostname + port,
                     channel: withChannel

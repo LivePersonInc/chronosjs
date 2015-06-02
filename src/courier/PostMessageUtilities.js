@@ -11,7 +11,8 @@
             return root.lpTag.channel;
         }
         //</lptag>
-        return root;
+        root.Chronos = root.Chronos || {};
+        return root.Chronos;
     }
     var define  = window.define;
 
@@ -20,16 +21,16 @@
         namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
-        define("lpPostMessageUtilities", ["exports"], function () {
-            if (!namespace.LPPostMessageUtilities) {
+        define("Chronos.PostMessageUtilities", ["exports"], function () {
+            if (!namespace.PostMessageUtilities) {
                 factory(root, namespace);
             }
 
-            return namespace.LPPostMessageUtilities;
+            return namespace.PostMessageUtilities;
         });
 
         //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPPostMessageUtilities) {
+        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageUtilities) {
             factory(root, namespace);
         }
         //</lptag>
@@ -316,7 +317,7 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.LPPostMessageUtilities = exports.LPPostMessageUtilities || {
+    exports.PostMessageUtilities = exports.PostMessageUtilities || {
         SEQUENCE_FORMAT: SEQUENCE_FORMAT,
         stringify: stringify,
         hasPostMessageObjectsSupport: hasPostMessageObjectsSupport,
