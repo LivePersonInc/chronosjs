@@ -101,55 +101,6 @@
             var handler;
             var initiated;
 
-            /**
-             * Method for handling the initial handler binding for needed event listeners
-             * @param {Object} event - the event object on message
-             */
-            function _handleMessage(event) {
-                var handshake;
-                var previous;
-
-                if (event.ports && 0 < event.ports.length) {
-                    this.receiver = event.ports[0];
-
-                    if (_isHandshake.call(this, event)) {
-                        if (!this.token) {
-                            this.token = event.data;
-                        }
-                    }
-
-                    this.receiver.start();
-
-                    // Swap Listeners
-                    previous = this.removeListener.bind(this);
-                    this.removeListener = PostMessageUtilities.addEventListener(this.receiver, "message", handler);
-                    previous();
-
-                    if (this.hosted && !this.ready) {
-                        handshake = true;
-                    }
-                }
-                else {
-                    if (_isHandshake.call(this, event)) {
-                        if (!this.token) {
-                            this.token = event.data;
-                        }
-
-                        if (this.hosted && !this.ready) {
-                            handshake = true;
-                        }
-                    }
-                    else if (this.token) {
-                        this.receiver.receive.call(this.receiver, event);
-                    }
-                }
-
-                if (handshake) {
-                    this.receiver.postMessage(HANSHAKE_PREFIX + this.token);
-                    _onReady.call(this);
-                }
-            }
-
             if (!this.initialized) {
                 this.hosted = false;
                 this.messageQueue = [];
@@ -204,7 +155,7 @@
                 }
 
                 if (this.hosted || !_isNativeMessageChannelSupported.call(this)) {
-                    handleMessage = _handleMessage.bind(this);
+                    handleMessage = _getHandleMessage(handler).bind(this);
                     this.removeListener = PostMessageUtilities.addEventListener(root, "message", handleMessage);
                 }
                 else if (_isNativeMessageChannelSupported.call(this)) {
@@ -229,7 +180,7 @@
                         this.receiver.onmessage = handler;
 
                         if (!this.hosted) {
-                            handleMessage = _handleMessage.bind(this);
+                            handleMessage = _getHandleMessage(handler).bind(this);
                             this.removeListener = PostMessageUtilities.addEventListener(root, "message", handleMessage);
                         }
 
@@ -317,6 +268,57 @@
                     return false;
                 }
             }
+        }
+
+        /**
+         * Method for handling the initial handler binding for needed event listeners
+         * @param {Object} event - the event object on message
+         */
+        function _getHandleMessage(handler) {
+            return function _handleMessage(event) {
+                var handshake;
+                var previous;
+
+                if (event.ports && 0 < event.ports.length) {
+                    this.receiver = event.ports[0];
+
+                    if (_isHandshake.call(this, event)) {
+                        if (!this.token) {
+                            this.token = event.data;
+                        }
+                    }
+
+                    this.receiver.start();
+
+                    // Swap Listeners
+                    previous = this.removeListener.bind(this);
+                    this.removeListener = PostMessageUtilities.addEventListener(this.receiver, "message", handler);
+                    previous();
+
+                    if (this.hosted && !this.ready) {
+                        handshake = true;
+                    }
+                }
+                else {
+                    if (_isHandshake.call(this, event)) {
+                        if (!this.token) {
+                            this.token = event.data;
+                        }
+
+                        if (this.hosted && !this.ready) {
+                            handshake = true;
+                        }
+                    }
+                    else if (this.token) {
+                        this.receiver.receive.call(this.receiver, event);
+                    }
+                }
+
+                if (handshake) {
+                    this.receiver.postMessage(HANSHAKE_PREFIX + this.token);
+                    _onReady.call(this);
+                }
+            };
         }
 
         /**
