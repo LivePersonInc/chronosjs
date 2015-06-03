@@ -239,3 +239,7 @@ courier.request({
  6. When IFRAME is managed outside of PostMessageCourier (passed by reference to the constructor), a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the PostMessageCourier at the IFRAME side, had also been initialized with a valid targetOrigin option)
 
 [PostMessageCourier API Doc](docs/src/courier/PostMessageCourier.md)
+
+License
+---------
+MIT
