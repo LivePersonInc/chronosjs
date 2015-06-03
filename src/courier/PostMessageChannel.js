@@ -1,50 +1,27 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-    var define  = window.define;
+    root.Chronos = root.Chronos || {};
 
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessageChannel", ["exports", "Chronos.PostMessageUtilities", "Chronos.PostMessageChannelPolyfill"], function () {
-            if (!namespace.PostMessageChannel) {
-                factory(root, namespace, namespace.PostMessageUtilities, namespace.PostMessageChannelPolyfill);
+            if (!root.Chronos.PostMessageChannel) {
+                factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.PostMessageChannelPolyfill);
             }
 
-            return namespace.PostMessageChannel;
+            return root.Chronos.PostMessageChannel;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageChannel) {
-            factory(root, namespace, namespace.PostMessageUtilities, namespace.PostMessageChannelPolyfill);
-        }
-        //</lptag>
     }
     else if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
          * @depend ./PostMessageChannelPolyfill.js
          */
-        // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace, namespace.PostMessageUtilities, namespace.PostMessageChannelPolyfill);
+        factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.PostMessageChannelPolyfill);
     }
-}(this, function (root, exports, PostMessageUtilities, PostMessageChannelPolyfill) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities, PostMessageChannelPolyfill) {
     "use strict";
 
     /*jshint validthis:true */

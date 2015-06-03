@@ -1,39 +1,16 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-    var define = window.define;
-
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        namespace = getNamespace();
-
+        root.Chronos = root.Chronos || {};
         // AMD. Register as an anonymous module.
         define("Chronos.EventsUtil", ["exports"], function () {
-            if (!namespace.EventsUtil) {
-                factory(root, namespace);
+            if (!root.Chronos.EventsUtil) {
+                factory(root, root.Chronos);
             }
 
-            return namespace.EventsUtil;
+            return root.Chronos.EventsUtil;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.EventsUtil) {
-            factory(root, namespace);
-        }
-        //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
@@ -41,10 +18,10 @@
     }
     else {
         // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace);
+        root.Chronos = root.Chronos || {};
+        factory(root, root.Chronos);
     }
-}(this, function (root, exports) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
     "use strict";
 
     function getListeners(lstnrs, eventName, appName) {

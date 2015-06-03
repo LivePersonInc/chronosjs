@@ -3,17 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Courier Tests</title>
-    <script type="text/javascript">
-        window.lpTag = window.lpTag || {};
-    </script>
-    <script type="text/javascript" src="../dist/lpPostMessageCourier.js"></script>
+    <script type="text/javascript" src="../dist/PostMessageCourier.js"></script>
     <script type="text/javascript">
         var ignorePorts = ["80", "443", "0", ":"];
         var protocol = window.location.protocol + "//";
         var hostname = window.location.hostname === "localhost" ? "127.0.0.1" : "localhost";
         var port = (-1 === ignorePorts.indexOf(window.location.port.toString())) ? ":" + window.location.port.replace(":", "") : "";
         var target = {
-            url: protocol + hostname + port + "/lpEvents/debug/courier.frame.html",
+            url: protocol + hostname + port + "/chronosjs/debug/courier.frame.html",
             style: {
                 width: "100px",
                 height: "100px"
@@ -30,7 +27,7 @@
             }
         };
 
-        var lpcourierHead = new lpTag.channel.LPPostMessageCourier({
+        var courierHead = new Chronos.PostMessageCourier({
             target: target
         });
     </script>
@@ -96,35 +93,35 @@
         return frame;
     }
 
-    var lpchannel;
-    var lpcourier;
-    var lpcourier2;
+    var channel;
+    var courier;
+    var courier2;
     var frame = createIFrame({ target: target2 });
 
     function kickStart() {
-        lpchannel = new lpTag.channel.LPEventChannel();
-        lpcourier = new lpTag.channel.LPPostMessageCourier({
-            eventChannel: lpchannel,
+        channel = new Chronos.Channels();
+        courier = new Chronos.PostMessageCourier({
+            eventChannel: channel,
             target: frame,
             targetOrigin: protocol + hostname + port
         });
-        lpcourier2 = new lpTag.channel.LPPostMessageCourier({
+        courier2 = new Chronos.PostMessageCourier({
             target: target
         });
 
-        lpchannel.bind("iframe", "Ma Hmaztav?", function (data) {
+        channel.bind("iframe", "Ma Hmaztav?", function (data) {
             if (data && data.text) {
                 alert(data.text);
             }
             alert("SABABA!");
         });
-        lpcourier2.bind("iframe", "Ma Hmaztav?", function (data) {
+        courier2.bind("iframe", "Ma Hmaztav?", function (data) {
             if (data && data.text) {
                 alert(data.text);
             }
             alert("SABABA2!");
         });
-        lpcourier.bind({
+        courier.bind({
             appName: "iframe",
             eventName: "Ma Hmaztav?",
             aSync: true,
@@ -133,7 +130,7 @@
                 alert("BE-TABA!");
             }
         });
-        lpcourier.comply({
+        courier.comply({
             appName: "iframe",
             cmdName: "console",
             func: function (data) {
@@ -142,7 +139,7 @@
                 }
             }
         });
-        lpcourier.reply({
+        courier.reply({
             appName: "iframe",
             reqName: "Your Name?",
             func: function (data, callback) {
@@ -164,7 +161,7 @@
     var btnRequest = document.getElementById("SendRequest");
 
     btnEvent.onclick = function() {
-        lpcourier.trigger({
+        courier.trigger({
             appName: "host",
             eventName: "Ma Shlomha?",
             data: {
@@ -174,7 +171,7 @@
     };
 
     btnCommand.onclick = function() {
-        lpcourier.command({
+        courier.command({
             appName: "host",
             cmdName: "console",
             data: {
@@ -184,7 +181,7 @@
     };
 
     btnRequest.onclick = function() {
-        lpcourier.request({
+        courier.request({
             appName: "host",
             reqName: "Your Name?",
             data: {

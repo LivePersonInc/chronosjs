@@ -1,8 +1,6 @@
 (function () {
     require(["conf"], function (conf) {
 
-        window.lpTag = window.lpTag || {};
-
         require.config(conf.requireConfig);
 
         require([

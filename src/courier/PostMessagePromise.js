@@ -1,46 +1,23 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-    var define  = window.define;
+    root.Chronos = root.Chronos || {};
 
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessagePromise", ["exports"], function () {
-            if (!namespace.PostMessagePromise) {
-                factory(root, namespace);
+            if (!root.Chronos.PostMessagePromise) {
+                factory(root, root.Chronos);
             }
 
-            return namespace.PostMessagePromise;
+            return root.Chronos.PostMessagePromise;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessagePromise) {
-            factory(root, namespace);
-        }
-        //</lptag>
     }
     else if ("object" !== typeof exports) {
-        // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace);
+        factory(root, root.Chronos);
     }
-}(this, function (root, exports) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
     "use strict";
 
     /*jshint validthis:true */
@@ -53,7 +30,7 @@
     /**
      * PostMessagePromise constructor
      * @constructor
-     * @param {Function} [executor] - optional method to be invoked during initialization that will have
+     * @param {Function} [executer] - optional method to be invoked during initialization that will have
      *                   arguments of resolve and reject according to ES6 Promise A+ spec
      */
     function PostMessagePromise(executer) {
@@ -131,7 +108,7 @@
 
         /**
          * Method for calling all queued handlers with a specified type to complete the queue
-         * @param {LPPostMessagePromise.ACTION_TYPE} type - the type of handlers to invoke
+         * @param {PostMessagePromise.ACTION_TYPE} type - the type of handlers to invoke
          * @param {Object} [arg] - the arg to pass the handler handler
          * @param {Boolean} empty - a flag to indicate whether the queue should be empty after completion
          * @private
@@ -155,7 +132,7 @@
 
         /**
          * Method for completing the promise (resolve/reject)
-         * @param {LPPostMessagePromise.ACTION_TYPE} type - resolve/reject
+         * @param {PostMessagePromise.ACTION_TYPE} type - resolve/reject
          * @param {Object} [arg] - the data to pass the handler
          * @private
          */

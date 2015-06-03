@@ -1,49 +1,26 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-    var define  = window.define;
+    root.Chronos = root.Chronos || {};
 
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessageMapper", ["exports", "Chronos.PostMessageUtilities"], function () {
-            if (!namespace.PostMessageMapper) {
-                factory(root, namespace, namespace.PostMessageUtilities);
+            if (!root.Chronos.PostMessageMapper) {
+                factory(root, root.Chronos, root.Chronos.PostMessageUtilities);
             }
 
-            return namespace.PostMessageMapper;
+            return root.Chronos.PostMessageMapper;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageMapper) {
-            factory(root, namespace, namespace.PostMessageUtilities);
-        }
-        //</lptag>
     }
     else if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
          */
-        // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace, namespace.PostMessageUtilities);
+        factory(root, root.Chronos, root.Chronos.PostMessageUtilities);
     }
-}(this, function (root, exports, PostMessageUtilities) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities) {
     "use strict";
 
     /*jshint validthis:true */
@@ -51,7 +28,7 @@
     /**
      * PostMessageMapper constructor
      * @constructor
-     * @param {LPEventChannel} [eventChannel] - the event channel on which events/commands/requests will be bind/triggered (must implement the LPEventChannel API)
+     * @param {Channels} [eventChannel] - the event channel on which events/commands/requests will be bind/triggered (must implement the Channels API)
      */
     function PostMessageMapper(eventChannel) {
         // For forcing new keyword
@@ -65,7 +42,7 @@
     PostMessageMapper.prototype = (function () {
         /**
          * Method for initialization
-         * @param {LPPostMessageChannel} [eventChannel] - the event channel on which events/commands/requests will be bind/triggered (must implement the LPEventChannel API)
+         * @param {Channels} [eventChannel] - the event channel on which events/commands/requests will be bind/triggered (must implement the Channels API)
          */
         function initialize(eventChannel) {
             if (!this.initialized) {

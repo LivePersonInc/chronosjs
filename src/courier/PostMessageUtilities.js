@@ -1,46 +1,22 @@
 ;(function (root, factory) {
     "use strict";
-
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-    var define  = window.define;
+    root.Chronos = root.Chronos || {};
 
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        namespace = getNamespace();
 
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessageUtilities", ["exports"], function () {
-            if (!namespace.PostMessageUtilities) {
-                factory(root, namespace);
+            if (!root.Chronos.PostMessageUtilities) {
+                factory(root, root.Chronos);
             }
 
-            return namespace.PostMessageUtilities;
+            return root.Chronos.PostMessageUtilities;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.PostMessageUtilities) {
-            factory(root, namespace);
-        }
-        //</lptag>
     }
     else if ("object" !== typeof exports) {
-        // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace);
+        factory(root, root.Chronos);
     }
-}(this, function (root, exports) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
     "use strict";
 
     var SEQUENCE_FORMAT = "_xxxxxx-4xxx-yxxx";

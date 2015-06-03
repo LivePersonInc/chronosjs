@@ -1,40 +1,18 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-
-    var define = window.define;
-
     if ("function" === typeof define && define.amd) {
         // Browser globals
-        namespace = getNamespace();
+        root.Chronos = root.Chronos || {};
 
         // AMD. Register as an anonymous module.
         define("Chronos.CommandsUtil", ["exports", "Chronos.EventsUtil"], function () {
-            if (!namespace.CommandsUtil) {
-                factory(root, namespace, namespace.EventsUtil);
+            if (!root.Chronos.CommandsUtil) {
+                factory(root, root.Chronos, root.Chronos.EventsUtil);
             }
 
-            return namespace.CommandsUtil;
+            return root.Chronos.CommandsUtil;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.CommandsUtil) {
-            factory(root, namespace, namespace.EventsUtil);
-        }
-        //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
@@ -45,10 +23,10 @@
          * @depend ./EventsUtil.js
          */
             // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace, namespace.EventsUtil);
+        root.Chronos = root.Chronos || {};
+        factory(root, root.Chronos, root.Chronos.EventsUtil);
     }
-}(this, function (root, exports, evUtil) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil) {
     "use strict";
 
     /**

@@ -28,7 +28,7 @@ describe("PostMessageCourier Sanity Tests", function () {
             url: url,
             callback: function() {
 				initialized = true;
-                courierGlobal2 = new lpTag.channel.PostMessageCourier({
+                courierGlobal2 = new Chronos.PostMessageCourier({
                     target: target2,
                     channel: false
                 });
@@ -58,7 +58,7 @@ describe("PostMessageCourier Sanity Tests", function () {
             require(["Chronos.PostMessageCourier", "Chronos.PostMessageUtilities", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper", "lpCircuitBreaker"],
                 function(lpPostMessageCourier, lpPostMessageUtilities, lpPostMessagePromise, lpPostMessageMapper, lpCircuitBreaker) {
                 // Do not use new deliberately to test if component is adding it
-                courierGlobal = lpTag.channel.PostMessageCourier({
+                courierGlobal = Chronos.PostMessageCourier({
                     target: target,
                     channel: withChannel
                 });
@@ -68,17 +68,17 @@ describe("PostMessageCourier Sanity Tests", function () {
                 });
                 msgChannel = courierGlobal.getMessageChannel();
                 evChannel = courierGlobal.getEventChannel();
-                utils = lpTag.channel.PostMessageUtilities;
-                LPPromise = lpTag.channel.PostMessagePromise;
+                utils = Chronos.PostMessageUtilities;
+                LPPromise = Chronos.PostMessagePromise;
                 // Do not use new deliberately to test if component is adding it
-                msgMapper = lpTag.channel.PostMessageMapper();
-                circuit = lpTag.channel.LPCircuitBreaker(failFast);
+                msgMapper = Chronos.PostMessageMapper();
+                circuit = window.LPCircuitBreaker(failFast);
             });
         }
         else {
             // Do not use new deliberately to test if component is adding it
             require("../../src/courier/PostMessageCourier")(function() {
-                courierGlobal = lpTag.channel.PostMessageCourier({
+                courierGlobal = Chronos.PostMessageCourier({
                     target: target,
                     channel: withChannel
                 });
@@ -100,7 +100,7 @@ describe("PostMessageCourier Sanity Tests", function () {
         // create a sandbox
         sandbox = sinon.sandbox.create();
 
-        courierLocal = lpTag.channel.PostMessageCourier({
+        courierLocal = Chronos.PostMessageCourier({
             target: {
                 url: url,
                 bust: false
@@ -135,7 +135,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 target: {
                     url: url,
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(lpTag.channel.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
                         courierLocal2.dispose();
                         courierLocal2 = null;
                         done();
@@ -143,7 +143,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: withChannel
             };
-            courierLocal2 = lpTag.channel.PostMessageCourier(options);
+            courierLocal2 = Chronos.PostMessageCourier(options);
         });
     });
 
@@ -156,7 +156,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                     url: url,
                     container: container,
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(lpTag.channel.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
                         courierLocal2.dispose();
                         courierLocal2 = null;
                         done();
@@ -164,7 +164,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: withChannel
             };
-            courierLocal2 = lpTag.channel.PostMessageCourier(options);
+            courierLocal2 = Chronos.PostMessageCourier(options);
             document.body.appendChild(container);
         });
     });
@@ -178,7 +178,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                     url: url,
                     container: document.body.appendChild(container),
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(lpTag.channel.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
                         courierLocal2.dispose();
                         courierLocal2 = null;
                         done();
@@ -186,7 +186,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: withChannel
             };
-            courierLocal2 = lpTag.channel.PostMessageCourier(options);
+            courierLocal2 = Chronos.PostMessageCourier(options);
         });
     });
 
@@ -197,7 +197,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 target: {
                     url: url + "x",  // Invalid path
                     callback: function (err) {
-                        expect(courierLocal2).to.be.an.instanceof(lpTag.channel.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
                         expect(err.message).to.be.equal("Loading: Operation Timeout!");
                         courierLocal2.dispose();
                         courierLocal2 = null;
@@ -208,7 +208,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 handshakeInterval: 200,
                 handshakeAttempts: 2
             };
-            courierLocal2 = new lpTag.channel.PostMessageCourier(options);
+            courierLocal2 = new Chronos.PostMessageCourier(options);
         });
     });
 
@@ -221,16 +221,16 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 onready: {
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(lpTag.channel.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
                         kickStart();
                     }
                 },
                 useObjects: false,
-                serialize: lpTag.channel.PostMessageUtilities.stringify,
+                serialize: Chronos.PostMessageUtilities.stringify,
                 deserialize: JSON.parse,
                 channel: withChannel
             };
-            courierLocal2 = lpTag.channel.PostMessageCourier(options);
+            courierLocal2 = Chronos.PostMessageCourier(options);
 
             function kickStart() {
                 var original = [3];
@@ -297,7 +297,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: false
             };
-            var courierLocal2 = lpTag.channel.PostMessageCourier(options);
+            var courierLocal2 = Chronos.PostMessageCourier(options);
 
             courierLocal2.bind({
                 appName: "frame",
@@ -453,13 +453,13 @@ describe("PostMessageCourier Sanity Tests", function () {
                 target: {
                     url: url,
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(lpTag.channel.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
                         counting();
                     }
                 },
                 channel: withChannel
             };
-            courierLocal2 = new lpTag.channel.PostMessageCourier(options);
+            courierLocal2 = new Chronos.PostMessageCourier(options);
 
             var num = 1;
             courierLocal.bind({

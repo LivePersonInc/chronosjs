@@ -34,7 +34,7 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
         var target = {
             url: url + (0 < url.indexOf("?") ? "&" : "?") + "_d=" + buster++,
             callback: function() {
-                courierLocal = new lpTag.channel.PostMessageCourier({
+                courierLocal = new Chronos.PostMessageCourier({
                     target: frame,
                     targetOrigin: protocol + hostname + port,
                     channel: withChannel

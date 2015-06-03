@@ -3,22 +3,19 @@
 <head>
     <meta charset="utf-8">
     <title>Courier Tests</title>
-    <script type="text/javascript">
-        window.lpTag = window.lpTag || {};
-    </script>
-    <script type="text/javascript" src="../dist/lpPostMessageCourier.js"></script>
+    <script type="text/javascript" src="../dist/PostMessageCourier.js"></script>
     <script type="text/javascript">
         var host = (window === window.top);
         var ignorePorts = ["80", "443", "0", ":"];
         var protocol = window.location.protocol + "//";
         var hostname = window.location.hostname === "localhost" ? "127.0.0.1" : "localhost";
         var port = (-1 === ignorePorts.indexOf(window.location.port.toString())) ? ":" + window.location.port.replace(":", "") : "";
-        var lpchannel = new lpTag.channel.LPEventChannel();
+        var channel = new Chronos.Channels();
         var target;
 
         if (host) {
             target = {
-                url: protocol + hostname + port + "/lpEvents/debug/courier.html",
+                url: protocol + hostname + port + "/chronosjs/debug/courier.html",
                 style: {
                     width: "100px",
                     height: "100px"
@@ -26,8 +23,8 @@
             };
         }
 
-        var lpcourier = new lpTag.channel.LPPostMessageCourier({
-            eventChannel: lpchannel,
+        var lpcourier = new Chronos.PostMessageCourier({
+            eventChannel: channel,
             target: target
         });
     </script>

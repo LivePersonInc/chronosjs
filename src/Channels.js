@@ -4,39 +4,18 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-
-    var define  = window.define;
-
     if ("function" === typeof define && define.amd) {
         // Browser globals
-        namespace = getNamespace();
+        root.Chronos = root.Chronos || {};
 
         // AMD. Register as an anonymous module.
         define("Chronos.Channels", ["exports", "Chronos.Events", "Chronos.Commands", "Chronos.Reqres"], function () {
-            if (!namespace.Channels) {
-                factory(root, namespace, namespace.Events, namespace.Commands, namespace.ReqRes);
+            if (!root.Chronos.Channels) {
+                factory(root, root.Chronos, root.Chronos.Events, root.Chronos.Commands, root.Chronos.ReqRes);
             }
 
-            return namespace.Channels;
+            return root.Chronos.Channels;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.Channels) {
-            factory(root, namespace, namespace.Events, namespace.Commands, namespace.ReqRes);
-        }
-        //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
@@ -49,10 +28,10 @@
          * @depend ./Reqres.js
          */
         // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace, namespace.Events, namespace.Commands, namespace.ReqRes);
+        root.Chronos = root.Chronos || {};
+        factory(root, root.Chronos, root.Chronos.Events, root.Chronos.Commands, root.Chronos.ReqRes);
     }
-}(this, function (root, exports, Events, Commands, ReqRes) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, Events, Commands, ReqRes) {
     function Channels(options) {
 
         options = options || {};

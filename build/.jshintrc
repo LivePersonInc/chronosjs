@@ -16,6 +16,9 @@
         "module": true,
         "exports": true,
         "define": true,
-        "require": true
+        "require": true,
+        "ChronosRoot": true,
+        "CacherRoot": true,
+        "CircuitRoot": true
     }
 }

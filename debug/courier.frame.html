@@ -3,23 +3,20 @@
 <head>
     <meta charset="utf-8">
     <title>Courier Tests</title>
+    <script type="text/javascript" src="../dist/PostMessageCourier.js"></script>
     <script type="text/javascript">
-        window.lpTag = window.lpTag || {};
-    </script>
-    <script type="text/javascript" src="../dist/lpPostMessageCourier.js"></script>
-    <script type="text/javascript">
-        var lpchannel = new lpTag.channel.LPEventChannel();
-        var lpcourier = new lpTag.channel.LPPostMessageCourier({
-            eventChannel: lpchannel
+        var channel = new Chronos.Channels();
+        var courier = new Chronos.PostMessageCourier({
+            eventChannel: channel
         });
 
-        lpchannel.bind("host", "Ma Shlomha?", function(data) {
+        channel.bind("host", "Ma Shlomha?", function(data) {
             if (data && data.text) {
                 alert(data.text);
             }
             alert("HAKOL TOV!");
         });
-        lpcourier.bind({
+        courier.bind({
             appName: "host",
             eventName: "Ma Shlomha?",
             aSync: true,
@@ -28,7 +25,7 @@
                 alert("TODA!");
             }
         });
-        lpcourier.comply({
+        courier.comply({
             appName: "host",
             cmdName: "console",
             func: function(data) {
@@ -37,7 +34,7 @@
                 }
             }
         });
-        lpcourier.reply({
+        courier.reply({
             appName: "host",
             reqName: "Your Name?",
             func: function(data) {
@@ -64,7 +61,7 @@
     var btnRequest = document.getElementById("SendRequest");
 
     btnEvent.onclick = function() {
-        lpcourier.trigger({
+        courier.trigger({
             appName: "iframe",
             eventName: "Ma Hmaztav?",
             data: {
@@ -74,7 +71,7 @@
     };
 
     btnCommand.onclick = function() {
-        lpcourier.command({
+        courier.command({
             appName: "iframe",
             cmdName: "console",
             data: {
@@ -84,7 +81,7 @@
     };
 
     btnRequest.onclick = function() {
-        lpcourier.request({
+        courier.request({
             appName: "iframe",
             reqName: "Your Name?",
             data: {

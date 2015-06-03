@@ -1,40 +1,19 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        root.Chronos = root.Chronos || {};
-        return root.Chronos;
-    }
-
-    var define  = window.define;
 
     if ("function" === typeof define && define.amd) {
         // Browser globals
-        namespace = getNamespace();
+        root.Chronos = root.Chronos || {};
 
         // AMD. Register as an anonymous module.
         define("Chronos.Reqres", ["exports", "Chronos.EventsUtil", "Chronos.CommandsUtil"], function () {
-            if (!namespace.ReqRes) {
-                factory(root, namespace, namespace.EventsUtil, namespace.CommandsUtil);
+            if (!root.Chronos.ReqRes) {
+                factory(root, root.Chronos, root.Chronos.EventsUtil, root.Chronos.CommandsUtil);
             }
 
-            return namespace.ReqRes;
+            return root.Chronos.ReqRes;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.ReqRes) {
-            factory(root, namespace, namespace.EventsUtil, namespace.CommandsUtil);
-        }
-        //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
@@ -46,10 +25,10 @@
          * @depend ./util/CommandsUtil.js
          */
         // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace, namespace.EventsUtil, namespace.CommandsUtil);
+        root.Chronos = root.Chronos || {};
+        factory(root, root.Chronos, root.Chronos.EventsUtil, root.Chronos.CommandsUtil);
     }
-}(this, function (root, exports, evUtil, cmdUtil) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil, cmdUtil) {
     function ReqRes(defaults) {
         var appName = "ReqRes",
             attrName = "reqName",

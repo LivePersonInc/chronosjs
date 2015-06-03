@@ -20,45 +20,45 @@ Overview
 -------------
 
 This library provides an ability to develop event driven applications using the included submodules of events, commands and request/response.
-Together with lpCourier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication. An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues. Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
+Together with Courier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication. An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues. Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
 
 
-### LPEvents
+### Chronos.Events
 An events channel for binding and triggering events.
 Allows multiple listeners on a single event and wildcards (`"*"`) support.
 
-### LPCommands
+### Chronos.Commands
 A command mechanism for complying and commanding and API call.
 Allows a single comelier per command.
 Supports async commands with an options to call a callback when done.
 
-### LPReqRes
+### Chronos.ReqRes
 A request mechanism for replying and requesting and API call that returns a response.
 Allows a single replier per request.
 Supports async requests with an options to call a callback when done with a result.
 
-### LPEventChannel
+### Chronos.Channels
 A Channel which includes all communication means (events, commands, requests). Implements the same API's as all means it contains
 
-### LPPostMessageCourier
-A generic implementation of LPEventChannel over postMessage API.
-Allows communication between cross domain IFRAMES "sharing" LPEventChannel.
+### Chronos.PostMessageCourier
+A generic implementation of Channels over postMessage API.
+Allows communication between cross domain IFRAMES "sharing" Channels.
 
 ### Package Contents
 The package holds a few artifacts:
-- lpEvents.js: The events channel
-- lpCommands.js: The commands channel
-- lpReqres.js: The request/response channel
-- lpEventChannel.js: Combination of all 3 channel options
-- lpPostMessageCourierNoDep.js: Channel transport over postmessage
-- lpPostMessageCourier.js: Combination of all 3 channel options with channel transport over postmessage
+- Events.js: The events channel
+- Commands.js: The commands channel
+- Reqres.js: The request/response channel
+- Channels.js: Combination of all 3 channel options
+- PostMessageCourierNoDep.js: Channel transport over postmessage
+- PostMessageCourier.js: Combination of all 3 channel options with channel transport over postmessage
 
 Usage examples
 ---------------
 
-### LPEvents
+### Events
 ```javascript
-var events = new lpTag.channel.LPEvents();
+var events = new Chronos.Events();
 
 //Listen on the event only once
 events.once({
@@ -94,9 +94,9 @@ events.hasFired("Your App Name", "Your Event Name");
 
 There is an option to pass `"*"` as event name and `"*"` as app name on all APIs which is an ALL indicator.
 
-### LPCommands
+### Commands
 ```javascript
-var commands = new lpTag.channel.LPCommands();
+var commands = new Chronos.Commands();
 
 function _yourCommandExecution(data, cb) {
     //Do something async with data and call cb when done.
@@ -135,9 +135,9 @@ commands.hasFired("Your App Name", "Your Command Name");
 
 The callback on the command is optional.
 
-### LPReqRes
+### ReqRes
 ```javascript
-var reqres = new lpTag.channel.LPReqRes();
+var reqres = new Chronos.ReqRes();
 
 function _yourRequestExecution(data, cb) {
     //Do something async with data and call cb when done.
@@ -177,10 +177,10 @@ reqres.hasFired("Your App Name", "Your Request Name");
 
 The callback on the request is optional.
 
-### LPPostMessageCourier
+### PostMessageCourier
 ```javascript
 // Initialize a new Courier
-var courier = lpTag.channel.LPPostMessageCourier({
+var courier = Chronos.PostMessageCourier({
     target: {
         url: "http://www.crossdomain.com/"
     }
@@ -234,8 +234,8 @@ courier.request({
 ####LIMITATIONS
  1. Only supports browsers which implements postMessage API and have native JSON implementation (IE8+, Chrome, FF, Safari, Opera, IOS, Opera Mini, Android)
  2. IE9-, FF & Opera Mini does not support MessageChannel and therefore we fallback to using basic postMessage. This makes the communication opened to any handler registered for messages on the same origin.
- 4. All passDataByRef flags (in LPEventChannel) are obviously ignored
- 5. In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to LPPostMessageCourier, All data is serialized using JSON.stringify/JSON.parse which means that Object data is limited to JSON which supports types like: strings, numbers, null, arrays, and objects (and does not allow circular references). Trying to serialize other types, will result in conversion to null (like Infinity or NaN) or to a string (Dates), that must be manually deserialized on the other side
- 6. When IFRAME is managed outside of LPPostMessageCourier (passed by reference to the constructor), a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the LPPostMessageCourier at the IFRAME side, had also been initialized with a valid targetOrigin option)
+ 4. All passDataByRef flags (in Channels) are obviously ignored
+ 5. In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to PostMessageCourier, All data is serialized using JSON.stringify/JSON.parse which means that Object data is limited to JSON which supports types like: strings, numbers, null, arrays, and objects (and does not allow circular references). Trying to serialize other types, will result in conversion to null (like Infinity or NaN) or to a string (Dates), that must be manually deserialized on the other side
+ 6. When IFRAME is managed outside of PostMessageCourier (passed by reference to the constructor), a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the PostMessageCourier at the IFRAME side, had also been initialized with a valid targetOrigin option)
 
-[LPPostMessageCourier API Doc](docs/src/courier/lpPostMessageCourier.md)
+[PostMessageCourier API Doc](docs/src/courier/PostMessageCourier.md)

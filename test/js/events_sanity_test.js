@@ -12,7 +12,7 @@ describe('Events Sanity Tests', function () {
         }
     });
     beforeEach('Init Events', function (done) {
-        events = new lpTag.channel.Events();
+        events = new Chronos.Events();
         done();
     });
 
@@ -219,7 +219,7 @@ describe('Events Sanity Tests', function () {
 
             expect(events.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var events2 = new lpTag.channel.Events();
+            var events2 = new Chronos.Events();
             expect(events.hasFired('app1', 'ev1').length).to.equal(1);
         });
 
@@ -311,7 +311,7 @@ describe('Events Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var events2 = new lpTag.channel.Events({
+            var events2 = new Chronos.Events({
                 eventBufferLimit: 1
             });
             events2.bind({
@@ -338,7 +338,7 @@ describe('Events Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var events2 = new lpTag.channel.Events({
+            var events2 = new Chronos.Events({
                 cloneEventData: true
             });
             events2.bind({

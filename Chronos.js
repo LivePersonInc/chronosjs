@@ -1,7 +1,7 @@
-var Events = require("./src/lpEvents");
-var ReqRes = require("./src/lpReqres");
-var Commands = require("./src/lpCommands");
-var Channels = require("./src/lpEventChannel");
+var Events = require("./src/Events");
+var ReqRes = require("./src/Reqres");
+var Commands = require("./src/Commands");
+var Channels = require("./src/Channels");
 
 module.exports = {
     Events: Events,

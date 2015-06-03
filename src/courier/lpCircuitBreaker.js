@@ -1,47 +1,22 @@
 ;(function (root, factory) {
     "use strict";
 
-    var namespace;
-
-    function getNamespace() {
-        //<lptag>
-        if (root.lpTag) {
-            root.lpTag.channel = root.lpTag.channel || {};
-
-            return root.lpTag.channel;
-        }
-        //</lptag>
-        return root;
-    }
-    var define  = window.define;
-
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        namespace = getNamespace();
-
         // AMD. Register as an anonymous module.
         define("lpCircuitBreaker", ["exports"], function () {
-            if (!namespace.LPCircuitBreaker) {
-                factory(root, namespace);
+            if (!root.LPCircuitBreaker) {
+                factory(root, root);
             }
 
-            return namespace.LPCircuitBreaker;
+            return root.LPCircuitBreaker;
         });
-
-        //<lptag>
-        if (root.lpTag && root.lpTag.taglets && !namespace.LPCircuitBreaker) {
-            factory(root, namespace);
-        }
-        //</lptag>
     }
     else if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports);
     }
     else {
-        // Browser globals
-        namespace = getNamespace();
-        factory(root, namespace);
+        factory(root, root);
     }
 }(this, function (root, exports) {
     "use strict";

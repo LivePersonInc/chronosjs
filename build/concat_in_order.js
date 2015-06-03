@@ -21,11 +21,11 @@ module.exports = function (grunt, options) {
                 onlyConcatRequiredFiles: true
             },
             "files": {
-                "dist/lpEvents.js": ["src/lpEvents.js"],
-                "dist/lpCommands.js": ["src/lpCommands.js"],
-                "dist/lpReqres.js": ["src/lpReqres.js"],
-                "dist/lpEventChannel.js": ["src/lpEventChannel.js"],
-                "dist/lpPostMessageCourier.js": ["src/courier/lpPostMessageCourier.js"]
+                "dist/Events.js": ["src/Events.js"],
+                "dist/Commands.js": ["src/Commands.js"],
+                "dist/Reqres.js": ["src/Reqres.js"],
+                "dist/Channels.js": ["src/Channels.js"],
+                "dist/PostMessageCourier.js": ["src/courier/PostMessageCourier.js"]
             }
         }
     };

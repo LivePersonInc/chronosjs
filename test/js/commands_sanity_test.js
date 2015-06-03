@@ -12,7 +12,7 @@ describe('Commands Sanity Tests', function () {
         }
     });
     beforeEach('Init ReqRes', function (done) {
-        commands = new lpTag.channel.Commands();
+        commands = new Chronos.Commands();
         done();
     });
 
@@ -178,7 +178,7 @@ describe('Commands Sanity Tests', function () {
 
             expect(commands.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var commands2 = new lpTag.channel.Commands();
+            var commands2 = new Chronos.Commands();
             expect(commands.hasFired('app1', 'ev1').length).to.equal(1);
         });
 
@@ -214,7 +214,7 @@ describe('Commands Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var commands2 = new lpTag.channel.Commands({
+            var commands2 = new Chronos.Commands({
                 eventBufferLimit: 1
             });
             commands2.comply({
@@ -240,7 +240,7 @@ describe('Commands Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var commands2 = new lpTag.channel.Commands({
+            var commands2 = new Chronos.Commands({
                 cloneEventData: true
             });
             commands2.comply({

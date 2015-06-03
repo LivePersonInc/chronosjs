@@ -12,7 +12,7 @@ describe('ReqRes Sanity Tests', function () {
         }
     });
     beforeEach('Init ReqRes', function (done) {
-        reqres = new lpTag.channel.ReqRes();
+        reqres = new Chronos.ReqRes();
         done();
     });
 
@@ -180,7 +180,7 @@ describe('ReqRes Sanity Tests', function () {
 
             expect(reqres.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var reqres2 = new lpTag.channel.ReqRes();
+            var reqres2 = new Chronos.ReqRes();
             expect(reqres.hasFired('app1', 'ev1').length).to.equal(1);
         });
     });
@@ -215,7 +215,7 @@ describe('ReqRes Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var reqres2 = new lpTag.channel.ReqRes({
+            var reqres2 = new Chronos.ReqRes({
                 eventBufferLimit: 1
             });
             reqres2.reply({
@@ -241,7 +241,7 @@ describe('ReqRes Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var reqres2 = new lpTag.channel.ReqRes({
+            var reqres2 = new Chronos.ReqRes({
                 cloneEventData: true
             });
             reqres2.reply({

@@ -1,7 +1,7 @@
 {
     "courier": {
-        "src": ["src/courier/lpPostMessageUtilities.js", "src/courier/lpPostMessagePromise.js", "src/courier/lpPostMessageMapper.js",
-            "src/courier/lpPostMessageChannelPolyfill.js", "src/courier/lpPostMessageChannel.js", "src/courier/lpPostMessageCourier.js"],
-        "dest": "dist/lpPostMessageCourierNoDep.js"
+        "src": ["src/courier/PostMessageUtilities.js", "src/courier/PostMessagePromise.js", "src/courier/PostMessageMapper.js",
+            "src/courier/PostMessageChannelPolyfill.js", "src/courier/PostMessageChannel.js", "src/courier/PostMessageCourier.js"],
+        "dest": "dist/PostMessageCourierNoDep.js"
     }
 }
