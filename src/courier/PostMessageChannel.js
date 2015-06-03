@@ -99,7 +99,6 @@
         function initialize(options, onmessage) {
             var handleMessage;
             var handler;
-            var initiated;
 
             if (!this.initialized) {
                 this.hosted = false;
@@ -107,13 +106,6 @@
 
                 options = options || {};
                 handler = _initParameters.call(this, options, onmessage);
-                if (!_isNativeMessageChannelSupported.call(this)) {
-                    this.receiver = new PostMessageChannelPolyfill(this.target, {
-                        serialize: this.serialize,
-                        deserialize: this.deserialize
-                    });
-                    this.receiver.onmessage = handler;
-                }
 
                 if (this.hosted || !_isNativeMessageChannelSupported.call(this)) {
                     handleMessage = _getHandleMessage(handler).bind(this);
@@ -124,38 +116,7 @@
                 }
 
                 if (this.target && !this.loading && !this.ready) {
-                    try {
-                        initiated = _handshake.call(this);
-                    }
-                    catch(ex) {
-                        initiated = false;
-                    }
-
-                    if (!initiated) {
-                        // Fallback to pure postMessage
-                        this.channel = false;
-                        this.receiver = new PostMessageChannelPolyfill(this.target, {
-                            serialize: this.serialize,
-                            deserialize: this.deserialize
-                        });
-                        this.receiver.onmessage = handler;
-
-                        if (!this.hosted) {
-                            handleMessage = _getHandleMessage(handler).bind(this);
-                            this.removeListener = PostMessageUtilities.addEventListener(root, "message", handleMessage);
-                        }
-
-                        _handshake.call(this);
-                    }
-
-                    this.handshakeAttempts--;
-
-                    PostMessageUtilities.delay(function() {
-                        if (!this.hosted && !this.ready) {
-                            _addLoadHandler.call(this, this.target);
-                            this.timer = PostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
-                        }
-                    }.bind(this));
+                    _kickStartHandshake.call(this, handler, handleMessage);
                 }
 
                 this.initialized = true;
@@ -231,6 +192,41 @@
             }
         }
 
+        function _kickStartHandshake(handler, handleMessage) {
+            var initiated;
+            try {
+                initiated = _handshake.call(this);
+            }
+            catch (ex) {
+                initiated = false;
+            }
+
+            if (!initiated) {
+                // Fallback to pure postMessage
+                this.channel = false;
+                this.receiver = new PostMessageChannelPolyfill(this.target, {
+                    serialize: this.serialize,
+                    deserialize: this.deserialize
+                });
+                this.receiver.onmessage = handler;
+
+                if (!this.hosted) {
+                    handleMessage = _getHandleMessage(handler).bind(this);
+                    this.removeListener = PostMessageUtilities.addEventListener(root, "message", handleMessage);
+                }
+
+                _handshake.call(this);
+            }
+
+            this.handshakeAttempts--;
+
+            PostMessageUtilities.delay(function () {
+                if (!this.hosted && !this.ready) {
+                    _addLoadHandler.call(this, this.target);
+                    this.timer = PostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
+                }
+            }.bind(this));
+        }
         function _initParameters(options, onmessage) {
             var handler;
             _simpleParametersInit.call(this, options);
@@ -259,6 +255,13 @@
                 this.loading = true;
                 this.targetContainer = options.target.container || document.body;
                 this.target = _createIFrame.call(this, options.target, this.targetContainer);
+            }
+            if (!_isNativeMessageChannelSupported.call(this)) {
+                this.receiver = new PostMessageChannelPolyfill(this.target, {
+                    serialize: this.serialize,
+                    deserialize: this.deserialize
+                });
+                this.receiver.onmessage = handler;
             }
             return handler;
         }
