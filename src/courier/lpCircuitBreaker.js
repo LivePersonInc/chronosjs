@@ -18,7 +18,7 @@
     else {
         factory(root, root);
     }
-}(this, function (root, exports) {
+}(typeof CircuitRoot === "undefined" ? this : CircuitRoot, function (root, exports) {
     "use strict";
 
     /*jshint validthis:true */
