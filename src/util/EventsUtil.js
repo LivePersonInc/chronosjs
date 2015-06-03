@@ -46,8 +46,8 @@
     }
 
     function log(msg, level, app) {
-        if (root.lpTag && "function" === typeof root.lpTag.log) {
-            root.lpTag.log(msg, level, app);
+        if (root && "function" === typeof root.log) {
+            root.log(msg, level, app);
         }
     }
 
