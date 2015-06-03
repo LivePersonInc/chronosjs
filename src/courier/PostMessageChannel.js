@@ -106,6 +106,13 @@
 
                 options = options || {};
                 handler = _initParameters.call(this, options, onmessage);
+                if (!_isNativeMessageChannelSupported.call(this)) {
+                    this.receiver = new PostMessageChannelPolyfill(this.target, {
+                        serialize: this.serialize,
+                        deserialize: this.deserialize
+                    });
+                    this.receiver.onmessage = handler;
+                }
 
                 if (this.hosted || !_isNativeMessageChannelSupported.call(this)) {
                     handleMessage = _getHandleMessage(handler).bind(this);
@@ -255,13 +262,6 @@
                 this.loading = true;
                 this.targetContainer = options.target.container || document.body;
                 this.target = _createIFrame.call(this, options.target, this.targetContainer);
-            }
-            if (!_isNativeMessageChannelSupported.call(this)) {
-                this.receiver = new PostMessageChannelPolyfill(this.target, {
-                    serialize: this.serialize,
-                    deserialize: this.deserialize
-                });
-                this.receiver.onmessage = handler;
             }
             return handler;
         }
