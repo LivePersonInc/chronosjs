@@ -106,46 +106,7 @@
                 this.messageQueue = [];
 
                 options = options || {};
-
-                this.serialize = PostMessageUtilities.parseFunction(options.serialize, PostMessageUtilities.stringify);
-                this.deserialize = PostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
-                this.targetOrigin = options.targetOrigin;
-                this.maxConcurrency = PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
-                this.handshakeInterval = PostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
-                this.handshakeAttempts = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
-                this.hostParam = options.hostParam;
-                this.channel = "undefined" !== typeof options.channel ? options.channel : _getChannelUrlIndicator();
-                this.useObjects = options.useObjects;
-                this.onready = _wrapReadyCallback(options.onready, options.target).bind(this);
-                this.removeDispose = options.removeDispose;
-
-                handler = _wrapMessageHandler(onmessage).bind(this);
-
-                this.channelFactory = _hookupMessageChannel.call(this, handler);
-
-                // No Iframe - We are inside it (hosted) initialized by the host/container
-                if (!options.target || (options.target !== root || options.target === root.top) && "undefined" !== typeof Window && options.target instanceof Window) {
-                    this.hosted = true;
-                    this.target = options.target || root.top;
-                }
-                else if (options.target.contentWindow) { // We've got a reference to an "external" iframe
-                    this.target = options.target;
-                }
-                else if (options.target.url) { // We've got the needed configuration for creating an iframe
-                    this.targetUrl = options.target.url;
-                    this.targetOrigin = this.targetOrigin || PostMessageUtilities.getHost(options.target.url);
-                }
-
-                if (!this.hosted) {
-                    this.token = PostMessageUtilities.createUniqueSequence(TOKEN_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
-                }
-
-                if (this.targetUrl) { // We've got the needed configuration for creating an iframe
-                    this.loading = true;
-                    this.targetContainer = options.target.container || document.body;
-                    this.target = _createIFrame.call(this, options.target, this.targetContainer);
-                }
-
+                handler = _initParameters.call(this, options, onmessage);
                 if (!_isNativeMessageChannelSupported.call(this)) {
                     this.receiver = new PostMessageChannelPolyfill(this.target, {
                         serialize: this.serialize,
@@ -268,6 +229,50 @@
                     return false;
                 }
             }
+        }
+
+        function _initParameters(options, onmessage) {
+            var handler;
+
+            this.serialize = PostMessageUtilities.parseFunction(options.serialize, PostMessageUtilities.stringify);
+            this.deserialize = PostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
+            this.targetOrigin = options.targetOrigin;
+            this.maxConcurrency = PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
+            this.handshakeInterval = PostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
+            this.handshakeAttempts = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
+            this.hostParam = options.hostParam;
+            this.channel = "undefined" !== typeof options.channel ? options.channel : _getChannelUrlIndicator();
+            this.useObjects = options.useObjects;
+            this.onready = _wrapReadyCallback(options.onready, options.target).bind(this);
+            this.removeDispose = options.removeDispose;
+
+            handler = _wrapMessageHandler(onmessage).bind(this);
+
+            this.channelFactory = _hookupMessageChannel.call(this, handler);
+
+            // No Iframe - We are inside it (hosted) initialized by the host/container
+            if (!options.target || (options.target !== root || options.target === root.top) && "undefined" !== typeof Window && options.target instanceof Window) {
+                this.hosted = true;
+                this.target = options.target || root.top;
+            }
+            else if (options.target.contentWindow) { // We've got a reference to an "external" iframe
+                this.target = options.target;
+            }
+            else if (options.target.url) { // We've got the needed configuration for creating an iframe
+                this.targetUrl = options.target.url;
+                this.targetOrigin = this.targetOrigin || PostMessageUtilities.getHost(options.target.url);
+            }
+
+            if (!this.hosted) {
+                this.token = PostMessageUtilities.createUniqueSequence(TOKEN_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
+            }
+
+            if (this.targetUrl) { // We've got the needed configuration for creating an iframe
+                this.loading = true;
+                this.targetContainer = options.target.container || document.body;
+                this.target = _createIFrame.call(this, options.target, this.targetContainer);
+            }
+            return handler;
         }
 
         /**
