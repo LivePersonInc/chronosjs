@@ -1,22 +1,22 @@
-;(function (root, factory) {
+;(function (root, chronosRoot, factory) {
     "use strict";
-    root.Chronos = root.Chronos || {};
+    chronosRoot.Chronos = chronosRoot.Chronos || {};
 
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessageUtilities", ["exports"], function () {
-            if (!root.Chronos.PostMessageUtilities) {
-                factory(root, root.Chronos);
+            if (!chronosRoot.Chronos.PostMessageUtilities) {
+                factory(root, chronosRoot.Chronos);
             }
 
-            return root.Chronos.PostMessageUtilities;
+            return chronosRoot.Chronos.PostMessageUtilities;
         });
     }
     else if ("object" !== typeof exports) {
-        factory(root, root.Chronos);
+        factory(root, chronosRoot.Chronos);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
+}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
     "use strict";
 
     var SEQUENCE_FORMAT = "_xxxxxx-4xxx-yxxx";

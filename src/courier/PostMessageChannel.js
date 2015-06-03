@@ -1,17 +1,17 @@
-;(function (root, factory) {
+;(function (root, chronosRoot, factory) {
     "use strict";
 
-    root.Chronos = root.Chronos || {};
+    chronosRoot.Chronos = chronosRoot.Chronos || {};
 
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessageChannel", ["exports", "Chronos.PostMessageUtilities", "Chronos.PostMessageChannelPolyfill"], function () {
-            if (!root.Chronos.PostMessageChannel) {
-                factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.PostMessageChannelPolyfill);
+            if (!chronosRoot.Chronos.PostMessageChannel) {
+                factory(root, chronosRoot.Chronos, chronosRoot.Chronos.PostMessageUtilities, chronosRoot.Chronos.PostMessageChannelPolyfill);
             }
 
-            return root.Chronos.PostMessageChannel;
+            return chronosRoot.Chronos.PostMessageChannel;
         });
     }
     else if ("object" !== typeof exports) {
@@ -19,9 +19,9 @@
          * @depend ./PostMessageUtilities.js
          * @depend ./PostMessageChannelPolyfill.js
          */
-        factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.PostMessageChannelPolyfill);
+        factory(root, chronosRoot.Chronos, chronosRoot.Chronos.PostMessageUtilities, chronosRoot.Chronos.PostMessageChannelPolyfill);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities, PostMessageChannelPolyfill) {
+}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities, PostMessageChannelPolyfill) {
     "use strict";
 
     /*jshint validthis:true */
