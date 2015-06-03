@@ -233,19 +233,7 @@
 
         function _initParameters(options, onmessage) {
             var handler;
-
-            this.serialize = PostMessageUtilities.parseFunction(options.serialize, PostMessageUtilities.stringify);
-            this.deserialize = PostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
-            this.targetOrigin = options.targetOrigin;
-            this.maxConcurrency = PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
-            this.handshakeInterval = PostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
-            this.handshakeAttempts = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
-            this.hostParam = options.hostParam;
-            this.channel = "undefined" !== typeof options.channel ? options.channel : _getChannelUrlIndicator();
-            this.useObjects = options.useObjects;
-            this.onready = _wrapReadyCallback(options.onready, options.target).bind(this);
-            this.removeDispose = options.removeDispose;
-
+            _simpleParametersInit.call(this, options);
             handler = _wrapMessageHandler(onmessage).bind(this);
 
             this.channelFactory = _hookupMessageChannel.call(this, handler);
@@ -273,6 +261,20 @@
                 this.target = _createIFrame.call(this, options.target, this.targetContainer);
             }
             return handler;
+        }
+
+        function _simpleParametersInit(options) {
+            this.serialize = PostMessageUtilities.parseFunction(options.serialize, PostMessageUtilities.stringify);
+            this.deserialize = PostMessageUtilities.parseFunction(options.deserialize, JSON.parse);
+            this.targetOrigin = options.targetOrigin;
+            this.maxConcurrency = PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
+            this.handshakeInterval = PostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
+            this.handshakeAttempts = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
+            this.hostParam = options.hostParam;
+            this.channel = "undefined" !== typeof options.channel ? options.channel : _getChannelUrlIndicator();
+            this.useObjects = options.useObjects;
+            this.onready = _wrapReadyCallback(options.onready, options.target).bind(this);
+            this.removeDispose = options.removeDispose;
         }
 
         /**
