@@ -234,6 +234,7 @@
                 }
             }.bind(this));
         }
+
         function _initParameters(options, onmessage) {
             var handler;
             _simpleParametersInit.call(this, options);
