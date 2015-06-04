@@ -1,3 +1,4 @@
+![chronosjs](https://cloud.githubusercontent.com/assets/5138735/7985842/785e3ef4-0adc-11e5-9a13-383d4c462949.png)
 chronosjs
 ========
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
