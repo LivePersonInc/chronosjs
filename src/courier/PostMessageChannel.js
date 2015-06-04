@@ -2,7 +2,7 @@
     "use strict";
 
     chronosRoot.Chronos = chronosRoot.Chronos || {};
-
+    //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
@@ -13,8 +13,10 @@
 
             return chronosRoot.Chronos.PostMessageChannel;
         });
+        return;
     }
-    else if ("object" !== typeof exports) {
+    //</amd>
+    if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
          * @depend ./PostMessageChannelPolyfill.js

@@ -18,7 +18,7 @@
     "use strict";
 
     root.Chronos = root.Chronos || {};
-
+    //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
@@ -31,7 +31,9 @@
 
             return root.Chronos.PostMessageCourier;
         });
+        return;
     }
+    //</amd>
     /**
      * @depend ../Channels.js
      * @depend ./lpCircuitBreaker.js
@@ -41,7 +43,7 @@
      * @depend ./PostMessagePromise.js
      * @depend ./PostMessageMapper.js
      */
-    else if ("object" !== typeof exports) {
+    if ("object" !== typeof exports) {
         factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.Channels,
             cacherRoot.Cacher,  circuitRoot.LPCircuitBreaker,
             root.Chronos.PostMessageChannel, root.Chronos.PostMessagePromise, root.Chronos.PostMessageMapper);

@@ -1,7 +1,7 @@
 ;(function (root, factory) {
     "use strict";
 
-
+    //<amd>
     if ("function" === typeof define && define.amd) {
         // Browser globals
         root.Chronos = root.Chronos || {};
@@ -14,8 +14,10 @@
 
             return root.Chronos.ReqRes;
         });
+        return;
     }
-    else if ("object" === typeof exports) {
+    //</amd>
+    if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports, require("util/EventsUtil"), require("util/CommandsUtil"));
     }

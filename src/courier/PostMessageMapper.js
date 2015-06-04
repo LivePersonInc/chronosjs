@@ -3,6 +3,7 @@
 
     root.Chronos = root.Chronos || {};
 
+    //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
@@ -13,8 +14,10 @@
 
             return root.Chronos.PostMessageMapper;
         });
+        return;
     }
-    else if ("object" !== typeof exports) {
+    //</amd>
+    if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
          */

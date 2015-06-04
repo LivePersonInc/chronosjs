@@ -1,7 +1,7 @@
 ;(function (root, chronosRoot, factory) {
     "use strict";
     chronosRoot.Chronos = chronosRoot.Chronos || {};
-
+    //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
@@ -12,8 +12,10 @@
 
             return chronosRoot.Chronos.PostMessageUtilities;
         });
+        return;
     }
-    else if ("object" !== typeof exports) {
+    //</amd>
+    if ("object" !== typeof exports) {
         factory(root, chronosRoot.Chronos);
     }
 }(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {

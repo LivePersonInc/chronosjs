@@ -1,6 +1,6 @@
 ;(function (root, factory) {
     "use strict";
-
+    //<amd>
     if ("function" === typeof define && define.amd) {
         // AMD. Register as an anonymous module.
         define("lpCircuitBreaker", ["exports"], function () {
@@ -10,8 +10,10 @@
 
             return root.LPCircuitBreaker;
         });
+        return;
     }
-    else if ("object" === typeof exports) {
+    //</amd>
+    if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports);
     }

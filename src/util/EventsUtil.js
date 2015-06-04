@@ -1,6 +1,6 @@
 ;(function (root, factory) {
     "use strict";
-
+    //<amd>
     if ("function" === typeof define && define.amd) {
         root.Chronos = root.Chronos || {};
         // AMD. Register as an anonymous module.
@@ -11,8 +11,10 @@
 
             return root.Chronos.EventsUtil;
         });
+        return;
     }
-    else if ("object" === typeof exports) {
+    //</amd>
+    if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports);
     }
