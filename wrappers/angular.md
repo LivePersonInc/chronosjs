@@ -1,24 +1,32 @@
-Include the lp-events js file in your main html.
+Include the chronosjs js file in your main html.
 
 ```html
-<script type="text/javascript" src="/node_modules/dist/lpPostMessageCourier.js"></script>
+<script type="text/javascript" src="/node_modules/dist/PostMessageCourier.js"></script>
+```
+Channels is already provided with the [ngChronos module](/ngChronos.js), you can use it by adding:
+```html
+<script type="text/javascript" src="/node_modules/wrappers/ngChronos.js"></script>
+```
+And skip to adding Chronos dependency to your app
+
+Create a module and add a factory to it with the following code:
+```javascript
+var module = angular.module('Chronos', []);
 ```
 
-Add a factory to your module/app with the following code
-
-### LPEventChannel
+### Channels
 ```javascript
-module.factory('lpEventChannel', function ($window) {
-    var channels = new $window.LPEventChannel();
+module.factory('Chronos.Channels', function ($window) {
+    var channels = new $window.Chronos.Channels();
 
     return channels;
 });
 ```
 
-### LPPostMessageCourier
+### PostMessageCourier
 ```javascript
-module.factory('lpPostMessageCourier', function ($window) {
-    var postMessageCourier = new $window.LPPostMessageCourier({
+module.factory('Chronos.PostMessageCourier', function ($window) {
+    var postMessageCourier = new $window.Chronos.PostMessageCourier({
         //YOUR configuration here
     });
 
@@ -26,10 +34,17 @@ module.factory('lpPostMessageCourier', function ($window) {
 });
 ```
 
+In you app.js add the Chronos dependency:
+```javascript
+angular.module('myApp', [
+    'Chronos',
+])
+```
+
 In your controller:
 
 ```javascript
-module.controller('lpEventChannel', 'lpPostMessageCourier', function (lpEventChannel, lpPostMessageCourier) {
+module.controller('Chronos.Channels', 'Chronos.PostMessageCourier', function (channels, postMessageCourier) {
     //Your controller
 });
 ```

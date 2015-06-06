@@ -1,22 +1,22 @@
 Include the lp-events js file in your main html.
 
 ```html
-<script type="text/javascript" src="/node_modules/dist/lpPostMessageCourier.js"></script>
+<script type="text/javascript" src="/node_modules/dist/PostMessageCourier.js"></script>
 ```
 
 Add a controller to your module/app with the following code
 
-### LPEventChannel
+### Channels
 ```javascript
 var App = Ember.Application.create();
-App.LPEventChannelController = Ember.Controller.extend(new window.LPEventChannel());
+App.ChronosChannelsController = Ember.Controller.extend(new window.Chronos.Channels());
 ```
 
-### LPPostMessageCourier
+### PostMessageCourier
 ```javascript
 var App = Ember.Application.create();
-App.LPPostMessageCourierController = Ember.Controller.extend(
-    new window.LPPostMessageCourier({
+App.ChronosPostMessageCourierController = Ember.Controller.extend(
+    new window.Chronos.PostMessageCourier({
     //YOUR configuration here
     }
 );
@@ -25,13 +25,13 @@ App.LPPostMessageCourierController = Ember.Controller.extend(
 In your controller:
 
 ```javascript
-App.MyController('lpEventChannel', 'lpPostMessageCourier', function (lpEventChannel, lpPostMessageCourier) {
+App.MyController('ChronosChannelsController', 'ChronosPostMessageCourierController', function (channels, postMessageCourier) {
     //Your controller
 });
 App.MyController = Ember.Controller.extend({
-    needs: ['lPEventChannel', 'lPPostMessageCourier'],
+    needs: ['ChronosChannelsController', 'ChronosPostMessageCourierController'],
     someFunc: function(src){
-        this.get('controllers.lPEventChannel').bind({/*whatever*/})
+        this.get('controllers.ChronosChannelsController').bind({/*whatever*/})
     }
 });
 ```
