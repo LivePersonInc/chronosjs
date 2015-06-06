@@ -238,6 +238,10 @@ courier.request({
  5. In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to PostMessageCourier, All data is serialized using JSON.stringify/JSON.parse which means that Object data is limited to JSON which supports types like: strings, numbers, null, arrays, and objects (and does not allow circular references). Trying to serialize other types, will result in conversion to null (like Infinity or NaN) or to a string (Dates), that must be manually deserialized on the other side
  6. When IFRAME is managed outside of PostMessageCourier (passed by reference to the constructor), a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the PostMessageCourier at the IFRAME side, had also been initialized with a valid targetOrigin option)
 
+Wrappers
+-----------
+- [ngChronos](/wrappers/angular.md) for angular js.
+
 License
 ---------
 MIT
