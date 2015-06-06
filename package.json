@@ -1,7 +1,7 @@
 {
     "name": "chronosjs",
     "description": "JS Channels Mechanism",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "author": {
         "name": "LivePersonInc",
         "email": "fe-infra-lp@liveperson.com"
@@ -17,8 +17,8 @@
         }
     ],
     "dependencies": {
-        "cacherjs": "~0.0.6",
-        "circuit-breakerjs": "~0.0.4"
+        "cacherjs": "~0.0.7",
+        "circuit-breakerjs": "~0.0.5"
     },
     "devDependencies": {
         "chai": "~3.0.0",
