@@ -1,5 +1,7 @@
 ;(function (root, factory) {
     "use strict";
+
+    /* istanbul ignore if */
     //<amd>
     if ("function" === typeof define && define.amd) {
         root.Chronos = root.Chronos || {};
@@ -14,6 +16,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore else */
     if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports);

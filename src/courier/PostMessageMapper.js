@@ -3,6 +3,7 @@
 
     root.Chronos = root.Chronos || {};
 
+    /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 

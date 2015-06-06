@@ -1,5 +1,7 @@
 ;(function (root, factory) {
     "use strict";
+
+    /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
         // Browser globals
@@ -16,6 +18,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore else  */
     if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports, require("util/EventsUtil"), require("util/CommandsUtil"));

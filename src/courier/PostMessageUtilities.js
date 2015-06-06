@@ -1,6 +1,9 @@
 ;(function (root, chronosRoot, factory) {
     "use strict";
+
     chronosRoot.Chronos = chronosRoot.Chronos || {};
+
+    /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 
@@ -262,6 +265,7 @@
      * @param {Object} object - the object to bind to
      * @returns {Function} the bound function
      */
+    /* istanbul ignore next */
     function bind(object) {
         /*jshint validthis:true */
         var args;
@@ -289,6 +293,7 @@
         return bound;
     }
 
+    /* istanbul ignore if  */
     if (!Function.prototype.bind) {
         Function.prototype.bind = bind;
     }

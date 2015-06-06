@@ -2,6 +2,8 @@
     "use strict";
 
     chronosRoot.Chronos = chronosRoot.Chronos || {};
+
+    /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 
