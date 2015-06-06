@@ -3,7 +3,7 @@ Include the chronosjs js file in your main html.
 ```html
 <script type="text/javascript" src="/node_modules/dist/PostMessageCourier.js"></script>
 ```
-Channels is already provided with the [ngChronos module](/ngChronos.js), you can use it by adding:
+Channels is already provided with the [ngChronos module](/wrappers/ngChronos.js), you can use it by adding:
 ```html
 <script type="text/javascript" src="/node_modules/wrappers/ngChronos.js"></script>
 ```
