@@ -18,7 +18,7 @@
     ],
     "dependencies": {
         "cacherjs": "~0.0.6",
-        "circuit-breakerjs": "~0.0.3"
+        "circuit-breakerjs": "~0.0.4"
     },
     "devDependencies": {
         "chai": "~3.0.0",
