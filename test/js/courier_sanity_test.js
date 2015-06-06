@@ -7,7 +7,6 @@ describe("PostMessageCourier Sanity Tests", function () {
     var utils;
     var LPPromise;
     var msgMapper;
-    var circuit;
     var orgBind;
     var orgToJSON;
     var initialized = false;
@@ -18,7 +17,6 @@ describe("PostMessageCourier Sanity Tests", function () {
     var split = location.href.split("/");
     var base = split.splice(3, split.length - 4).join("/");
     var url = protocol + hostname + port + "/" + base + "/courier_test_frame.html";
-    var failFast = { timeWindow: 2000, slidesNumber: 2, tolerance: 10, calibration: 2 };
     var withChannel = window.PHANTOMJS ? false : void 0;
     var sandbox;
 
@@ -55,8 +53,8 @@ describe("PostMessageCourier Sanity Tests", function () {
         };
 
         if ("undefined" !== typeof define) {
-            require(["Chronos.PostMessageCourier", "Chronos.PostMessageUtilities", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper", "lpCircuitBreaker"],
-                function(lpPostMessageCourier, lpPostMessageUtilities, lpPostMessagePromise, lpPostMessageMapper, lpCircuitBreaker) {
+            require(["Chronos.PostMessageCourier", "Chronos.PostMessageUtilities", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"],
+                function(lpPostMessageCourier, lpPostMessageUtilities, lpPostMessagePromise, lpPostMessageMapper) {
                 // Do not use new deliberately to test if component is adding it
                 courierGlobal = Chronos.PostMessageCourier({
                     target: target,
@@ -72,7 +70,6 @@ describe("PostMessageCourier Sanity Tests", function () {
                 LPPromise = Chronos.PostMessagePromise;
                 // Do not use new deliberately to test if component is adding it
                 msgMapper = Chronos.PostMessageMapper();
-                circuit = window.LPCircuitBreaker(failFast);
             });
         }
         else {
@@ -88,11 +85,10 @@ describe("PostMessageCourier Sanity Tests", function () {
                 });
                 msgChannel = courierGlobal.getMessageChannel();
                 evChannel = courierGlobal.getEventChannel();
-                utils = require("./courier/lpPostMessageUtilities");
-                LPPromise = require("./courier/lpPostMessagePromise");
+                utils = require("./courier/PostMessageUtilities");
+                LPPromise = require("./courier/PostMessagePromise");
                 // Do not use new deliberately to test if component is adding it
-                msgMapper = require("./courier/lpPostMessageMapper")();
-                circuit = require("./courier/lpCircuitBreaker")(failFast);
+                msgMapper = require("./courier/PostMessageMapper")();
             });
         }
     });
@@ -627,87 +623,12 @@ describe("PostMessageCourier Sanity Tests", function () {
         });
     });
 
-    describe("check circuit breaker functionality", function () {
-
-        it("check close and opened", function (done) {
-            // Still in calibration threshold
-            setTimeout(function() {
-                circuit.run(function(success, failure) {
-                    failure();
-                });
-                circuit.run(function(success, failure) {
-                    failure();
-                });
-                expect(circuit.isOpen()).to.be.false;
-                circuit.open();
-                expect(circuit.isOpen()).to.be.true;
-                circuit.close();
-                expect(circuit.isOpen()).to.be.false;
-                circuit.reset();
-                circuit.run(function(success, failure) {
-                    failure();
-                });
-                circuit.run(function(success, failure) {
-                    failure();
-                });
-                circuit.run(function(success, failure) {
-                    failure();
-                });
-                circuit.run(function(success, failure) {
-                    failure();
-                });
-                expect(circuit.isOpen()).to.be.true;
-                setTimeout(function() {
-                    circuit.run(function(success, failure) {
-                        failure();
-                    });
-                    circuit.run(function(success, failure) {
-                        failure();
-                    });
-                    circuit.run(function(success, failure) {
-                        failure();
-                    });
-                    circuit.run(function(success, failure) {
-                        failure();
-                    });
-                    circuit.run(function(success, failure) {
-                        failure();
-                    }, function() {
-                        done();
-                    });
-                }, 2000);
-            }, 2000);
-        });
-    });
-
     describe("check bind polyfill", function () {
 
         before(function () {
             // Override function.bind to use polyfill
             orgBind = Function.prototype.bind;
             Function.prototype.bind = utils.bind;
-        });
-
-        it("bind method using polyfill method", function () {
-            var obj = { checked: true };
-            function tester() {
-                expect(this.checked).to.be.true;
-            }
-            tester.bind(obj)();
-        });
-
-        after(function () {
-            // Remove polyfill for function.bind
-            Function.prototype.bind = orgBind;
-        });
-    });
-
-    describe("check bind polyfill", function () {
-
-        before(function () {
-            // Override function.bind to use polyfill
-            orgBind = Function.prototype.bind;
-            Function.prototype.bind = circuit.bind;
         });
 
         it("bind method using polyfill method", function () {

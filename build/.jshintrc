@@ -8,7 +8,7 @@
     "laxcomma": true,
     "es3": true,
     "globals": {
-        "lpTag": true,
+        "JSON": true,
         "Window": true,
         "Promise": true,
         "setImmediate": true,

@@ -10,7 +10,7 @@ define("conf", function() {
                 chai: "../../../../node_modules/chai/chai",
                 sinon: "../../../../node_modules/sinon/pkg/sinon",
                 cacher: "../../../../node_modules/cacherjs/src/cacher",
-                lpCircuitBreaker: "courier/lpCircuitBreaker",
+                CircuitBreaker: "../../../../node_modules/circuit-breakerjs/src/CircuitBreaker",
                 "Chronos.Events": "Events",
                 "Chronos.EventsUtil": "util/EventsUtil",
                 "Chronos.Commands": "Commands",

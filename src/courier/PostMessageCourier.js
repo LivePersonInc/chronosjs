@@ -22,10 +22,10 @@
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
-        define("Chronos.PostMessageCourier", ["exports", "Chronos.PostMessageUtilities", "Chronos.Channels", "cacher", "lpCircuitBreaker", "Chronos.PostMessageChannel", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"], function () {
+        define("Chronos.PostMessageCourier", ["exports", "Chronos.PostMessageUtilities", "Chronos.Channels", "cacher", "CircuitBreaker", "Chronos.PostMessageChannel", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"], function () {
             if (!root.Chronos.PostMessageCourier) {
                 factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.Channels,
-                    cacherRoot.Cacher, circuitRoot.LPCircuitBreaker,
+                    cacherRoot.Cacher, circuitRoot.CircuitBreaker,
                     root.Chronos.PostMessageChannel, root.Chronos.PostMessagePromise, root.Chronos.PostMessageMapper);
             }
 
@@ -36,7 +36,7 @@
     //</amd>
     /**
      * @depend ../Channels.js
-     * @depend ./lpCircuitBreaker.js
+     * @depend ../../node_modules/circuit-breakerjs/src/CircuitBreaker.js
      * @depend ../../node_modules/cacherjs/src/cacher.js
      * @depend ./PostMessageUtilities.js
      * @depend ./PostMessageChannel.js
@@ -45,13 +45,13 @@
      */
     if ("object" !== typeof exports) {
         factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.Channels,
-            cacherRoot.Cacher,  circuitRoot.LPCircuitBreaker,
+            cacherRoot.Cacher,  circuitRoot.CircuitBreaker,
             root.Chronos.PostMessageChannel, root.Chronos.PostMessagePromise, root.Chronos.PostMessageMapper);
     }
 }(typeof ChronosRoot === "undefined" ? this : ChronosRoot,
     typeof CacherRoot === "undefined" ? this : CacherRoot,
     typeof CircuitRoot === "undefined" ? this : CircuitRoot,
-    function (root, exports, PostMessageUtilities, Channels, Cacher, LPCircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper) {
+    function (root, exports, PostMessageUtilities, Channels, Cacher, CircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper) {
         "use strict";
 
         /*jshint validthis:true */
@@ -214,7 +214,7 @@
                     });
 
                     messureTime = PostMessageUtilities.parseNumber(options.messureTime, DEFAULT_MESSURE_TIME);
-                    this.circuit = new LPCircuitBreaker({
+                    this.circuit = new CircuitBreaker({
                         timeWindow: messureTime,
                         slidesNumber: Math.ceil(messureTime / 100),
                         tolerance: PostMessageUtilities.parseNumber(options.messureTolerance, DEFAULT_MESSURE_TOLERANCE),
