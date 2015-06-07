@@ -8,5 +8,5 @@ after_script:
   - npm install -g codeclimate-test-reporter
   - codeclimate < test/coverage/reports/lcov.info
 exclude_paths:
-  - "gruntfile.js"
-  - "build/*"
+- "gruntfile.js"
+- "build/*"

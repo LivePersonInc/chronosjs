@@ -231,7 +231,7 @@ courier.request({
 	console.log(data);
 });
 ```
-####LIMITATIONS
+###LIMITATIONS
 - Only supports browsers which implements postMessage API and have native JSON implementation (IE8+, Chrome, FF, Safari, Opera, IOS, Opera Mini, Android)
 - IE9-, FF & Opera Mini does not support MessageChannel and therefore we fallback to using basic postMessage. This makes the communication opened to any handler registered for messages on the same origin.
 - All passDataByRef flags (in Channels) are obviously ignored
