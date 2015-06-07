@@ -16,6 +16,12 @@ layout: base
         {% if site.compass.tagline %}
         <div class="tagline-container"><p>{{ site.compass.tagline }}</p></div>
         {% endif %}
+
+        {% if site.compass.brand %}
+        <div class="brand-container">
+            <a class="brand" href="{{ page.baseurl }}" style="background-image: url('{{ site.baseurl }}{{ site.compass.brand }}')"></a>
+        </div>
+        {% endif %}
     </header>
     <main>
       {% if site.compass.include_content %}

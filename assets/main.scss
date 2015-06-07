@@ -60,14 +60,27 @@ since it must be aligned with the content */
 }
 
 .logo {
-	width: 96px;
-	height: 96px;
+	width: 168px;
+	height: 168px;
 	display: inline-block;
 	background-size: cover;
 	border-radius: 50%;
 	-moz-border-radius: 50%;
 	border: 2px solid $background-color;
 	box-shadow: 0 0 0 3px $text-color;
+}
+
+/*** brand ***/
+.brand-container {
+    text-align: center;
+}
+
+.brand {
+    height: 36px;
+    width: 264px;
+    background-size: 264px;
+    display: inline-block;
+    margin-left: 40px;
 }
 
 /*** author ***/
