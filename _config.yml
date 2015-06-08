@@ -1,7 +1,7 @@
 # general configuration
 url: http://livepersoninc.github.io/chronosjs/
 baseurl: '.'
-icon: "assets/images/icon.png"
+icon: "images/icon.png"
 icontype: "image/png"
 
 # compass configuration
