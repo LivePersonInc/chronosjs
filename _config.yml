@@ -1,6 +1,8 @@
 # general configuration
 url: http://www.liveperson.com
 baseurl: ''
+icon: "/images/icon.png"
+icontype: "image/png"
 
 # compass configuration
 compass:
