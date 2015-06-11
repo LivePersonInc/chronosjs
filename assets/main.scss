@@ -6,7 +6,7 @@ $anchor-text-color: #CE534D;
 $background-color: #F1EED9;
 
 body {
-	font-family: 'Vollkorn', serif;
+	font-family: Courier, "Lucida Console", monospace;
 	color: $text-color;
 	background-color: $background-color;
 }
@@ -18,7 +18,7 @@ main {
 
 /*** wrapper div for both header and main ***/
 .wrapper {
-	margin-top: 10%;
+	margin-top: 4%;
 }
 
 /*** anchor tags ***/
@@ -80,7 +80,6 @@ since it must be aligned with the content */
     width: 264px;
     background-size: 264px;
     display: inline-block;
-    margin-left: 40px;
 }
 
 /*** author ***/
@@ -129,7 +128,7 @@ footer {
 	/* wrapper stays 480px wide past 480px wide and is kept centered */
 	.wrapper {
 		width: 480px;
-		margin: 10% auto 0 auto;
+		margin: 4% auto 0 auto;
 	}
 }
 

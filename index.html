@@ -3,28 +3,28 @@ layout: base
 ---
 <div class="wrapper">
     <header>
-        {% if site.compass.logo %}
+        {% if site.chronosjs.logo %}
         <div class="logo-container">
-          <a class="logo" href="{{ page.baseurl }}" style="background-image: url('{{ site.baseurl }}{{ site.compass.logo }}')"></a>
+          <a class="logo" href="{{ page.baseurl }}" style="background-image: url('{{ site.baseurl }}{{ site.chronosjs.logo }}')"></a>
         </div>
         {% endif %}
 
-        {% if site.compass.author %}
-        <div class="author-container"><h1>{{ site.compass.author }}</h1></div>
+        {% if site.chronosjs.author %}
+        <div class="author-container"><h1>{{ site.chronosjs.author }}</h1></div>
         {% endif %}
 
-        {% if site.compass.tagline %}
-        <div class="tagline-container"><p>{{ site.compass.tagline }}</p></div>
+        {% if site.chronosjs.tagline %}
+        <div class="tagline-container"><p>{{ site.chronosjs.tagline }}</p></div>
         {% endif %}
 
-        {% if site.compass.brand %}
+        {% if site.chronosjs.brand %}
         <div class="brand-container">
-            <a class="brand" href="{{ page.baseurl }}" style="background-image: url('{{ site.baseurl }}{{ site.compass.brand }}')"></a>
+            <a class="brand" href="{{ page.baseurl }}" style="background-image: url('{{ site.baseurl }}{{ site.chronosjs.brand }}')"></a>
         </div>
         {% endif %}
     </header>
     <main>
-      {% if site.compass.include_content %}
+      {% if site.chronosjs.include_content %}
       <div class="content">
         {% include content.html %}
       </div>

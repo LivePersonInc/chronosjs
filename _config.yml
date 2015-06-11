@@ -1,15 +1,16 @@
 # general configuration
 url: http://livepersoninc.github.io/chronosjs/
-baseurl: '.'
-icon: "images/icon.png"
+baseurl: ''
+liveperson_url: http://www.liveperson.com
+icon: "./images/icon.png"
 icontype: "image/png"
 
-# compass configuration
-compass:
+# chronosjs configuration
+chronosjs:
   # an avatar or logo (optional)
-  logo: "/images/chronosjs.png"
+  logo: "./images/chronosjs.png"
   # a brand logo (optional)
-  brand: "/images/liveperson.png"
+  brand: "./images/liveperson.png"
   # author will appear under the avatar (optional)
   author: "ChronosJS"
   # tagline will appear under the title (optional)

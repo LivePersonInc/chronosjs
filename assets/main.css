@@ -1,5 +1,5 @@
 body {
-  font-family: 'Vollkorn', serif;
+  font-family: Courier, "Lucida Console", monospace;
   color: #46433A;
   background-color: #F1EED9; }
 
@@ -9,7 +9,7 @@ main {
 
 /*** wrapper div for both header and main ***/
 .wrapper {
-  margin-top: 10%; }
+  margin-top: 4%; }
 
 /*** anchor tags ***/
 a:link,
@@ -60,8 +60,7 @@ since it must be aligned with the content */
   height: 36px;
   width: 264px;
   background-size: 264px;
-  display: inline-block;
-  margin-left: 40px; }
+  display: inline-block; }
 
 /*** author ***/
 .author-container h1 {
@@ -104,7 +103,7 @@ footer {
   /* wrapper stays 480px wide past 480px wide and is kept centered */
   .wrapper {
     width: 480px;
-    margin: 10% auto 0 auto; } }
+    margin: 4% auto 0 auto; } }
 /* All other devices (768px and up) */
 @media (min-width: 768px) {
   /* past 768px the layout is changed and the wrapper has a fixed width of 680px
