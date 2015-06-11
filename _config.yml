@@ -1,5 +1,5 @@
 # general configuration
-url: http://livepersoninc.github.io/chronosjs/
+url: http://livepersoninc.github.io/chronosjs
 baseurl: ''
 liveperson_url: http://www.liveperson.com
 icon: "./images/icon.png"
