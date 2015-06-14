@@ -1,5 +1,6 @@
 # general configuration
 url: http://livepersoninc.github.io/chronosjs
+repo_url: https://github.com/LivePersonInc/chronosjs
 baseurl: ''
 liveperson_url: http://www.liveperson.com
 icon: "./images/icon.png"
