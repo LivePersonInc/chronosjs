@@ -53,3 +53,4 @@ npm-debug.log
 dist
 dest
 test/coverage
+_site

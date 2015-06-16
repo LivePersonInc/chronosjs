@@ -18,6 +18,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore next  */
     if ("object" !== typeof exports) {
         factory(root, chronosRoot.Chronos);
     }

@@ -18,6 +18,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore next  */
     if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
@@ -36,6 +37,7 @@
      */
     function PostMessageMapper(eventChannel) {
         // For forcing new keyword
+        /* istanbul ignore if  */
         if (false === (this instanceof PostMessageMapper)) {
             return new PostMessageMapper(eventChannel);
         }

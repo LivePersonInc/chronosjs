@@ -18,6 +18,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore next  */
     if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
@@ -39,6 +40,7 @@
      * @param {Function} [options.deserialize = JSON.parse] - optional deserialization method for post message
      */
     function PostMessageChannelPolyfill(target, options) {
+        /* istanbul ignore if  */
         // For forcing new keyword
         if (false === (this instanceof PostMessageChannelPolyfill)) {
             return new PostMessageChannelPolyfill(target, options);

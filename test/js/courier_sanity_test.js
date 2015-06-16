@@ -551,6 +551,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                     // Do not use new deliberately to test if component is adding it
                     var promise = LPPromise(function(resolve, reject) {
                         setTimeout(function() {
+                            promise.progress({ status: "Initialized" });
                             resolve(data);
 
                             expect(promise.progress()).to.be.false;

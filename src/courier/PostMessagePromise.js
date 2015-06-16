@@ -18,6 +18,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore next  */
     if ("object" !== typeof exports) {
         factory(root, chronosRoot.Chronos);
     }
@@ -39,6 +40,7 @@
      */
     function PostMessagePromise(executer) {
         // For forcing new keyword
+        /* istanbul ignore if  */
         if (false === (this instanceof PostMessagePromise)) {
             return new PostMessagePromise(executer);
         }
@@ -181,6 +183,7 @@
      * Method for polyfilling Promise support if not exist
      */
     PostMessagePromise.polyfill = function() {
+        /* istanbul ignore if  */
         if (!root.Promise) {
             root.Promise = PostMessagePromise;
         }

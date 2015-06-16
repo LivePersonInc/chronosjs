@@ -18,11 +18,12 @@
         return;
     }
     //</amd>
-    /* istanbul ignore else  */
+    /* istanbul ignore next  */
     if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports, require("util/EventsUtil"), require("util/CommandsUtil"));
     }
+    /* istanbul ignore next  */
     else {
         /**
          * @depend ./util/EventsUtil.js

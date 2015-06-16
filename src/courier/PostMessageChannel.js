@@ -18,6 +18,7 @@
         return;
     }
     //</amd>
+    /* istanbul ignore next  */
     if ("object" !== typeof exports) {
         /**
          * @depend ./PostMessageUtilities.js
@@ -65,6 +66,7 @@
      * @param {Function} onmessage - the handler for incoming messages
      */
     function PostMessageChannel(options, onmessage) {
+        /* istanbul ignore if  */
         // For forcing new keyword
         if (false === (this instanceof PostMessageChannel)) {
             return new PostMessageChannel(options, onmessage);

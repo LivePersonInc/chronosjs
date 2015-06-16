@@ -36,16 +36,17 @@
         return;
     }
     //</amd>
-    /**
-     * @depend ../Channels.js
-     * @depend ../../node_modules/circuit-breakerjs/src/CircuitBreaker.js
-     * @depend ../../node_modules/cacherjs/src/cacher.js
-     * @depend ./PostMessageUtilities.js
-     * @depend ./PostMessageChannel.js
-     * @depend ./PostMessagePromise.js
-     * @depend ./PostMessageMapper.js
-     */
+    /* istanbul ignore next  */
     if ("object" !== typeof exports) {
+        /**
+         * @depend ../Channels.js
+         * @depend ../../node_modules/circuit-breakerjs/src/CircuitBreaker.js
+         * @depend ../../node_modules/cacherjs/src/cacher.js
+         * @depend ./PostMessageUtilities.js
+         * @depend ./PostMessageChannel.js
+         * @depend ./PostMessagePromise.js
+         * @depend ./PostMessageMapper.js
+         */
         factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.Channels,
             cacherRoot.Cacher,  circuitRoot.CircuitBreaker,
             root.Chronos.PostMessageChannel, root.Chronos.PostMessagePromise, root.Chronos.PostMessageMapper);
@@ -118,6 +119,7 @@
          */
         function PostMessageCourier(options) {
             // For forcing new keyword
+            /* istanbul ignore if  */
             if (false === (this instanceof PostMessageCourier)) {
                 return new PostMessageCourier(options);
             }

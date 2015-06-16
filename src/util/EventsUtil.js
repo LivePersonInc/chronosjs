@@ -16,11 +16,12 @@
         return;
     }
     //</amd>
-    /* istanbul ignore else */
+    /* istanbul ignore next */
     if ("object" === typeof exports) {
         // CommonJS
         factory(root, exports);
     }
+    /* istanbul ignore next  */
     else {
         // Browser globals
         root.Chronos = root.Chronos || {};
