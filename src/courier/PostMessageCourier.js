@@ -160,70 +160,21 @@
              * @param {Function} [options.onreconnect] - optional reconnect handler that will be invoked when the fail fast mechanism reconnects the component upon back to normal behaviour
              */
             function initialize(options) {
-                var mapping;
-                var onmessage;
-                var messureTime;
 
                 if (!this.initialized) {
                     options = options || {};
 
-                    this.useObjects = false === options.useObjects ? options.useObjects : _getUseObjectsUrlIndicator();
-                    if ("undefined" === typeof this.useObjects) {
-                        // Defaults to true
-                        this.useObjects = true;
-                    }
-                    options.useObjects = this.useObjects;
+                    // Init options for serialization of messages
+                    _initializeSerialization.call(this, options);
 
-                    // Define the serialize/deserialize methods to be used
-                    if ("function" !== typeof options.serialize || "function" !== typeof options.deserialize) {
-                        if (this.useObjects && PostMessageUtilities.hasPostMessageObjectsSupport()) {
-                            this.serialize = _de$serializeDummy;
-                            this.deserialize = _de$serializeDummy;
-                        }
-                        else {
-                            this.serialize = PostMessageUtilities.stringify;
-                            this.deserialize = JSON.parse;
-                        }
+                    // Init the communication components
+                    _initializeCommunication.call(this, options);
 
-                        options.serialize = this.serialize;
-                        options.deserialize = this.deserialize;
-                    }
-                    else {
-                        this.serialize = options.serialize;
-                        this.deserialize = options.deserialize;
-                    }
+                    // Init the cache for handling responses
+                    _initializeCache.call(this, options);
 
-                    // Grab the event channel and initialize a new mapper
-                    this.eventChannel = options.eventChannel || new Channels({
-                            events: options.events,
-                            commands: options.commands,
-                            reqres: options.reqres
-                        });
-                    this.mapper = new PostMessageMapper(this.eventChannel);
-
-                    // Bind the mapping method to the mapper
-                    mapping = this.mapper.toEvent.bind(this.mapper);
-                    // Create the message handler which uses the mapping method
-                    onmessage = _createMessageHandler(mapping).bind(this);
-
-                    // Initialize a message channel with the message handler
-                    this.messageChannel = new PostMessageChannel(options, onmessage);
-
-                    this.callbackCache = new Cacher({
-                        max: PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY),
-                        ttl: PostMessageUtilities.parseNumber(options.timeout, DEFAULT_TIMEOUT),
-                        interval: CACHE_EVICTION_INTERVAL
-                    });
-
-                    messureTime = PostMessageUtilities.parseNumber(options.messureTime, DEFAULT_MESSURE_TIME);
-                    this.circuit = new CircuitBreaker({
-                        timeWindow: messureTime,
-                        slidesNumber: Math.ceil(messureTime / 100),
-                        tolerance: PostMessageUtilities.parseNumber(options.messureTolerance, DEFAULT_MESSURE_TOLERANCE),
-                        calibration: PostMessageUtilities.parseNumber(options.messureCalibration, DEFAULT_MESSURE_CALIBRATION),
-                        onopen: PostMessageUtilities.parseFunction(options.ondisconnect, true),
-                        onclose: PostMessageUtilities.parseFunction(options.onreconnect, true)
-                    });
+                    // Init the fail fast mechanism which monitors responses
+                    _initializeFailFast.call(this, options);
 
                     // Dumb Proxy methods
                     this.once = this.eventChannel.once;
@@ -367,6 +318,102 @@
                     this.circuit = void 0;
                     this.disposed = true;
                 }
+            }
+
+            /**
+             * Method for initializing the options for serialization of messages
+             * @param {Boolean} [options.useObjects = true upon browser support] - optional indication for passing objects by reference
+             * @param {Function} [options.serialize = JSON.stringify] - optional serialization method for post message
+             * @param {Function} [options.deserialize = JSON.parse] - optional deserialization method for post message
+             * @private
+             */
+            function _initializeSerialization(options) {
+                this.useObjects = false === options.useObjects ? options.useObjects : _getUseObjectsUrlIndicator();
+                if ("undefined" === typeof this.useObjects) {
+                    // Defaults to true
+                    this.useObjects = true;
+                }
+                options.useObjects = this.useObjects;
+
+                // Define the serialize/deserialize methods to be used
+                if ("function" !== typeof options.serialize || "function" !== typeof options.deserialize) {
+                    if (this.useObjects && PostMessageUtilities.hasPostMessageObjectsSupport()) {
+                        this.serialize = _de$serializeDummy;
+                        this.deserialize = _de$serializeDummy;
+                    }
+                    else {
+                        this.serialize = PostMessageUtilities.stringify;
+                        this.deserialize = JSON.parse;
+                    }
+
+                    options.serialize = this.serialize;
+                    options.deserialize = this.deserialize;
+                }
+                else {
+                    this.serialize = options.serialize;
+                    this.deserialize = options.deserialize;
+                }
+            }
+
+            /**
+             * Method for initializing the communication elements
+             * @param {Object} [options.eventChannel] - optional events channel to be used (if not supplied, a new one will be created OR optional events, optional commands, optional reqres to be used
+             * @private
+             */
+            function _initializeCommunication(options) {
+                var mapping;
+                var onmessage;
+
+                // Grab the event channel and initialize a new mapper
+                this.eventChannel = options.eventChannel || new Channels({
+                    events: options.events,
+                    commands: options.commands,
+                    reqres: options.reqres
+                });
+                this.mapper = new PostMessageMapper(this.eventChannel);
+
+                // Bind the mapping method to the mapper
+                mapping = this.mapper.toEvent.bind(this.mapper);
+                // Create the message handler which uses the mapping method
+                onmessage = _createMessageHandler(mapping).bind(this);
+
+                // Initialize a message channel with the message handler
+                this.messageChannel = new PostMessageChannel(options, onmessage);
+            }
+
+            /**
+             * Method for initializing the cache for responses
+             * @param {Number} [options.maxConcurrency = 100] - optional maximum concurrency that can be managed by the component before dropping
+             * @param {Number} [options.timeout = 30000] - optional milliseconds parameter for waiting before timeout to responses (default is 30 seconds)
+             * @private
+             */
+            function _initializeCache(options) {
+                this.callbackCache = new Cacher({
+                    max: PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY),
+                    ttl: PostMessageUtilities.parseNumber(options.timeout, DEFAULT_TIMEOUT),
+                    interval: CACHE_EVICTION_INTERVAL
+                });
+            }
+
+            /**
+             * Method for initializing the fail fast mechanisms
+             * @param {Number} [options.messureTime = 30000] - optional milliseconds parameter for time measurement indicating the time window to apply when implementing the internal fail fast mechanism (default is 30 seconds)
+             * @param {Number} [options.messureTolerance = 30] - optional percentage parameter indicating the tolerance to apply on the measurements when implementing the internal fail fast mechanism (default is 30 percents)
+             * @param {Number} [options.messureCalibration = 10] optional numeric parameter indicating the calibration of minimum calls before starting to validate measurements when implementing the internal fail fast mechanism (default is 10 calls)
+             * @param {Function} [options.ondisconnect] - optional disconnect handler that will be invoked when the fail fast mechanism disconnects the component upon to many failures
+             * @param {Function} [options.onreconnect] - optional reconnect handler that will be invoked when the fail fast mechanism reconnects the component upon back to normal behaviour
+             * @private
+             */
+            function _initializeFailFast(options) {
+                var messureTime = PostMessageUtilities.parseNumber(options.messureTime, DEFAULT_MESSURE_TIME);
+                this.circuit = new CircuitBreaker({
+                    timeWindow: messureTime,
+                    slidesNumber: Math.ceil(messureTime / 100),
+                    tolerance: PostMessageUtilities.parseNumber(options.messureTolerance, DEFAULT_MESSURE_TOLERANCE),
+                    calibration: PostMessageUtilities.parseNumber(options.messureCalibration, DEFAULT_MESSURE_CALIBRATION),
+                    onopen: PostMessageUtilities.parseFunction(options.ondisconnect, true),
+                    onclose: PostMessageUtilities.parseFunction(options.onreconnect, true)
+                });
             }
 
             /**
