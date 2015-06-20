@@ -563,13 +563,126 @@
             }
 
             /**
+             * Method for handling return messages from the callee
+             * @param {String} id - the id of the callback
+             * @param {Object} method - the method object with needed args
+             * @private
+             */
+            function _handleReturnMessage(id, method) {
+                var callback = this.callbackCache.get(id, true);
+                var args = method && method.args;
+
+                if ("function" === typeof callback) {
+                    // First try to parse the first parameter in case the error is an object
+                    if (args && args.length && args[0] && "Error" === args[0].type && "string" === typeof args[0].message) {
+                        args[0] = new Error(args[0].message);
+                    }
+
+                    try {
+                        callback.apply(null, args);
+                    }
+                    catch (ex) {
+                        PostMessageUtilities.log("Error while trying to handle the returned message from request/command", "ERROR", "PostMessageCourier");
+                    }
+                }
+            }
+
+            /**
+             * Method for creation of a return message handler from the callee
+             * @param {String} id - the id of the message
+             * @param {String} name - message name
+             * @param {Object} message - original message structure
+             * @private
+             */
+            function _getReturnMessageHandler(id, name, message) {
+                return function(err, result) {
+                    var retMsg;
+                    var params;
+                    var error = err;
+
+                    // In case of Error Object, create a special object that can be parsed
+                    if (err instanceof Error) {
+                        error = {
+                            type: "Error",
+                            message: err.message
+                        };
+                    }
+
+                    // Call the mapping method to receive the message structure
+                    params = [id, ACTION_TYPE.RETURN, error];
+
+                    if (ACTION_TYPE.REQUEST === name) {
+                        params.push(result);
+                    }
+
+                    retMsg = this.mapper.toMessage.apply(this.mapper, params);
+
+                    // Post the message
+                    _returnMessage.call(this, retMsg, message.source);
+                }.bind(this);
+            }
+
+            /**
+             * Method for handling the result of the call (this can be the response or a defer/promise)
+             * @param {String} id - the id of the message
+             * @param {String} name - message name
+             * @param {Object} result - the result object
+             * @param {Object} message - original message structure
+             * @private
+             */
+            function _handleResult(id, name, result, message) {
+                var retMsg;
+                var params;
+
+                // If the result is async (promise) we need to defer the execution of the results data
+                if (("undefined" !== typeof Promise && result instanceof Promise) || result instanceof PostMessagePromise) {
+                    // Handle async using promises
+                    result.then(function (data) {
+                        params = [id, ACTION_TYPE.RETURN, null];
+
+                        if (ACTION_TYPE.REQUEST === name) {
+                            params.push(data);
+                        }
+
+                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
+                        _returnMessage.call(this, retMsg, message.source);
+                    }.bind(this), function (data) {
+                        params = [id, ACTION_TYPE.RETURN, data];
+
+                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
+                        _returnMessage.call(this, retMsg, message.source);
+                    }.bind(this));
+                }
+                else {
+                    if (result.error) {
+                        params = [id, ACTION_TYPE.RETURN, result];
+
+                        // Call the mapping method to receive the message structure
+                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
+                    }
+                    else {
+                        params = [id, ACTION_TYPE.RETURN, null];
+
+                        if (ACTION_TYPE.REQUEST === name) {
+                            params.push(result);
+                        }
+
+                        // Call the mapping method to receive the message structure
+                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
+                    }
+
+                    // Post the message
+                    _returnMessage.call(this, retMsg, message.source);
+                }
+            }
+            /**
              * Method for wrapping the handler of the postmessage for parsing
              * @param {Object} mapping - the handler for incoming messages to invoke which maps the message to event
              * @returns {Function} handler function for messages
              * @private
              */
             function _createMessageHandler(mapping) {
-                return function handle(message) {
+                return function(message) {
                     var handler;
                     var result;
                     var params;
@@ -577,7 +690,6 @@
                     var id;
                     var name;
                     var args;
-                    var callback;
 
                     if (message) {
                         id = message.method && message.method.id;
@@ -587,20 +699,7 @@
                         // In case the message is a return value from a request/response call
                         // It is marked as a "return" message and we need to call the supplied cached callback
                         if (ACTION_TYPE.RETURN === name) {
-                            callback = this.callbackCache.get(id, true);
-                            if ("function" === typeof callback) {
-                                // First try to parse the first parameter in case the error is an object
-                                if (args && args.length && args[0] && "Error" === args[0].type && "string" === typeof args[0].message) {
-                                    args[0] = new Error(args[0].message);
-                                }
-
-                                try {
-                                    callback.apply(null, args);
-                                }
-                                catch (ex) {
-                                    PostMessageUtilities.log("Error while trying to handle the returned message from request/command", "ERROR", "PostMessageCourier");
-                                }
-                            }
+                            _handleReturnMessage.call(this, id, message.method);
                         }
                         else {
                             // Call the mapping method to receive the handling method on the event channel
@@ -608,29 +707,7 @@
                             try {
                                 if (_isTwoWay(name)) {
                                     if (args.length) {
-                                        args.push(function (err, result) {
-                                            var error = err;
-
-                                            // In case of Error Object, create a special object that can be parsed
-                                            if (err instanceof Error) {
-                                                error = {
-                                                    type: "Error",
-                                                    message: err.message
-                                                };
-                                            }
-
-                                            // Call the mapping method to receive the message structure
-                                            params = [id, ACTION_TYPE.RETURN, error];
-
-                                            if (ACTION_TYPE.REQUEST === name) {
-                                                params.push(result);
-                                            }
-
-                                            retMsg = this.mapper.toMessage.apply(this.mapper, params);
-
-                                            // Post the message
-                                            _returnMessage.call(this, retMsg, message.source);
-                                        }.bind(this));
+                                        args.push(_getReturnMessageHandler.call(this, id, name, message));
                                     }
                                 }
 
@@ -649,46 +726,7 @@
 
                             // In case the method is two way and returned a result
                             if (_isTwoWay(name) && "undefined" !== typeof result) {
-                                // If the result is async (promise) we need to defer the execution of the results data
-                                if (("undefined" !== typeof Promise && result instanceof Promise) || result instanceof PostMessagePromise) {
-                                    // Handle async using promises
-                                    result.then(function (data) {
-                                        params = [id, ACTION_TYPE.RETURN, null];
-
-                                        if (ACTION_TYPE.REQUEST === name) {
-                                            params.push(data);
-                                        }
-
-                                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
-                                        _returnMessage.call(this, retMsg, message.source);
-                                    }.bind(this), function (data) {
-                                        params = [id, ACTION_TYPE.RETURN, data];
-
-                                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
-                                        _returnMessage.call(this, retMsg, message.source);
-                                    }.bind(this));
-                                }
-                                else {
-                                    if (result.error) {
-                                        params = [id, ACTION_TYPE.RETURN, result];
-
-                                        // Call the mapping method to receive the message structure
-                                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
-                                    }
-                                    else {
-                                        params = [id, ACTION_TYPE.RETURN, null];
-
-                                        if (ACTION_TYPE.REQUEST === name) {
-                                            params.push(result);
-                                        }
-
-                                        // Call the mapping method to receive the message structure
-                                        retMsg = this.mapper.toMessage.apply(this.mapper, params);
-                                    }
-
-                                    // Post the message
-                                    _returnMessage.call(this, retMsg, message.source);
-                                }
+                                _handleResult.call(this, id, name, result, message);
                             }
                         }
                     }
