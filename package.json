@@ -1,7 +1,7 @@
 {
     "name": "chronosjs",
     "description": "JS Channels Mechanism",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "author": {
         "name": "LivePersonInc",
         "email": "fe-infra-lp@liveperson.com"
@@ -28,6 +28,7 @@
         "grunt-contrib-concat": "~0.5.1",
         "grunt-contrib-connect": "~0.10.1",
         "grunt-contrib-jshint": "~0.11.2",
+        "grunt-contrib-uglify": "^0.9.1",
         "grunt-env": "~0.4.4",
         "grunt-istanbul": "~0.5.0",
         "grunt-mocha": "~0.4.12",
