@@ -258,6 +258,54 @@ describe("PostMessageCourier Sanity Tests", function () {
         });
     });
 
+    describe("check creation with default serializer and deserializer but no objects support", function () {
+        it("should still create instance and work", function (done) {
+            var courierLocal2;
+            var options = {
+                target: {
+                    url: url
+                },
+                onready: {
+                    callback: function () {
+                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        kickStart();
+                    }
+                },
+                useObjects: false,
+                channel: withChannel
+            };
+            courierLocal2 = Chronos.PostMessageCourier(options);
+
+            function kickStart() {
+                var original = [3];
+                var id = courierLocal2.comply({
+                    appName: "frame",
+                    cmdName: "expect",
+                    func: complyHandler
+                });
+
+                expect(id).to.be.defined;
+
+                function complyHandler(data) {
+                    expect(data).to.be.defined;
+                    expect(data[0]).to.be.defined;
+                    expect(data[0]).to.equal(original[0] * original[0]);
+
+                    courierLocal2.dispose();
+                    courierLocal2 = null;
+
+                    done();
+                }
+
+                var res = courierLocal2.command({
+                    appName: "host",
+                    cmdName: "square",
+                    data: original
+                });
+            }
+        });
+    });
+
     describe("check trigger and bind works", function () {
         it("should get event back upon triggering", function (done) {
             var original = 1;
@@ -437,6 +485,37 @@ describe("PostMessageCourier Sanity Tests", function () {
         });
     });
 
+    describe("check request and reply works with callback that throws", function () {
+        it("should get request back upon replying", function (done) {
+            var replyHandler = function(data) {
+                // Send the done to the end of the event loop
+                setTimeout(function() {
+                    done();
+                }, 0);
+                throw new Error("Error Throwing Check");
+            };
+            var original = {
+                num: 4
+            };
+
+            var id = courierLocal.reply({
+                appName: "frame",
+                reqName: "askBack",
+                func: replyHandler
+            });
+
+            expect(id).to.be.defined;
+
+            var res = courierLocal.request({
+                appName: "host",
+                reqName: "divide",
+                data: original
+            }, function() {});
+
+            expect(res).to.be.undefined;
+        });
+    });
+
     describe("check 2 frames creation with events", function () {
         it("should create 2 instances and work", function (done) {
             var courierLocal2;
@@ -474,7 +553,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 appName: "host",
                 eventName: "multiply",
                 data: num
-            });
+            }, true);
 
             var original = {
                 num: 3
@@ -574,6 +653,59 @@ describe("PostMessageCourier Sanity Tests", function () {
             });
 
             expect(request).to.be.undefined;
+        });
+    });
+
+    describe("check can reject reply request from iframe and with the value sent", function () {
+
+        it("reply reject request from iframe and with the value sent", function (done) {
+            courierLocal.reply({
+                appName: "iframe",
+                reqName: "Ma Shlomha?",
+                func: function(data) {
+                    var promise = new LPPromise(function(resolve, reject) {
+                        setTimeout(function() {
+                            promise.progress({ status: "Initialized" });
+                            reject(data);
+
+                            expect(promise.progress()).to.be.false;
+                        }, 0);
+                    });
+
+                    return promise;
+                }
+            });
+            var request = courierLocal.request({
+                appName: "host",
+                reqName: "Ask Async Ma Shlomha?"
+            }, function(err, data) {
+                expect(err).to.be.null;
+                done();
+            });
+
+            expect(request).to.be.undefined;
+        });
+    });
+
+    describe("check promise polyfill", function () {
+
+        it("try resolve promise and use then", function () {
+            var spy = sandbox.spy();
+            var promise = new LPPromise();
+            promise.then(function() {
+                spy();
+            });
+            promise.resolve("OK");
+            try {
+                promise.resolve("Should Throw");
+            }
+            catch(ex) {
+                expect(ex.message).to.equal("This Promise instance had already been completed.");
+            }
+            promise.then(function() {
+                spy();
+            });
+            expect(spy.calledOnce).to.be.true;
         });
     });
 

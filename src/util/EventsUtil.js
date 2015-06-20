@@ -51,6 +51,7 @@
         return callBacks;
     }
 
+    /* istanbul ignore next  */
     function log(msg, level, app) {
         if (root && "function" === typeof root.log) {
             root.log(msg, level, app);

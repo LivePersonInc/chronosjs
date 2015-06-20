@@ -47,7 +47,9 @@
                 stringified = JSON.stringify.apply(null, arguments);
             }
             catch (ex) {
+                /* istanbul ignore next  */
                 Array.prototype.toJSON = toJSONPrototype;
+                /* istanbul ignore next  */
                 throw ex;
             }
 
@@ -202,6 +204,7 @@
      * @param {Number} [milliseconds] - optional milliseconds to delay or false to run immediately
      */
     function delay(method, milliseconds) {
+        /* istanbul ignore if  */
         if ("undefined" !== typeof setImmediate && (isNaN(milliseconds) || 0 >= milliseconds)) {
             setImmediate(method);
         }
@@ -220,6 +223,7 @@
      * @param {Function} callback - the function to execute
      */
     function addEventListener(element, event, callback) {
+        /* istanbul ignore else: IE9- only  */
         if (element.addEventListener) {
             element.addEventListener(event, callback, false);
         }
@@ -239,6 +243,7 @@
      * @param {Function} callback - the function to execute
      */
     function removeEventListener(element, event, callback) {
+        /* istanbul ignore else: IE9- only  */
         if (element.removeEventListener) {
             element.removeEventListener(event, callback, false);
         }
@@ -253,6 +258,7 @@
      * @param {String} level - the logging level of the message
      * @param {String} app - the app which logs
      */
+    /* istanbul ignore next  */
     function log(msg, level, app) {
         if (root && "function" === typeof root.log) {
             root.log(msg, level, app);

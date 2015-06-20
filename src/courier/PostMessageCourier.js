@@ -557,6 +557,7 @@
                         callback.call(null, new Error("Callback: Operation Timeout!"));
                     }
                     catch (ex) {
+                        /* istanbul ignore next  */
                         PostMessageUtilities.log("Error while trying to handle the timeout using the callback", "ERROR", "PostMessageCourier");
                     }
                 }
@@ -595,6 +596,7 @@
              * @private
              */
             function _getReturnMessageHandler(id, name, message) {
+                /* istanbul ignore next: it is being covered at the iframe side - cannot add it to coverage matrix  */
                 return function(err, result) {
                     var retMsg;
                     var params;
@@ -715,8 +717,9 @@
                                 result = handler && handler();
                             }
                             catch (ex) {
+                                /* istanbul ignore next: special handling for other implementations of channels which does not catch exceptions from triggers (like backbone) - when working with chronos channels it will not be called  */
                                 PostMessageUtilities.log("Error while trying to invoke the handler on the events channel", "ERROR", "PostMessageCourier");
-
+                                /* istanbul ignore next: special handling for other implementations of channels which does not catch exceptions from triggers (like backbone) - when working with chronos channels it will not be called  */
                                 if (_isTwoWay(name)) {
                                     params = [id, ACTION_TYPE.RETURN, {error: ex.toString()}];
                                     retMsg = this.mapper.toMessage.apply(this.mapper, params);

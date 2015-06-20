@@ -91,7 +91,9 @@
                     receiver.postMessage(parsed, origin);
                 }
                 catch(ex) {
+                    /* istanbul ignore next  */
                     PostMessageUtilities.log("Error while trying to post the message", "ERROR", "PostMessageChannelPolyfill");
+                    /* istanbul ignore next  */
                     return false;
                 }
             }
@@ -155,6 +157,7 @@
                     }
                 }
                 catch (ex) {
+                    /* istanbul ignore next  */
                     PostMessageUtilities.log("Error while trying to deserialize the message", "ERROR", "PostMessageChannelPolyfill");
                 }
             }

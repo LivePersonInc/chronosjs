@@ -156,6 +156,7 @@
                         }
                     }
                     catch(ex) {
+                        /* istanbul ignore next  */
                         PostMessageUtilities.log("Error while trying to remove the iframe from the container", "ERROR", "PostMessageChannel");
                     }
                 }
@@ -199,6 +200,7 @@
                     }
                 }
                 catch(ex) {
+                    /* istanbul ignore next  */
                     PostMessageUtilities.log("Error while trying to post the message", "ERROR", "PostMessageChannel");
                     return false;
                 }
@@ -354,6 +356,7 @@
          * @returns {Boolean} indication for message channel usage
          * @private
          */
+        /* istanbul ignore next: it is being covered at the iframe side - cannot add it to coverage matrix  */
         function _getChannelUrlIndicator() {
             if ("true" === PostMessageUtilities.getURLParameter("lpPMCPolyfill")) {
                 return false;
@@ -495,6 +498,7 @@
                             this.neutered = true;
                         }
                         catch(ex) {
+                            /* istanbul ignore next  */
                             return false;
                         }
                     }
@@ -539,6 +543,7 @@
                                     this.receiver.postMessage(parsed);
                                 }
                                 catch(ex) {
+                                    /* istanbul ignore next  */
                                     PostMessageUtilities.log("Error while trying to post the message from queue", "ERROR", "PostMessageChannel");
                                 }
                             }

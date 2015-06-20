@@ -120,19 +120,24 @@
          * @private
          */
         function _completeQueue(type, arg, empty) {
-            var i = 0;
-            var item = this.queue[i++];
+            var i;
+            var item;
 
-            while (item) {
-                if (item[type]) {
-                    item[type].call(this, arg);
-                }
+            if (this.queue && this.queue.length) {
+                i = 0;
                 item = this.queue[i++];
-            }
 
-            if (empty) {
-                // Clear
-                this.queue.length = 0;
+                while (item) {
+                    if (item[type]) {
+                        item[type].call(this, arg);
+                    }
+                    item = this.queue[i++];
+                }
+
+                if (empty) {
+                    // Clear
+                    this.queue.length = 0;
+                }
             }
         }
 
@@ -167,7 +172,10 @@
             _completeQueue.call(this, type, arg, true);
 
             // Clean
-            delete this.queue;
+            if (this.queue) {
+                this.queue.length = 0;
+                delete this.queue;
+            }
         }
 
         return {
@@ -182,8 +190,8 @@
     /**
      * Method for polyfilling Promise support if not exist
      */
+    /* istanbul ignore next  */
     PostMessagePromise.polyfill = function() {
-        /* istanbul ignore if  */
         if (!root.Promise) {
             root.Promise = PostMessagePromise;
         }

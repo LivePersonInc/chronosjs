@@ -112,6 +112,7 @@
                     return eventChannel[name].apply(eventChannel, args);
                 }
                 else {
+                    /* istanbul ignore next  */
                     PostMessageUtilities.log("No channel exists", "ERROR", "PostMessageMapper");
                 }
             };
