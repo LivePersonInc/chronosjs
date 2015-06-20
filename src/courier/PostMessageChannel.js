@@ -292,7 +292,7 @@
          * @param {Object} event - the event object on message
          */
         function _getHandleMessage(handler) {
-            return function _handleMessage(event) {
+            return function(event) {
                 var handshake;
                 var previous;
 
@@ -412,7 +412,7 @@
          * @private
          */
         function _wrapReadyCallback(onready, target) {
-            return function callback(err) {
+            return function(err) {
                 if (target && "function" === typeof target.callback) {
                     target.callback.call(target.context, err, this.target);
                 }
@@ -434,7 +434,7 @@
          * @private
          */
         function _wrapMessageHandler(onmessage) {
-            return function handle(message) {
+            return function(message) {
                 var msgObject;
 
                 if (!message.origin || "*" === message.origin ||  this.targetOrigin === message.origin) {
