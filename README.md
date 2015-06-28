@@ -1,4 +1,4 @@
-![chronosjs](https://cloud.githubusercontent.com/assets/5138735/7985842/785e3ef4-0adc-11e5-9a13-383d4c462949.png)
+![chronosjs](https://cloud.githubusercontent.com/assets/5138735/8395584/e39bc9cc-1d81-11e5-800e-cd8f5b59025c.png)
 ========
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![Build Status](https://travis-ci.org/LivePersonInc/chronosjs.svg)](https://travis-ci.org/LivePersonInc/chronosjs)
