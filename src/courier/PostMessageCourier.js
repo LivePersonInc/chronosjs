@@ -17,21 +17,15 @@
 ;(function (root, cacherRoot, circuitRoot, factory) {
     "use strict";
 
-    root.Chronos = root.Chronos || {};
-
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
-        define("Chronos.PostMessageCourier", ["exports", "Chronos.PostMessageUtilities", "Chronos.Channels", "cacher", "CircuitBreaker", "Chronos.PostMessageChannel", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"], function () {
-            if (!root.Chronos.PostMessageCourier) {
-                factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.Channels,
-                    cacherRoot.Cacher, circuitRoot.CircuitBreaker,
-                    root.Chronos.PostMessageChannel, root.Chronos.PostMessagePromise, root.Chronos.PostMessageMapper);
-            }
-
-            return root.Chronos.PostMessageCourier;
+        define("Chronos.PostMessageCourier", ["Chronos.PostMessageUtilities", "Chronos.Channels", "cacher", "CircuitBreaker", "Chronos.PostMessageChannel", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"],
+            function (PostMessageUtilities, Channels, cacher, CircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper) {
+                return factory(root, root, PostMessageUtilities, Channels,
+                    cacher, CircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper, true);
         });
         return;
     }
@@ -47,6 +41,7 @@
          * @depend ./PostMessagePromise.js
          * @depend ./PostMessageMapper.js
          */
+        root.Chronos = root.Chronos || {};
         factory(root, root.Chronos, root.Chronos.PostMessageUtilities, root.Chronos.Channels,
             cacherRoot.Cacher,  circuitRoot.CircuitBreaker,
             root.Chronos.PostMessageChannel, root.Chronos.PostMessagePromise, root.Chronos.PostMessageMapper);
@@ -54,7 +49,7 @@
 }(typeof ChronosRoot === "undefined" ? this : ChronosRoot,
     typeof CacherRoot === "undefined" ? this : CacherRoot,
     typeof CircuitRoot === "undefined" ? this : CircuitRoot,
-    function (root, exports, PostMessageUtilities, Channels, Cacher, CircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper) {
+    function (root, exports, PostMessageUtilities, Channels, Cacher, CircuitBreaker, PostMessageChannel, PostMessagePromise, PostMessageMapper, hide) {
         "use strict";
 
         /*jshint validthis:true */
@@ -750,5 +745,8 @@
 
         // attach properties to the exports object to define
         // the exported module properties.
-        exports.PostMessageCourier = exports.PostMessageCourier || PostMessageCourier;
+        if (!hide) {
+            exports.PostMessageCourier = exports.PostMessageCourier || PostMessageCourier;
+        }
+        return PostMessageCourier;
     }));

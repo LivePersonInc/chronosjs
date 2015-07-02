@@ -1,19 +1,13 @@
 ;(function (root, factory) {
     "use strict";
 
-    root.Chronos = root.Chronos || {};
-
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
-        define("Chronos.PostMessageMapper", ["exports", "Chronos.PostMessageUtilities"], function () {
-            if (!root.Chronos.PostMessageMapper) {
-                factory(root, root.Chronos, root.Chronos.PostMessageUtilities);
-            }
-
-            return root.Chronos.PostMessageMapper;
+        define("Chronos.PostMessageMapper", ["Chronos.PostMessageUtilities"], function (PostMessageUtilities) {
+            return factory(root, root, PostMessageUtilities, true);
         });
         return;
     }
@@ -23,9 +17,10 @@
         /**
          * @depend ./PostMessageUtilities.js
          */
+        root.Chronos = root.Chronos || {};
         factory(root, root.Chronos, root.Chronos.PostMessageUtilities);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities, hide) {
     "use strict";
 
     /*jshint validthis:true */
@@ -127,5 +122,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.PostMessageMapper = exports.PostMessageMapper || PostMessageMapper;
+    if (!hide) {
+        exports.PostMessageMapper = exports.PostMessageMapper || PostMessageMapper;
+    }
+    return PostMessageMapper;
 }));

@@ -4,16 +4,9 @@
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        root.Chronos = root.Chronos || {};
-
         // AMD. Register as an anonymous module.
-        define("Chronos.Reqres", ["exports", "Chronos.EventsUtil", "Chronos.CommandsUtil"], function () {
-            if (!root.Chronos.ReqRes) {
-                factory(root, root.Chronos, root.Chronos.EventsUtil, root.Chronos.CommandsUtil);
-            }
-
-            return root.Chronos.ReqRes;
+        define("Chronos.Reqres", ["Chronos.EventsUtil", "Chronos.CommandsUtil"], function (EventsUtil, CommandsUtil) {
+            return factory(root, root, EventsUtil, CommandsUtil, true);
         });
         return;
     }
@@ -33,7 +26,7 @@
         root.Chronos = root.Chronos || {};
         factory(root, root.Chronos, root.Chronos.EventsUtil, root.Chronos.CommandsUtil);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil, cmdUtil) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil, cmdUtil, hide) {
     function ReqRes(defaults) {
         var appName = "ReqRes",
             attrName = "reqName",
@@ -178,5 +171,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.ReqRes = exports.ReqRes || ReqRes;
+    if (!hide) {
+        exports.ReqRes = exports.ReqRes || ReqRes;
+    }
+    return ReqRes;
 }));

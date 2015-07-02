@@ -19,14 +19,15 @@ describe("PostMessageCourier Sanity Tests", function () {
     var url = protocol + hostname + port + "/" + base + "/courier_test_frame.html";
     var withChannel = window.PHANTOMJS ? false : void 0;
     var sandbox;
+    var PostMessageCourier, PostMessageUtilities, PostMessagePromise, PostMessageMapper;
 
     before(function (done) {
         initialized = false;
         var target = {
             url: url,
-            callback: function() {
-				initialized = true;
-                courierGlobal2 = new Chronos.PostMessageCourier({
+            callback: function () {
+                initialized = true;
+                courierGlobal2 = new PostMessageCourier({
                     target: target2,
                     channel: false
                 });
@@ -42,7 +43,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 top: "-1000px",
                 left: "-1000px"
             },
-            callback: function() {
+            callback: function () {
                 courierGlobal2.trigger({
                     appName: "host",
                     eventName: "Hello"
@@ -54,28 +55,32 @@ describe("PostMessageCourier Sanity Tests", function () {
 
         if ("undefined" !== typeof define) {
             require(["Chronos.PostMessageCourier", "Chronos.PostMessageUtilities", "Chronos.PostMessagePromise", "Chronos.PostMessageMapper"],
-                function(lpPostMessageCourier, lpPostMessageUtilities, lpPostMessagePromise, lpPostMessageMapper) {
-                // Do not use new deliberately to test if component is adding it
-                courierGlobal = Chronos.PostMessageCourier({
-                    target: target,
-                    channel: withChannel
+                function (_PostMessageCourier, _PostMessageUtilities, _PostMessagePromise, _PostMessageMapper) {
+                    PostMessageCourier = _PostMessageCourier;
+                    PostMessageUtilities = _PostMessageUtilities;
+                    PostMessagePromise = _PostMessagePromise;
+                    PostMessageMapper = _PostMessageMapper;
+                    // Do not use new deliberately to test if component is adding it
+                    courierGlobal = PostMessageCourier({
+                        target: target,
+                        channel: withChannel
+                    });
+                    courierGlobal.trigger({
+                        appName: "host",
+                        eventName: "Hello"
+                    });
+                    msgChannel = courierGlobal.getMessageChannel();
+                    evChannel = courierGlobal.getEventChannel();
+                    utils = PostMessageUtilities;
+                    LPPromise = PostMessagePromise;
+                    // Do not use new deliberately to test if component is adding it
+                    msgMapper = PostMessageMapper();
                 });
-                courierGlobal.trigger({
-                    appName: "host",
-                    eventName: "Hello"
-                });
-                msgChannel = courierGlobal.getMessageChannel();
-                evChannel = courierGlobal.getEventChannel();
-                utils = Chronos.PostMessageUtilities;
-                LPPromise = Chronos.PostMessagePromise;
-                // Do not use new deliberately to test if component is adding it
-                msgMapper = Chronos.PostMessageMapper();
-            });
         }
         else {
             // Do not use new deliberately to test if component is adding it
-            require("../../src/courier/PostMessageCourier")(function() {
-                courierGlobal = Chronos.PostMessageCourier({
+            require("../../src/courier/PostMessageCourier")(function () {
+                courierGlobal = PostMessageCourier({
                     target: target,
                     channel: withChannel
                 });
@@ -96,7 +101,7 @@ describe("PostMessageCourier Sanity Tests", function () {
         // create a sandbox
         sandbox = sinon.sandbox.create();
 
-        courierLocal = Chronos.PostMessageCourier({
+        courierLocal = PostMessageCourier({
             target: {
                 url: url,
                 bust: false
@@ -105,17 +110,23 @@ describe("PostMessageCourier Sanity Tests", function () {
             channel: withChannel
         });
     });
-    afterEach(function() {
+    afterEach(function () {
         // restore the environment as it was before
         sandbox.restore();
         courierLocal.dispose();
         courierLocal = null;
     });
-    after(function() {
+    after(function () {
         courierGlobal.dispose();
         courierGlobal2.dispose();
         courierGlobal = null;
         courierGlobal2 = null;
+    });
+
+    describe("check for global scope", function () {
+        it("should not be polluted", function() {
+            expect(window.Chronos).to.be.undefined;
+        })
     });
 
     describe("check handshake", function () {
@@ -131,7 +142,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 target: {
                     url: url,
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         courierLocal2.dispose();
                         courierLocal2 = null;
                         done();
@@ -139,7 +150,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: withChannel
             };
-            courierLocal2 = Chronos.PostMessageCourier(options);
+            courierLocal2 = PostMessageCourier(options);
         });
     });
 
@@ -152,7 +163,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                     url: url,
                     container: container,
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         courierLocal2.dispose();
                         courierLocal2 = null;
                         done();
@@ -160,7 +171,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: withChannel
             };
-            courierLocal2 = Chronos.PostMessageCourier(options);
+            courierLocal2 = PostMessageCourier(options);
             document.body.appendChild(container);
         });
     });
@@ -174,7 +185,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                     url: url,
                     container: document.body.appendChild(container),
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         courierLocal2.dispose();
                         courierLocal2 = null;
                         done();
@@ -182,7 +193,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: withChannel
             };
-            courierLocal2 = Chronos.PostMessageCourier(options);
+            courierLocal2 = PostMessageCourier(options);
         });
     });
 
@@ -193,7 +204,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 target: {
                     url: url + "x",  // Invalid path
                     callback: function (err) {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         expect(err.message).to.be.equal("Loading: Operation Timeout!");
                         courierLocal2.dispose();
                         courierLocal2 = null;
@@ -204,7 +215,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 handshakeInterval: 200,
                 handshakeAttempts: 2
             };
-            courierLocal2 = new Chronos.PostMessageCourier(options);
+            courierLocal2 = new PostMessageCourier(options);
         });
     });
 
@@ -217,16 +228,16 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 onready: {
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         kickStart();
                     }
                 },
                 useObjects: false,
-                serialize: Chronos.PostMessageUtilities.stringify,
+                serialize: PostMessageUtilities.stringify,
                 deserialize: JSON.parse,
                 channel: withChannel
             };
-            courierLocal2 = Chronos.PostMessageCourier(options);
+            courierLocal2 = PostMessageCourier(options);
 
             function kickStart() {
                 var original = [3];
@@ -267,14 +278,14 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 onready: {
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         kickStart();
                     }
                 },
                 useObjects: false,
                 channel: withChannel
             };
-            courierLocal2 = Chronos.PostMessageCourier(options);
+            courierLocal2 = PostMessageCourier(options);
 
             function kickStart() {
                 var original = [3];
@@ -341,7 +352,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 },
                 channel: false
             };
-            var courierLocal2 = Chronos.PostMessageCourier(options);
+            var courierLocal2 = PostMessageCourier(options);
 
             courierLocal2.bind({
                 appName: "frame",
@@ -388,14 +399,14 @@ describe("PostMessageCourier Sanity Tests", function () {
 
     describe("check command and comply works with callback", function () {
         it("should get command back upon complying", function (done) {
-            var complyHandler = sandbox.spy(function(data) {
+            var complyHandler = sandbox.spy(function (data) {
                 expect(data).to.be.defined;
                 expect(data.num).to.be.defined;
                 expect(data.num).to.equal(original.num * original.num);
 
                 return data.num;
             });
-            var callback = function() {
+            var callback = function () {
                 expect(complyHandler.calledOnce).to.be.true;
                 done();
             };
@@ -452,14 +463,14 @@ describe("PostMessageCourier Sanity Tests", function () {
 
     describe("check request and reply works with callback", function () {
         it("should get request back upon replying", function (done) {
-            var replyHandler = sandbox.spy(function(data) {
+            var replyHandler = sandbox.spy(function (data) {
                 expect(data).to.be.defined;
                 expect(data.num).to.be.defined;
                 expect(data.num).to.equal(original.num / original.num);
 
                 return data.num;
             });
-            var callback = function() {
+            var callback = function () {
                 expect(replyHandler.calledOnce).to.be.true;
                 done();
             };
@@ -487,9 +498,9 @@ describe("PostMessageCourier Sanity Tests", function () {
 
     describe("check request and reply works with callback that throws", function () {
         it("should get request back upon replying", function (done) {
-            var replyHandler = function(data) {
+            var replyHandler = function (data) {
                 // Send the done to the end of the event loop
-                setTimeout(function() {
+                setTimeout(function () {
                     done();
                 }, 0);
                 throw new Error("Error Throwing Check");
@@ -510,7 +521,8 @@ describe("PostMessageCourier Sanity Tests", function () {
                 appName: "host",
                 reqName: "divide",
                 data: original
-            }, function() {});
+            }, function () {
+            });
 
             expect(res).to.be.undefined;
         });
@@ -519,7 +531,7 @@ describe("PostMessageCourier Sanity Tests", function () {
     describe("check 2 frames creation with events", function () {
         it("should create 2 instances and work", function (done) {
             var courierLocal2;
-            var counting = sandbox.spy(function() {
+            var counting = sandbox.spy(function () {
                 if (counting.calledThrice) {
                     done();
                 }
@@ -528,13 +540,13 @@ describe("PostMessageCourier Sanity Tests", function () {
                 target: {
                     url: url,
                     callback: function () {
-                        expect(courierLocal2).to.be.an.instanceof(Chronos.PostMessageCourier);
+                        expect(courierLocal2).to.be.an.instanceof(PostMessageCourier);
                         counting();
                     }
                 },
                 channel: withChannel
             };
-            courierLocal2 = new Chronos.PostMessageCourier(options);
+            courierLocal2 = new PostMessageCourier(options);
 
             var num = 1;
             courierLocal.bind({
@@ -590,7 +602,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 data: {
                     text: "TODA!"
                 }
-            }, function(err, data) {
+            }, function (err, data) {
                 expect(err).to.be.null;
                 expect(data).to.be.equal("TODA!");
                 done();
@@ -609,7 +621,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 data: {
                     text: "TODA!"
                 }
-            }, function(err, data) {
+            }, function (err, data) {
                 expect(err).to.be.defined;
                 expect(err.message).to.be.equal("Callback: Operation Timeout!");
                 expect(data).to.be.undefined;
@@ -626,11 +638,11 @@ describe("PostMessageCourier Sanity Tests", function () {
             courierLocal.reply({
                 appName: "iframe",
                 reqName: "Ma Shlomha?",
-                func: function(data) {
+                func: function (data) {
                     // Do not use new deliberately to test if component is adding it
-                    var promise = LPPromise(function(resolve, reject) {
-                        setTimeout(function() {
-                            promise.progress({ status: "Initialized" });
+                    var promise = LPPromise(function (resolve, reject) {
+                        setTimeout(function () {
+                            promise.progress({status: "Initialized"});
                             resolve(data);
 
                             expect(promise.progress()).to.be.false;
@@ -646,7 +658,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 data: {
                     text: "TODA!"
                 }
-            }, function(err, data) {
+            }, function (err, data) {
                 expect(err).to.be.null;
                 expect(data).to.be.equal("TODA!");
                 done();
@@ -662,10 +674,10 @@ describe("PostMessageCourier Sanity Tests", function () {
             courierLocal.reply({
                 appName: "iframe",
                 reqName: "Ma Shlomha?",
-                func: function(data) {
-                    var promise = new LPPromise(function(resolve, reject) {
-                        setTimeout(function() {
-                            promise.progress({ status: "Initialized" });
+                func: function (data) {
+                    var promise = new LPPromise(function (resolve, reject) {
+                        setTimeout(function () {
+                            promise.progress({status: "Initialized"});
                             reject(data);
 
                             expect(promise.progress()).to.be.false;
@@ -678,7 +690,7 @@ describe("PostMessageCourier Sanity Tests", function () {
             var request = courierLocal.request({
                 appName: "host",
                 reqName: "Ask Async Ma Shlomha?"
-            }, function(err, data) {
+            }, function (err, data) {
                 expect(err).to.be.null;
                 done();
             });
@@ -692,17 +704,17 @@ describe("PostMessageCourier Sanity Tests", function () {
         it("try resolve promise and use then", function () {
             var spy = sandbox.spy();
             var promise = new LPPromise();
-            promise.then(function() {
+            promise.then(function () {
                 spy();
             });
             promise.resolve("OK");
             try {
                 promise.resolve("Should Throw");
             }
-            catch(ex) {
+            catch (ex) {
                 expect(ex.message).to.equal("This Promise instance had already been completed.");
             }
-            promise.then(function() {
+            promise.then(function () {
                 spy();
             });
             expect(spy.calledOnce).to.be.true;
@@ -714,13 +726,13 @@ describe("PostMessageCourier Sanity Tests", function () {
         before(function () {
             // Override array.toJSON to simulate Prototype.js which fucks up this API
             orgToJSON = Array.prototype.toJSON;
-            Array.prototype.toJSON = function() {
+            Array.prototype.toJSON = function () {
                 return "SHEKER KOLSHEHOO!!!";
             };
         });
 
         it("serialize object using stringify method", function () {
-            var obj = { checked: true };
+            var obj = {checked: true};
             var serialized = utils.stringify(obj);
             var deserialized = JSON.parse(serialized);
 
@@ -742,7 +754,7 @@ describe("PostMessageCourier Sanity Tests", function () {
             expect(utils.resolveOrigin(window, true)).to.be.equal(origin);
             expect(utils.resolveOrigin({
                 contentWindow: window,
-                getAttribute: function() {
+                getAttribute: function () {
                     return "http://127.0.0.1:63342/lpEvents/debug/courier.frame.html?bust=1425412100449" + querystring;
                 }
             })).to.be.equal(origin2);
@@ -752,7 +764,7 @@ describe("PostMessageCourier Sanity Tests", function () {
     describe("check message mapper with error message", function () {
 
         it("try map error message", function () {
-            expect(msgMapper.toEvent({ error: "Error check 123!" })().error).to.be.equal("Error check 123!");
+            expect(msgMapper.toEvent({error: "Error check 123!"})().error).to.be.equal("Error check 123!");
         });
     });
 
@@ -765,10 +777,12 @@ describe("PostMessageCourier Sanity Tests", function () {
         });
 
         it("bind method using polyfill method", function () {
-            var obj = { checked: true };
+            var obj = {checked: true};
+
             function tester() {
                 expect(this.checked).to.be.true;
             }
+
             tester.bind(obj)();
         });
 
@@ -780,7 +794,7 @@ describe("PostMessageCourier Sanity Tests", function () {
 
     describe("check command and comply with compliant failure", function () {
         it("should call the callback anyway", function (done) {
-            var counting = sandbox.spy(function() {
+            var counting = sandbox.spy(function () {
                 if (counting.calledTwice) {
                     done();
                 }
@@ -789,8 +803,8 @@ describe("PostMessageCourier Sanity Tests", function () {
             var res = courierGlobal.command({
                 appName: "host",
                 cmdName: "command",
-                data: { success: true }
-            }, function(err, callback) {
+                data: {success: true}
+            }, function (err, callback) {
                 expect(err).to.be.undefined;
                 counting();
                 callback();
@@ -800,8 +814,8 @@ describe("PostMessageCourier Sanity Tests", function () {
             res = courierGlobal.command({
                 appName: "host",
                 cmdName: "command",
-                data: { success: false }
-            }, function(err, callback) {
+                data: {success: false}
+            }, function (err, callback) {
                 expect(err).to.be.defined;
                 expect(err.message).to.be.equal("Error in command");
                 counting();

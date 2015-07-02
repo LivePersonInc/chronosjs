@@ -6,16 +6,9 @@
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        root.Chronos = root.Chronos || {};
-
         // AMD. Register as an anonymous module.
-        define("Chronos.Channels", ["exports", "Chronos.Events", "Chronos.Commands", "Chronos.Reqres"], function () {
-            if (!root.Chronos.Channels) {
-                factory(root, root.Chronos, root.Chronos.Events, root.Chronos.Commands, root.Chronos.ReqRes);
-            }
-
-            return root.Chronos.Channels;
+        define("Chronos.Channels", ["Chronos.Events", "Chronos.Commands", "Chronos.Reqres"], function (Events, Commands, Reqres) {
+            return factory(root, root, Events, Commands, Reqres, true);
         });
         return;
     }
@@ -36,7 +29,7 @@
         root.Chronos = root.Chronos || {};
         factory(root, root.Chronos, root.Chronos.Events, root.Chronos.Commands, root.Chronos.ReqRes);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, Events, Commands, ReqRes) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, Events, Commands, ReqRes, hide) {
     function Channels(options) {
 
         options = options || {};
@@ -67,5 +60,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.Channels = exports.Channels || Channels;
+    if (!hide) {
+        exports.Channels = exports.Channels || Channels;
+    }
+    return Channels;
 }));

@@ -1,19 +1,13 @@
 ;(function (root, chronosRoot, factory) {
     "use strict";
 
-    chronosRoot.Chronos = chronosRoot.Chronos || {};
-
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
-        define("Chronos.PostMessageChannelPolyfill", ["exports", "Chronos.PostMessageUtilities"], function () {
-            if (!chronosRoot.Chronos.PostMessageChannelPolyfill) {
-                factory(root, chronosRoot.Chronos, chronosRoot.Chronos.PostMessageUtilities);
-            }
-
-            return chronosRoot.Chronos.PostMessageChannelPolyfill;
+        define("Chronos.PostMessageChannelPolyfill", ["Chronos.PostMessageUtilities"], function (PostMessageUtilities) {
+            return factory(root, chronosRoot, PostMessageUtilities, true);
         });
         return;
     }
@@ -23,9 +17,10 @@
         /**
          * @depend ./PostMessageUtilities.js
          */
+        chronosRoot.Chronos = chronosRoot.Chronos || {};
         factory(root, chronosRoot.Chronos, chronosRoot.Chronos.PostMessageUtilities);
     }
-}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities) {
+}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, PostMessageUtilities, hide) {
     "use strict";
 
     /*jshint validthis:true */
@@ -174,5 +169,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.PostMessageChannelPolyfill = exports.PostMessageChannelPolyfill || PostMessageChannelPolyfill;
+    if (!hide) {
+        exports.PostMessageChannelPolyfill = exports.PostMessageChannelPolyfill || PostMessageChannelPolyfill;
+    }
+    return PostMessageChannelPolyfill;
 }));

@@ -1,9 +1,11 @@
 describe('ReqRes Sanity Tests', function () {
     var reqres;
+    var ReqRes;
 
     before(function (done) {
         if ("undefined" !== typeof define) {
             require(["Chronos.Reqres"], function(Reqres) {
+                ReqRes = Reqres;
                 done();
             });
         }
@@ -12,8 +14,13 @@ describe('ReqRes Sanity Tests', function () {
         }
     });
     beforeEach('Init ReqRes', function (done) {
-        reqres = new Chronos.ReqRes();
+        reqres = new ReqRes();
         done();
+    });
+    describe("check for global scope", function () {
+        it("should not be polluted", function() {
+            expect(window.Chronos).to.be.undefined;
+        })
     });
 
     describe("check response", function () {
@@ -180,7 +187,7 @@ describe('ReqRes Sanity Tests', function () {
 
             expect(reqres.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var reqres2 = new Chronos.ReqRes();
+            var reqres2 = new ReqRes();
             expect(reqres.hasFired('app1', 'ev1').length).to.equal(1);
         });
     });
@@ -215,7 +222,7 @@ describe('ReqRes Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var reqres2 = new Chronos.ReqRes({
+            var reqres2 = new ReqRes({
                 eventBufferLimit: 1
             });
             reqres2.reply({
@@ -241,7 +248,7 @@ describe('ReqRes Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var reqres2 = new Chronos.ReqRes({
+            var reqres2 = new ReqRes({
                 cloneEventData: true
             });
             reqres2.reply({

@@ -4,14 +4,9 @@
     /* istanbul ignore if */
     //<amd>
     if ("function" === typeof define && define.amd) {
-        root.Chronos = root.Chronos || {};
         // AMD. Register as an anonymous module.
-        define("Chronos.EventsUtil", ["exports"], function () {
-            if (!root.Chronos.EventsUtil) {
-                factory(root, root.Chronos);
-            }
-
-            return root.Chronos.EventsUtil;
+        define("Chronos.EventsUtil", [], function () {
+            return factory(root, root, true);
         });
         return;
     }
@@ -27,7 +22,7 @@
         root.Chronos = root.Chronos || {};
         factory(root, root.Chronos);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, hide) {
     "use strict";
 
     function getListeners(lstnrs, eventName, appName) {
@@ -254,7 +249,7 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.EventsUtil = exports.EventsUtil || {
+    var ret = {
         getListeners: getListeners,
         log: log,
         unbind: unbind,
@@ -262,4 +257,8 @@
         cloneEventData: cloneEventData,
         storeEventData: storeEventData
     };
+    if (!hide) {
+        exports.EventsUtil = exports.EventsUtil || ret;
+    }
+    return ret;
 }));

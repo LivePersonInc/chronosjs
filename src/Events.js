@@ -4,16 +4,9 @@
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        root.Chronos = root.Chronos || {};
-
         // AMD. Register as an anonymous module.
-        define("Chronos.Events", ["exports", "Chronos.EventsUtil"], function () {
-            if (!root.Chronos.Events) {
-                factory(root, root.Chronos, root.Chronos.EventsUtil);
-            }
-
-            return root.Chronos.Events;
+        define("Chronos.Events", ["Chronos.EventsUtil"], function (EventsUtil) {
+            return factory(root, root, EventsUtil, true);
         });
         return;
     }
@@ -32,7 +25,7 @@
         root.Chronos = root.Chronos || {};
         factory(root, root.Chronos, root.Chronos.EventsUtil);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil, hide) {
     "use strict";
 
     function Events(defaults) {
@@ -244,5 +237,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.Events = exports.Events || Events;
+    if (!hide) {
+        exports.Events = exports.Events || Events;
+    }
+    return Events;
 }));

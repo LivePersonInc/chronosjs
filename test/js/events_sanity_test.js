@@ -1,9 +1,11 @@
 describe('Events Sanity Tests', function () {
     var events;
+    var Events;
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["Chronos.Events"], function(Events) {
+            require(["Chronos.Events"], function(_Events) {
+                Events = _Events;
                 done();
             });
         }
@@ -12,8 +14,14 @@ describe('Events Sanity Tests', function () {
         }
     });
     beforeEach('Init Events', function (done) {
-        events = new Chronos.Events();
+        events = new Events();
         done();
+    });
+
+    describe("check for global scope", function () {
+        it("should not be polluted", function() {
+            expect(window.Chronos).to.be.undefined;
+        })
     });
 
     describe("check cannot trigger without event name", function () {
@@ -219,7 +227,7 @@ describe('Events Sanity Tests', function () {
 
             expect(events.hasFired('app1', 'ev1').length).to.equal(1);
 
-            var events2 = new Chronos.Events();
+            var events2 = new Events();
             expect(events.hasFired('app1', 'ev1').length).to.equal(1);
         });
 
@@ -311,7 +319,7 @@ describe('Events Sanity Tests', function () {
     describe("Change bufferLimit default", function () {
 
         it("should catch the change and act accordingly", function () {
-            var events2 = new Chronos.Events({
+            var events2 = new Events({
                 eventBufferLimit: 1
             });
             events2.bind({
@@ -338,7 +346,7 @@ describe('Events Sanity Tests', function () {
                 item: "whatever"
             };
             var innerData;
-            var events2 = new Chronos.Events({
+            var events2 = new Events({
                 cloneEventData: true
             });
             events2.bind({

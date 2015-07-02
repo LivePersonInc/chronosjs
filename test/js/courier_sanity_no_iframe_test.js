@@ -12,6 +12,7 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
     var buster = 0;
     var withChannel = window.PHANTOMJS ? false : void 0;
     var sandbox;
+    var PostMessageCourier;
 
     if (false === withChannel) {
         url += "?lpPMCPolyfill=true";
@@ -20,6 +21,7 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
     before(function (done) {
         if ("undefined" !== typeof define) {
             require(["Chronos.PostMessageCourier"], function (lpPostMessageCourier) {
+                PostMessageCourier = lpPostMessageCourier;
                 done();
             });
         } else {
@@ -34,7 +36,7 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
         var target = {
             url: url + (0 < url.indexOf("?") ? "&" : "?") + "_d=" + buster++,
             callback: function() {
-                courierLocal = new Chronos.PostMessageCourier({
+                courierLocal = new PostMessageCourier({
                     target: frame,
                     targetOrigin: protocol + hostname + port,
                     channel: withChannel

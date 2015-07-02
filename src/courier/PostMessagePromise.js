@@ -1,28 +1,22 @@
 ;(function (root, chronosRoot, factory) {
     "use strict";
 
-    chronosRoot.Chronos = chronosRoot.Chronos || {};
-
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
-
         // AMD. Register as an anonymous module.
         define("Chronos.PostMessagePromise", ["exports"], function () {
-            if (!chronosRoot.Chronos.PostMessagePromise) {
-                factory(root, chronosRoot.Chronos);
-            }
-
-            return chronosRoot.Chronos.PostMessagePromise;
+            return factory(root, chronosRoot, true);
         });
         return;
     }
     //</amd>
     /* istanbul ignore next  */
     if ("object" !== typeof exports) {
+        chronosRoot.Chronos = chronosRoot.Chronos || {};
         factory(root, chronosRoot.Chronos);
     }
-}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
+}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, hide) {
     "use strict";
 
     /*jshint validthis:true */
@@ -199,5 +193,8 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.PostMessagePromise = exports.PostMessagePromise || PostMessagePromise;
+    if (!hide) {
+        exports.PostMessagePromise = exports.PostMessagePromise || PostMessagePromise;
+    }
+    return PostMessagePromise;
 }));

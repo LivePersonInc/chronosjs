@@ -1,28 +1,23 @@
 ;(function (root, chronosRoot, factory) {
     "use strict";
 
-    chronosRoot.Chronos = chronosRoot.Chronos || {};
-
     /* istanbul ignore if  */
     //<amd>
     if ("function" === typeof define && define.amd) {
 
         // AMD. Register as an anonymous module.
-        define("Chronos.PostMessageUtilities", ["exports"], function () {
-            if (!chronosRoot.Chronos.PostMessageUtilities) {
-                factory(root, chronosRoot.Chronos);
-            }
-
-            return chronosRoot.Chronos.PostMessageUtilities;
+        define("Chronos.PostMessageUtilities", [], function () {
+            return factory(root, chronosRoot, true);
         });
         return;
     }
     //</amd>
     /* istanbul ignore next  */
     if ("object" !== typeof exports) {
+        chronosRoot.Chronos = chronosRoot.Chronos || {};
         factory(root, chronosRoot.Chronos);
     }
-}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports) {
+}(this, typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, hide) {
     "use strict";
 
     var SEQUENCE_FORMAT = "_xxxxxx-4xxx-yxxx";
@@ -307,7 +302,7 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.PostMessageUtilities = exports.PostMessageUtilities || {
+    var ret = {
         SEQUENCE_FORMAT: SEQUENCE_FORMAT,
         stringify: stringify,
         hasPostMessageObjectsSupport: hasPostMessageObjectsSupport,
@@ -323,4 +318,8 @@
         log: log,
         bind: bind
     };
+    if (!hide) {
+        exports.PostMessageUtilities = exports.PostMessageUtilities || ret;
+    }
+    return ret;
 }));

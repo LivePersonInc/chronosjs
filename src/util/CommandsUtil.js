@@ -4,16 +4,10 @@
     /* istanbul ignore if */
     //<amd>
     if ("function" === typeof define && define.amd) {
-        // Browser globals
-        root.Chronos = root.Chronos || {};
-
         // AMD. Register as an anonymous module.
-        define("Chronos.CommandsUtil", ["exports", "Chronos.EventsUtil"], function () {
-            if (!root.Chronos.CommandsUtil) {
-                factory(root, root.Chronos, root.Chronos.EventsUtil);
-            }
+        define("Chronos.CommandsUtil", ["Chronos.EventsUtil"], function (EventsUtil) {
+            return factory(root, root, EventsUtil, true);
 
-            return root.Chronos.CommandsUtil;
         });
         return;
     }
@@ -32,7 +26,7 @@
         root.Chronos = root.Chronos || {};
         factory(root, root.Chronos, root.Chronos.EventsUtil);
     }
-}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil) {
+}(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, evUtil, hide) {
     "use strict";
 
     /**
@@ -76,8 +70,12 @@
 
     // attach properties to the exports object to define
     // the exported module properties.
-    exports.CommandsUtil = exports.CommandsUtil || {
-            bind: bind,
-            valid: valid
-        };
+    var ret = {
+        bind: bind,
+        valid: valid
+    };
+    if (!hide) {
+        exports.CommandsUtil = exports.CommandsUtil || ret;
+    }
+    return ret;
 }));
