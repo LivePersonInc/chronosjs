@@ -373,4 +373,25 @@ describe('Commands Sanity Tests', function () {
 
     });
 
+    describe("check response on named commands", function () {
+        var res;
+        var namedCommands = new Commands({ appName: "NamedCommands" });
+
+        it("should respond with 1", function () {
+            var cmdId = namedCommands.comply({
+                cmdName: "get",
+                func: function () {
+                    return 1;
+                }
+            });
+
+            res = namedCommands.command({
+                cmdName: "get",
+                data: {}
+            });
+            expect(cmdId).not.to.be.null;
+            expect(res).to.be.true;
+        });
+    });
+
 });
