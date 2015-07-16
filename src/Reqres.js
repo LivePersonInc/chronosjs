@@ -36,8 +36,10 @@
             prefix = "reqId_",
             indexer = 0,
             cloneData,
-            eventBufferLimit;
+            eventBufferLimit,
+            defaultAppName;
 
+        defaultAppName = defaults && defaults.appName || "*";
         cloneData = (defaults && typeof defaults.cloneEventData === "boolean" ? defaults.cloneEventData : false);
         eventBufferLimit = (defaults && !isNaN(defaults.eventBufferLimit) ? defaults.eventBufferLimit : -1);
 
@@ -53,6 +55,9 @@
          * @return {String} - command Id.
          */
         function reply(req) {
+            if ("*" !== defaultAppName) {
+                req.appName = req.appName || defaultAppName;
+            }
             return cmdUtil.bind({
                 cmd: req,
                 attrName: attrName,
@@ -74,6 +79,9 @@
          * @return {Boolean} - has stopped complying.
          */
         function stopReplying(unbindObj) {
+            if ("*" !== defaultAppName) {
+                unbindObj.appName = unbindObj.appName || defaultAppName;
+            }
             return evUtil.unbind({
                 unbindObj: unbindObj,
                 attrName: attrName,
@@ -89,6 +97,11 @@
          * @return {Array}
          */
         function hasFired(app, reqName) {
+            if ("undefined" === typeof reqName) {
+                reqName = app;
+                app = defaultAppName;
+            }
+
             return evUtil.hasFired(fired, app, reqName);
         }
 
@@ -108,6 +121,9 @@
             if (!req || typeof (req.reqName) === "undefined" || !cmdUtil.valid(req, req.reqName)) {
                 evUtil.log("request: name not spec for command", "ERROR", "ReqRes");
                 throw new Error("Invalid request object");
+            }
+            if ("*" !== defaultAppName) {
+                req.appName = req.appName || defaultAppName;
             }
             req.passDataByRef = req.passDataByRef || !cloneData;
             _storeEventData(req);

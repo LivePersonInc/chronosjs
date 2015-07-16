@@ -376,4 +376,25 @@ describe('ReqRes Sanity Tests', function () {
         });
 
     });
+
+    describe("check response on named reqres", function () {
+        var res;
+        var namedReqRes = new ReqRes({ appName: "NamedReqRes" });
+
+        it("should respond with 1", function () {
+            var reqId = namedReqRes.reply({
+                reqName: "get",
+                func: function () {
+                    return 1;
+                }
+            });
+
+            res = namedReqRes.command({
+                reqName: "get",
+                data: {}
+            });
+            expect(reqId).not.to.be.null;
+            expect(res).to.be.true;
+        });
+    });
 });

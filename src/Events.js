@@ -37,8 +37,10 @@
             prefix = "evId_",
             indexer = 0,
             cloneData,
-            eventBufferLimit;
+            eventBufferLimit,
+            defaultAppName;
 
+        defaultAppName = defaults && defaults.appName || "*";
         cloneData = (defaults && typeof defaults.cloneEventData === "boolean" ? defaults.cloneEventData : false);
         eventBufferLimit = (defaults && !isNaN(defaults.eventBufferLimit) ? defaults.eventBufferLimit : -1);
 
@@ -82,6 +84,8 @@
                 };
             }
 
+            evData.appName = evData.appName || defaultAppName;
+
             if (!evData.eventName || !evData.func || ("function" !== typeof evData.func && evData.func.constructor !== Array)) {
                 evUtil.log("Ev listen has invalid params: evName=[" + evData.eventName + "]", "ERROR", "Events");
                 return null;
@@ -102,7 +106,7 @@
                 func: evData.func,
                 context: evData.context || null,
                 aSync: evData.aSync ? true : false,
-                appName: evData.appName || "*",
+                appName: evData.appName,
                 triggerOnce: evData.triggerOnce || false
             };
             lstnrs[evData.eventName] = lstnrs[evData.eventName] || [];
@@ -124,6 +128,9 @@
          * @return {Boolean}
          */
         function unbind(unbindObj) {
+            if ("*" !== defaultAppName) {
+                unbindObj.appName = unbindObj.appName || defaultAppName;
+            }
             return evUtil.unbind({
                 unbindObj: unbindObj,
                 attrName: attrName,
@@ -134,14 +141,16 @@
 
         /**
          * firedEventData can pass two request parameters
-         * @param app = {
-         *  eventName: the name of the event you want to know about, if this is not passed it returns all the fired events data
-         *  appName: the name of the app that fired the event
-         * } || app name
+         * @param app name
          * @param evName = event name
          * @return {Array}
          */
         function hasFired(app, evName) {
+            if ("undefined" === typeof evName) {
+                evName = app;
+                app = defaultAppName;
+            }
+
             return evUtil.hasFired(fired, app, evName);
         }
 
@@ -165,6 +174,9 @@
                     appName: app,
                     data: data
                 };
+            }
+            if ("*" !== defaultAppName) {
+                triggerData.appName = triggerData.appName || defaultAppName;
             }
             if (!triggerData || typeof (triggerData.eventName) === "undefined") {
                 evUtil.log("Ev name not spec for publish", "ERROR", "Events");
