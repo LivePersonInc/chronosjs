@@ -86,7 +86,7 @@
 
             evData.appName = evData.appName || defaultAppName;
             if ("*" !== defaultAppName) {
-                if ("string" === typeof app && ("object" === typeof ev || "undefined" === typeof ev)) {
+                if ("string" === typeof app && ("function" === typeof ev || "undefined" === typeof ev)) {
                     evData.eventName = app;
                 }
             }
