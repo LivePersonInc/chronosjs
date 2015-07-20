@@ -85,6 +85,11 @@
             }
 
             evData.appName = evData.appName || defaultAppName;
+            if ("*" !== defaultAppName) {
+                if ("string" === typeof app && ("object" === typeof ev || "undefined" === typeof ev)) {
+                    evData.eventName = app;
+                }
+            }
 
             if (!evData.eventName || !evData.func || ("function" !== typeof evData.func && evData.func.constructor !== Array)) {
                 evUtil.log("Ev listen has invalid params: evName=[" + evData.eventName + "]", "ERROR", "Events");
@@ -177,6 +182,9 @@
             }
             if ("*" !== defaultAppName) {
                 triggerData.appName = triggerData.appName || defaultAppName;
+                if ("string" === typeof app && ("object" === typeof evName || "undefined" === typeof evName)) {
+                    triggerData.eventName = app;
+                }
             }
             if (!triggerData || typeof (triggerData.eventName) === "undefined") {
                 evUtil.log("Ev name not spec for publish", "ERROR", "Events");
