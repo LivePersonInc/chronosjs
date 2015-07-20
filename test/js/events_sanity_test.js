@@ -508,7 +508,7 @@ describe("Events Sanity Tests", function () {
 
     describe("named events", function () {
         var namedEvents = new Events({ appName: "NamedEvents" });
-        var obj = {x: 0};
+        var obj = {x: 0, y: 0};
         var evList = [];
 
         it("should trigger the event", function () {
@@ -516,9 +516,14 @@ describe("Events Sanity Tests", function () {
             evList.push(namedEvents.bind({ eventName: "*" }, function (obj) {
                 obj.x += 1;
             }));
+            evList.push(namedEvents.bind("*", function (obj) {
+                obj.y += 1;
+            }));
             namedEvents.trigger({ eventName: "evTest1" }, obj);
+            namedEvents.trigger("evTest1", obj);
 
-            expect(obj.x).to.equal(1);
+            expect(obj.x).to.equal(2);
+            expect(obj.y).to.equal(2);
         });
 
     });
