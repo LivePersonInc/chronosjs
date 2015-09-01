@@ -4,7 +4,7 @@ describe("Events Sanity Tests", function () {
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["Chronos.Events"], function(_Events) {
+            require(["Chronos.Events"], function (_Events) {
                 Events = _Events;
                 done();
             });
@@ -19,7 +19,7 @@ describe("Events Sanity Tests", function () {
     });
 
     describe("check for global scope", function () {
-        it("should not be polluted", function() {
+        it("should not be polluted", function () {
             expect(window.Chronos).to.be.undefined;
         })
     });
@@ -90,6 +90,21 @@ describe("Events Sanity Tests", function () {
             var unbind = events.unbind(false);
             expect(unbind).to.be.null;
             unbind = events.unbind("evTest");
+            expect(unbind).to.be.false;
+        });
+
+        it("should not throw error when unbinding an app that were never bound", function () {
+            var unbind = events.unbind({
+                appName: "neverBound",
+                eventName: "whatever",
+                func: function () {
+                }
+            });
+            expect(unbind).to.be.false;
+            unbind = events.unbind({
+                appName: "neverBound2",
+                eventName: "whatever2"
+            });
             expect(unbind).to.be.false;
         });
     });
@@ -507,28 +522,30 @@ describe("Events Sanity Tests", function () {
     });
 
     describe("named events", function () {
-        var namedEvents = new Events({ appName: "NamedEvents" });
+        var namedEvents;
+        var appName = "NamedEvents";
         var obj = {x: 0, y: 0, z: 0};
-        var evList = [];
+
+        before(function () {
+            namedEvents = new Events({appName: appName});
+        });
 
         it("should trigger the event", function () {
 
-            evList.push(namedEvents.bind({ eventName: "*" }, function (obj) {
-                obj.x += 1;
-            }));
-            evList.push(namedEvents.bind("*", function (obj) {
-                obj.y += 1;
-            }));
-            evList.push(namedEvents.bind("evTest1", function (obj) {
+            namedEvents.bind({
+                eventName: "*",
+                func: function (obj) {
+                    obj.x += 1;
+                }
+            });
+            namedEvents.bind(appName, "evTest1", function (obj) {
                 obj.z += 1;
-            }));
-            namedEvents.trigger({ eventName: "evTest1" }, obj);
-            namedEvents.trigger("evTest1", obj);
-            namedEvents.trigger("*", obj);
+            });
+            namedEvents.trigger({eventName: "evTest1", data: obj});
+            namedEvents.trigger(appName, "evTest1", obj);
 
-            expect(obj.x).to.equal(3);
-            expect(obj.y).to.equal(3);
-            expect(obj.z).to.equal(3);
+            expect(obj.x).to.equal(2);
+            expect(obj.z).to.equal(2);
         });
 
     });

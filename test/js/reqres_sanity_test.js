@@ -379,7 +379,10 @@ describe('ReqRes Sanity Tests', function () {
 
     describe("check response on named reqres", function () {
         var res;
-        var namedReqRes = new ReqRes({ appName: "NamedReqRes" });
+        var namedReqRes;
+        before(function() {
+            namedReqRes = new ReqRes({ appName: "NamedReqRes" });
+        });
 
         it("should respond with 1", function () {
             var reqId = namedReqRes.reply({
@@ -389,12 +392,12 @@ describe('ReqRes Sanity Tests', function () {
                 }
             });
 
-            res = namedReqRes.command({
+            res = namedReqRes.request({
                 reqName: "get",
                 data: {}
             });
             expect(reqId).not.to.be.null;
-            expect(res).to.be.true;
+            expect(res).to.equal(1);
         });
     });
 });

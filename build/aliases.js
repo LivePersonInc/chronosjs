@@ -6,7 +6,11 @@ module.exports = function (grunt, options) {
         'default': tasks,
         'test': [
             'node_version',
-            'mochaTest'
+            'mochaTest',
+            'env',
+            'instrument',
+            'connect',
+            'mocha'
         ]
     };
 };

@@ -375,7 +375,10 @@ describe('Commands Sanity Tests', function () {
 
     describe("check response on named commands", function () {
         var res;
-        var namedCommands = new Commands({ appName: "NamedCommands" });
+        var namedCommands;
+        before(function() {
+            namedCommands = new Commands({ appName: "NamedCommands" });
+        });
 
         it("should respond with 1", function () {
             var cmdId = namedCommands.comply({
