@@ -199,15 +199,37 @@
      * @param {Number} [milliseconds] - optional milliseconds to delay or false to run immediately
      */
     function delay(method, milliseconds) {
+        var timer;
         /* istanbul ignore if  */
         if ("undefined" !== typeof setImmediate && (isNaN(milliseconds) || 0 >= milliseconds)) {
-            setImmediate(method);
+            timer = setImmediate(method);
         }
         else if (false === milliseconds) {
             method();
         }
         else {
-            setTimeout(method, (isNaN(milliseconds) || 0 >= milliseconds) ? 0 : parseInt(milliseconds, 10));
+            timer = setTimeout(method, (isNaN(milliseconds) || 0 >= milliseconds) ? 0 : parseInt(milliseconds, 10));
+        }
+
+        return function() {
+            clearDelay(timer);
+        };
+    }
+
+    /**
+     * Method to clear the delay of a message execution (async)
+     * @param {Number} id - the id of the timer to clear
+     */
+    function clearDelay(timer) {
+        var timerId = parseNumber(timer);
+        if (timerId) {
+            /* istanbul ignore if  */
+            if ("undefined" !== typeof clearImmediate) {
+                clearImmediate(timerId);
+            }
+            else {
+                clearTimeout(timerId);
+            }
         }
     }
 

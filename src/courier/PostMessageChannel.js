@@ -156,6 +156,16 @@
                     }
                 }
 
+                // Remove load handler if needed
+                if (this.rmload) {
+                    this.rmload();
+                }
+
+                // Remove timer if needed
+                if (this.rmtimer) {
+                    this.rmtimer();
+                }
+
                 this.messageQueue.length = 0;
                 this.messageQueue = void 0;
                 this.channel = void 0;
@@ -232,8 +242,8 @@
 
             PostMessageUtilities.delay(function () {
                 if (!this.hosted && !this.ready) {
-                    _addLoadHandler.call(this, this.target);
-                    this.timer = PostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
+                    this.rmload = _addLoadHandler.call(this, this.target);
+                    this.rmtimer = PostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
                 }
             }.bind(this));
         }
@@ -474,8 +484,8 @@
          * @private
          */
         function _handshake(retry) {
-            if (this.timer) {
-                clearTimeout(this.timer);
+            if (this.rmtimer) {
+                this.rmtimer();
             }
 
             if (!this.ready) {
@@ -506,7 +516,7 @@
             if (!this.ready && retry) {
                 if (0 < this.handshakeAttempts) {
                     this.handshakeAttempts--;
-                    this.timer = PostMessageUtilities.delay(_handshake.bind(this, retry), retry);
+                    this.rmtimer = PostMessageUtilities.delay(_handshake.bind(this, retry), retry);
                 }
                 else {
                     this.onready(new Error("Loading: Operation Timeout!"));
@@ -630,7 +640,7 @@
                 delay: delay,
                 onready: function() {
                     (container || document.body).appendChild(frame);
-                    _addLoadHandler.call(this, frame);
+                    this.rmload = _addLoadHandler.call(this, frame);
                     _setIFrameLocation.call(this, frame, options.url, (false !== options.bust));
                 }.bind(this)
             });
@@ -641,14 +651,31 @@
         /**
          * Add load handler for the iframe to make sure it is loaded
          * @param {Object} frame - the actual DOM iframe
+         * @returns {Function} the remove handler function
          * @private
          */
         function _addLoadHandler(frame) {
-            PostMessageUtilities.addEventListener(frame, "load", function() {
+            var load = function() {
                 this.loading = false;
 
                 _handshake.call(this, this.handshakeInterval);
-            }.bind(this));
+            }.bind(this);
+
+            PostMessageUtilities.addEventListener(frame, "load", load);
+
+            return function() {
+                _removeLoadHandler(frame, load);
+            };
+        }
+
+        /**
+         * Remove load handler for the iframe
+         * @param {Object} frame - the actual DOM iframe
+         * @param {Function} handler - the actual registered load handler
+         * @private
+         */
+        function _removeLoadHandler(frame, handler) {
+            PostMessageUtilities.removeEventListener(frame, "load", handler);
         }
 
         /**

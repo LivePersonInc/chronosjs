@@ -12,6 +12,7 @@
         "Window": true,
         "Promise": true,
         "setImmediate": true,
+        "clearImmediate": true,
         "process": true,
         "module": true,
         "exports": true,
