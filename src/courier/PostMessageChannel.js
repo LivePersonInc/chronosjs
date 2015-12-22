@@ -132,6 +132,41 @@
         }
 
         /**
+         * Method for removing the handler
+         * @param {String} name - a name of the reference which holds the remove handler on this context,
+         * @param {Boolean} ignore - optional flag to indicate whether to ignore the execution of the remove handler
+         *
+         */
+        function _removeHandler(name, ignore) {
+            // Remove handler if needed
+            var func = PostMessageUtilities.parseFunction(this[name]);
+            if (func) {
+                if (!ignore) {
+                    func.call(this);
+                }
+
+                this[name] = void 0;
+                delete this[name];
+            }
+        }
+
+        /**
+         * Method for removing the timer
+         */
+        function _removeTimer(ignore) {
+            // Remove timer if needed
+            _removeHandler.call(this, "rmtimer", ignore);
+        }
+
+        /**
+         * Method for removing the timer
+         */
+        function _removeLoadedHandler(ignore) {
+            // Remove load handler if needed
+            _removeHandler.call(this, "rmload", ignore);
+        }
+
+        /**
          * Method for disposing the object
          */
         function dispose() {
@@ -157,14 +192,10 @@
                 }
 
                 // Remove load handler if needed
-                if (this.rmload) {
-                    this.rmload();
-                }
+                _removeTimer.call(this);
 
                 // Remove timer if needed
-                if (this.rmtimer) {
-                    this.rmtimer();
-                }
+                _removeLoadedHandler.call(this);
 
                 this.messageQueue.length = 0;
                 this.messageQueue = void 0;
@@ -241,7 +272,7 @@
             this.handshakeAttempts--;
 
             PostMessageUtilities.delay(function () {
-                if (!this.hosted && !this.ready) {
+                if (!this.disposed && !this.hosted && !this.ready) {
                     this.rmload = _addLoadHandler.call(this, this.target);
                     this.rmtimer = PostMessageUtilities.delay(_handshake.bind(this, this.handshakeInterval), this.handshakeInterval);
                 }
@@ -319,7 +350,7 @@
                     this.removeListener = PostMessageUtilities.addEventListener(this.receiver, "message", handler);
                     previous();
 
-                    if (this.hosted && !this.ready) {
+                    if (!this.disposed && this.hosted && !this.ready) {
                         handshake = true;
                     }
                 }
@@ -329,7 +360,7 @@
                             this.token = event.data;
                         }
 
-                        if (this.hosted && !this.ready) {
+                        if (!this.disposed && this.hosted && !this.ready) {
                             handshake = true;
                         }
                     }
@@ -446,7 +477,7 @@
                 var msgObject;
 
                 if (!message.origin || "*" === message.origin ||  this.targetOrigin === message.origin) {
-                    if (_isHandshake.call(this, message) && !this.hosted && !this.ready) {
+                    if (_isHandshake.call(this, message) && !this.disposed && !this.hosted && !this.ready) {
                         _onReady.call(this);
                     }
                     else {
@@ -484,11 +515,10 @@
          * @private
          */
         function _handshake(retry) {
-            if (this.rmtimer) {
-                this.rmtimer();
-            }
+            // Remove load handler if needed
+            _removeTimer.call(this, true);
 
-            if (!this.ready) {
+            if (!this.disposed && !this.ready) {
                 if (!_isNativeMessageChannelSupported.call(this)) {
                     this.targetOrigin = this.targetOrigin || PostMessageUtilities.resolveOrigin(this.target) || "*";
                 }
@@ -513,7 +543,7 @@
                 }
             }
 
-            if (!this.ready && retry) {
+            if (!this.disposed && !this.ready && retry) {
                 if (0 < this.handshakeAttempts) {
                     this.handshakeAttempts--;
                     this.rmtimer = PostMessageUtilities.delay(_handshake.bind(this, retry), retry);
@@ -531,7 +561,7 @@
          * @private
          */
         function _onReady() {
-            if (!this.ready) {
+            if (!this.disposed && !this.ready) {
                 this.ready = true;
 
                 // Process queued messages if any
@@ -540,7 +570,7 @@
                         var message;
                         var parsed;
 
-                        if (this.ready) {
+                        if (!this.disposed && this.ready) {
                             while (this.messageQueue && this.messageQueue.length) {
                                 message = this.messageQueue.shift();
                                 try {
