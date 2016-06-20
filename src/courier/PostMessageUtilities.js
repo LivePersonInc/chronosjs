@@ -70,7 +70,9 @@
                 }
             }, "*");
         }
-        catch(ex) {}
+        catch(ex) {
+            hasObjectsSupport = false;
+        }
 
         return hasObjectsSupport;
     }
