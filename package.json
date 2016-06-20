@@ -1,7 +1,7 @@
 {
     "name": "chronosjs",
     "description": "JS Channels Mechanism",
-    "version": "0.0.18",
+    "version": "0.0.19",
     "author": {
         "name": "LivePersonInc",
         "email": "fe-infra-lp@liveperson.com"
