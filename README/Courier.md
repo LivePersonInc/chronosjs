@@ -1,8 +1,10 @@
 #Overview
 
 Courier functions in two main ways:
+
 1. Spawning it's own private events engine
 2. Receiving an event engine (Channels externally)
+
 
 It is important to note the use case you want when creating a Courier instance.
 

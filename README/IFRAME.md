@@ -1,6 +1,7 @@
 #How to set up iFrames with Courier
 Both parent page and child iFrame need to include the <b>PostMessageCourier.js</b> from the dist directory (there is a minified, compressed version in the <b>min</b> directory).
 In order to set up iFrames you have two options:
+
 1. Create your own iFrame and pass it in to Courier
 2. Pass in a URL and let Courier create it for you
 
