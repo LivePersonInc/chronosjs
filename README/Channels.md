@@ -25,7 +25,7 @@ Config object options:
 | ---       | ---  | ---         | ---       |
 | events | Object | A Chronos.Events configuration object| None |
 | commands | Object | A Chronos.Commands configuration object| None |
-| reqres | Object | A Chronos.reqres configuration object| None |
+| reqres | Object | A Chronos.ReqRes configuration object| None |
 
 
 Sample Code:
