@@ -27,6 +27,7 @@ These are the exposed methods on an instance.
 ##bind / register / once
 This binds to a specific event.
 <b>bind</b> and <b>register</b> are the same, <b>once</b> raises the once flag when binding.
+Returns an eventId you can use to unbind with.
 
 Parameters:
 
@@ -41,7 +42,7 @@ Parameters:
 
 Example:
 ```
-    event.bind({
+   var eventId = events.bind({
         appName: "MyApp",
         eventName: "Terminating",
         func : function doCleanUp(){ //Clean up my stuff  },
@@ -50,6 +51,49 @@ Example:
         aSync : true
     });
 ```
+
+##trigger / publish
+This is used for triggering an event.
+
+Parameters:
+| Parameter | Type | Description |  Defaults |
+| ---       | ---  | ---         | ---       |
+| appName | String | The name of the application we're triggering with| default app (from configuration) |
+| eventName | String | The nane of the event we're triggering | None - Required |
+| data | Object/ String / Boolean / Number | The event data we are sharing | None - required |
+| passDataByRef | Boolean | Can force passing all data by REF or as Cloned to each listener| true (*can be overriden in general config) |
+| aSync | Boolean | Trigger as none blocking | false |
+
+Example:
+```
+    events.trigger({
+        appName: "MyApp",
+        eventName: "Terminating",
+        aSync : true,
+        passDataByRef: false,
+        data: { msg: "App Ending", reason: "Server fail", code: 57  }
+    });
+```
+
+Example data listener gets:
+```
+    listener(
+             EventData, //Whatever the event publisher sent
+             EventMetaData //Event meta data : { eventName, appName }
+            );
+```
+EventConfiguration contains:
+| Parameter | Type | Description |  Defaults |
+| ---       | ---  | ---         | ---       |
+| appName | String | The name of the application | default app (from configuration) |
+| eventName | String | The name of the event | None - Required |
+
+
+##unbind / unregister
+
+
+
+##hasFired
 
 
 
