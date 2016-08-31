@@ -83,7 +83,7 @@ Example data listener gets:
              EventMetaData //Event meta data : { eventName, appName }
             );
 ```
-EventConfiguration contains:
+EventMetaData contains:
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
