@@ -88,6 +88,8 @@ The iFrame configuration supports the following properties in the target attribu
      });
 ```
 
+More info about [Courier](Courier.md) can be found [here](Courier.md).
+
 
 
 
