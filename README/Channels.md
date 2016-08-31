@@ -1,6 +1,6 @@
 #Overview
 
-Channels is a wraps Events, Commands and ReqRes as a full package.
+Channels wraps Events, Commands and ReqRes as a single package.
 It's main use is to pass around when you'd like to share your events bus with multiple iFrames.
 Such cases arise mainly when you'd like to trigger events between iFrames.
 
@@ -38,4 +38,21 @@ var channel = new Chronos.Channels({
     }
 });
 ```
-
+Exposed Instance API:
+```     once //From Events
+        hasFiredEvents //From Events
+        trigger //From Events
+        publish //From Events
+        bind //From Events
+        register //From Events
+        unbind //From Events
+        unregister //From Events
+        hasFiredCommands //From Commands
+        comply //From Commands
+        stopComplying //From Commands
+        command //From Commands
+        hasFiredReqres //From ReqRes
+        request //From ReqRes
+        reply //From ReqRes
+        stopReplying //From ReqRes
+```
