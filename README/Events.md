@@ -84,6 +84,7 @@ Example data listener gets:
             );
 ```
 EventConfiguration contains:
+
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
 | appName | String | The name of the application | default app (from configuration) |
