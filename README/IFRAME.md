@@ -35,9 +35,7 @@ In order to set up iFrames you have two options:
         return frame;
     }
 ```
-After you have created your own iFrame you need to create:
-1. A channels instance
-2. A Courier instance - passing it channels and the iFrame
+After you have created your own iFrame you need to create a courier instance and pass it to the Courier.
 
 ```
     var frame = createIFrame({
@@ -57,9 +55,7 @@ After you have created your own iFrame you need to create:
         }
     });
 
-    var channel = new Chronos.Channels();
     var courier = new Chronos.PostMessageCourier({
-        eventChannel: channel,
         target: frame,
         targetOrigin: protocol + hostname + port
     });
@@ -67,14 +63,34 @@ After you have created your own iFrame you need to create:
 
 ##Passing in a iFrame configuration to Courier
 The other option is to let Courier create the iFrame and pass it back to you.
-The iFrame configuration supports the following properties:
+The iFrame configuration supports the following properties in the target attribute:
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
-| styles | Object | The style attributes you'd like to set on the Iframe | ```width :"0px",height : "0px",position :"absolute",top : "-1000px",left : "-1000px"}```|
+| url | String | The URL of your iFrame | None |
+| style | Object | The style attributes you'd like to set on the iFrame |
+```{ width :"0px",
+     height : "0px",
+     position :"absolute",
+     top : "-1000px",
+     left : "-1000px"
+     }
+```|
+ | attributes | Object | The attributes you'd like to set on the iFrame |
+```{
+        "id": name,             //A name we generate
+        "name" :name,           //A name we generate
+        "tabindex": "-1",       // To prevent it getting focus when tabbing through the page
+        "aria-hidden": "true",  // To prevent it being picked up by screen-readers
+        "title":  "",           // Adding an empty title for accessibility
+        "role": "presentation", // Adding a presentation role http://yahoodevelopers.tumblr.com/post/59489724815/easy-fixes-to-common-accessibility-problems
+        "allowTransparency":"true"
+    }
+```|
 
+###Please note if you dont set any attributes the iFrame will be hidden from view.
 
- ```
+```
      var courier = new Chronos.PostMessageCourier({
         target: {
             url: protocol + hostname + port + "/chronosjs/debug/courier.frame.html",
@@ -87,7 +103,7 @@ The iFrame configuration supports the following properties:
             }
         }
      });
- ```
+```
 
 
 
