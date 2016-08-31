@@ -10,6 +10,7 @@ var channel = new Chronos.Channels(options);
 ```
 
 Options can contain:
+
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
 | config | Object | Configuration for protocols | None |
@@ -18,7 +19,8 @@ Options can contain:
 | reqres | ReqRes Instance | A Chronos.reqres instance | None |
 
 
-Config object options
+Config object options:
+
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
 | events | Object | A Chronos.Events configuration object| None |
