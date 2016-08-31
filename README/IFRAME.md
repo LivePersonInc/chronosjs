@@ -68,25 +68,8 @@ The iFrame configuration supports the following properties in the target attribu
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
 | url | String | The URL of your iFrame | None |
-| style | Object | The style attributes you'd like to set on the iFrame |
- ```{ width :"0px",
-     height : "0px",
-     position :"absolute",
-     top : "-1000px",
-     left : "-1000px"
-     }
- ```|
-| attributes | Object | The attributes you'd like to set on the iFrame |
- ```{
-        "id": name,             //A name we generate
-        "name" :name,           //A name we generate
-        "tabindex": "-1",       // To prevent it getting focus when tabbing through the page
-        "aria-hidden": "true",  // To prevent it being picked up by screen-readers
-        "title":  "",           // Adding an empty title for accessibility
-        "role": "presentation", // Adding a presentation role http://yahoodevelopers.tumblr.com/post/59489724815/easy-fixes-to-common-accessibility-problems
-        "allowTransparency":"true"
-    }
- ```|
+| style | Object | The style attributes you'd like to set on the iFrame | ```{ width :"0px", height : "0px", position :"absolute", top : "-1000px",  left : "-1000px" }``` |
+| attributes | Object | The attributes you'd like to set on the iFrame | ```{"id": name, "name" :name, "tabindex": "-1", "aria-hidden": "true", "title":  "","role": "presentation","allowTransparency":"true"}```|
 
 ###Please note if you dont set any attributes the iFrame will be hidden from view.
 
