@@ -24,6 +24,7 @@ Example shared Events channel:
 
 ##How to set up iFrames with Courier
 Both parent page and child iFrame need to include the <b>PostMessageCourier.js</b> from the dist directory (there is a minified, compressed version in the <b>min</b> directory).
+
 In order to set up iFrames you have two options:
 
 1. Create your own iFrame and pass it in to Courier
@@ -141,7 +142,6 @@ Other configuration options:
 | targetOrigin | String | the domain of the iFrame being added <b>*must be supplied in case of external iFrame</b> | None |
 | handshakeInterval | milliseconds | Number of milliseconds before handshake retry | 5000 |
 | handshakeAttempts | int | Maximum attempts at handshake | 3 |
-| onmessage | Function | Handler for incoming messages <b>*optional</b>| None |
 
 Example:
 ```
@@ -155,10 +155,67 @@ Example:
     deserialize : function() { ... },
     targetOrigin: ...,
     handshakeInterval : ...,
-    handshakeAttempts : ...,
-    onmessage  : function() { ... },
+    handshakeAttempts : ...
 }
 ```
+
+##How to use Courier
+Once you have a courier instance you can use all the methods supported just like events:
+
+ ```
+ // Initialize a new Courier
+ var courier = Chronos.PostMessageCourier({
+     target: {
+         url: "http://www.crossdomain.com/"
+     }
+ });
+
+ ///// ---- BINDINGS ------ ////
+ courier.bind({
+     appName: "host",
+     eventName: "multiply",
+     func: multiply
+ });
+ courier.comply({
+     appName: "host",
+     cmdName: "square",
+     func: square
+ });
+ courier.reply({
+     appName: "host",
+     reqName: "divide",
+     func: divide
+ });
+
+ ///// ---- INVOCATION ------ ////
+ courier.trigger({
+     appName: "frame",
+     eventName: "got_it",
+     data: data * 2
+ });
+ courier.command({
+     appName: "frame",
+     cmdName: "expect",
+     data: data
+ }, function(err) {
+     if (err) {
+         console.log("Problem invoking command");
+     }
+ });
+ courier.request({
+     appName: "frame",
+     reqName: "askBack",
+     data: data
+ }, function(err, data) {
+     if (err) {
+         console.log("Problem invoking request");
+         return;
+     }
+     // Do Something with the data
+     console.log(data);
+ });
+ ```
+
 
 
 
