@@ -40,7 +40,7 @@ Supports async requests with an options to call a callback when done with a resu
 ### Chronos.Channels
 A Channel which includes all communication means (events, commands, requests). Implements the same API's as all means it contains
 
-### Chronos.PostMessageCourier
+### [Chronos.PostMessageCourier](README/Courier.md)
 A generic implementation of Channels over postMessage API.
 Allows communication between cross domain IFRAMES "sharing" Channels.
 
