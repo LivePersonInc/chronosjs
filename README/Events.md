@@ -56,6 +56,7 @@ Example:
 This is used for triggering an event.
 
 Parameters:
+
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
 | appName | String | The name of the application we're triggering with| default app (from configuration) |
