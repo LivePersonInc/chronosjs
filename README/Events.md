@@ -7,13 +7,13 @@ It has some neat features including:
 
 1. Async triggering / binding
 
+##Creation
+Events receives a few parameters for it's constructor.
+
 2. Cloned event data
 
 3. Getting triggered events after they have already triggered
 
-
-##Creation
-Events receives a few parameters for it's constructor.
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
