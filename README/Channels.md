@@ -40,36 +40,35 @@ var channel = new Chronos.Channels({
 ```
 Exposed Instance API:
 
-```
-        once //From [Events](Events.md)
+1. once //From [Events](Events.md)
 
-        hasFiredEvents //From [Events](Events.md)
+2. hasFiredEvents //From [Events](Events.md)
 
-        trigger //From [Events](Events.md)
+3. trigger //From [Events](Events.md)
 
-        publish //From [Events](Events.md)
+4. publish //From [Events](Events.md)
 
-        bind //From [Events](Events.md)
+5. bind //From [Events](Events.md)
 
-        register //From [Events](Events.md)
+6. register //From [Events](Events.md)
 
-        unbind //From [Events](Events.md)
+7. unbind //From [Events](Events.md)
 
-        unregister //From [Events](Events.md)
+8. unregister //From [Events](Events.md)
 
-        hasFiredCommands //From [Commands](Commands.md)
+9. hasFiredCommands //From [Commands](Commands.md)
 
-        comply //From [Commands](Commands.md)
+10. comply //From [Commands](Commands.md)
 
-        stopComplying //From [Commands](Commands.md)
+11. stopComplying //From [Commands](Commands.md)
 
-        command //From [Commands](Commands.md)
+12. command //From [Commands](Commands.md)
 
-        hasFiredReqres //From [ReqRes](ReqRes.md)
+13. hasFiredReqres //From [ReqRes](ReqRes.md)
 
-        request //From [ReqRes](ReqRes.md)
+14. request //From [ReqRes](ReqRes.md)
 
-        reply //From [ReqRes](ReqRes.md)
+15. reply //From [ReqRes](ReqRes.md)
 
-        stopReplying //From [ReqRes](ReqRes.md)
-```
+16. stopReplying //From [ReqRes](ReqRes.md)
+
