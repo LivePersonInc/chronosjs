@@ -23,21 +23,21 @@ This library provides an ability to develop event driven applications using the 
 Together with Courier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication. An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues. Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
 
 
-### Chronos.Events
+### [Chronos.Events](README/Events.md)
 An events channel for binding and triggering events.
 Allows multiple listeners on a single event and wildcards (`"*"`) support.
 
-### Chronos.Commands
+### [Chronos.Command](README/Commands.md)
 A command mechanism for complying and commanding and API call.
 Allows a single comelier per command.
 Supports async commands with an options to call a callback when done.
 
-### Chronos.ReqRes
+### [Chronos.ReqRes](README/ReqRes.md)
 A request mechanism for replying and requesting and API call that returns a response.
 Allows a single replier per request.
 Supports async requests with an options to call a callback when done with a result.
 
-### Chronos.Channels
+### [Chronos.Channels](README/Channels.md)
 A Channel which includes all communication means (events, commands, requests). Implements the same API's as all means it contains
 
 ### [Chronos.PostMessageCourier](README/Courier.md)
@@ -56,7 +56,7 @@ The package holds a few artifacts:
 Usage examples
 ---------------
 
-### Events
+### [Events](README/Events.md)
 ```javascript
 var events = new Chronos.Events();
 
@@ -94,7 +94,7 @@ events.hasFired("Your App Name", "Your Event Name");
 
 There is an option to pass `"*"` as event name and `"*"` as app name on all APIs which is an ALL indicator.
 
-### Commands
+### [Commands](README/Commands.md)
 ```javascript
 var commands = new Chronos.Commands();
 
@@ -135,7 +135,7 @@ commands.hasFired("Your App Name", "Your Command Name");
 
 The callback on the command is optional.
 
-### ReqRes
+### [ReqRes](README/ReqRes.md)
 ```javascript
 var reqres = new Chronos.ReqRes();
 
@@ -177,7 +177,7 @@ reqres.hasFired("Your App Name", "Your Request Name");
 
 The callback on the request is optional.
 
-### PostMessageCourier
+### [PostMessageCourier](README/Courier.md)
 ```javascript
 // Initialize a new Courier
 var courier = Chronos.PostMessageCourier({
