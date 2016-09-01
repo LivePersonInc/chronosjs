@@ -2,6 +2,8 @@
 
 Commands is an API to send commands and get compliance for them from the client given the command.
 
+Commands exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Commands.js</>.
+
 ##Creation
 Commands receives a few parameters for it's constructor.
 

@@ -2,6 +2,8 @@
 
 ReqRes is an API to send requests and get responses for them.
 
+ReqRes exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Reqres.js</>.
+
 ##Creation
 ReqRes receives a few parameters for it's constructor.
 

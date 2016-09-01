@@ -7,13 +7,14 @@ It has some neat features including:
 
 1. Async triggering / binding
 
-##Creation
-Events receives a few parameters for it's constructor.
-
 2. Cloned event data
 
 3. Getting triggered events after they have already triggered
 
+Events exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Events.js</>.
+
+##Creation
+Events receives a few parameters for it's constructor.
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |

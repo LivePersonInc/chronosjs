@@ -1,10 +1,14 @@
 #Overview
 
+Courier is a cross iFrame implementation of an event bus using [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) and [MessagChannel]((https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel)) APIs.
+
+It contains all three Event types we support in this dist [Events](Events.md), [Commands](Commands.md) and [ReqREs](ReqRes.md).
+
 Courier functions in two main ways:
 
 1. Spawning it's own private events engine
-2. Receiving an event engine (Channels externally)
 
+2. Receiving an event engine (Channels externally) it can share across iFrames / same Page Apps
 
 It is important to note the use case you want when creating a Courier instance.
 
