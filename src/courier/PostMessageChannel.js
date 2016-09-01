@@ -327,7 +327,7 @@
 
         /**
          * Method for handling the initial handler binding for needed event listeners
-         * @param {Object} event - the event object on message
+         * @param {Object} handler - the event object on message
          */
         function _getHandleMessage(handler) {
             return function(event) {
@@ -638,18 +638,33 @@
          * @private
          */
         function _createIFrame(options, container) {
-            var frame = document.createElement("IFRAME");
             var name = PostMessageUtilities.createUniqueSequence(IFRAME_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
+            var defaultAttributes = {
+                "id": name,
+                "name" :name,
+                "tabindex": "-1",       // To prevent it getting focus when tabbing through the page
+                "aria-hidden": "true",  // To prevent it being picked up by screen-readers
+                "title":  "",           // Adding an empty title for accessibility
+                "role": "presentation", // Adding a presentation role http://yahoodevelopers.tumblr.com/post/59489724815/easy-fixes-to-common-accessibility-problems
+                "allowTransparency":"true"
+            },
+            defaultStyle = {
+                width :"0px",
+                height : "0px",
+                position :"absolute",
+                top : "-1000px",
+                left : "-1000px"
+            };
+            var frame = document.createElement("IFRAME");
             var delay = options.delayLoad;
 
-            frame.setAttribute("id", name);
-            frame.setAttribute("name", name);
-            frame.setAttribute("tabindex", "-1");       // To prevent it getting focus when tabbing through the page
-            frame.setAttribute("aria-hidden", "true");  // To prevent it being picked up by screen-readers
-            frame.setAttribute("title", "");            // Adding an empty title at AT&Ts insistence
-            frame.setAttribute("role", "presentation"); // Adding a presentation role http://yahoodevelopers.tumblr.com/post/59489724815/easy-fixes-to-common-accessibility-problems
-            frame.setAttribute("allowTransparency", "true");
-
+            options.attributes = options.attributes || defaultAttributes;
+            for(var key in options.attributes){
+                if (options.attributes.hasOwnProperty(key)) {
+                    frame.setAttribute(key, options.attributes[key]);
+                }
+            }
+            options.style = options.style || defaultStyle;
             if (options.style) {
                 for (var attr in options.style) {
                     if (options.style.hasOwnProperty(attr)) {
@@ -657,15 +672,8 @@
                     }
                 }
             }
-            else {
-                frame.style.width = "0px";
-                frame.style.height = "0px";
-                frame.style.position = "absolute";
-                frame.style.top = "-1000px";
-                frame.style.left = "-1000px";
-            }
 
-            // Append and hookup after load
+            // Append and hookup after body tag opens
             _waitForBody({
                 delay: delay,
                 onready: function() {

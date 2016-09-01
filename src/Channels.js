@@ -34,9 +34,9 @@
 
         options = options || {};
 
-        var events = options.events || new Events();
-        var commands = options.commands || new Commands();
-        var reqres = options.reqres || new ReqRes();
+        var events = options.events || new Events(options.config && options.config.events);
+        var commands = options.commands || new Commands(options.config && options.config.commands);
+        var reqres = options.reqres || new ReqRes(options.config && options.config.reqres);
 
 
         this.once = events.once;

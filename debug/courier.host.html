@@ -73,8 +73,6 @@
             frame.style.left = "-1000px";
         }
 
-        document.body.appendChild(frame);
-
         addElementEventListener(frame, "load", function() {
             if (options && options.target && options.target.callback) {
                 options.target.callback(options.target.context);
