@@ -3,8 +3,13 @@
 Events is an event bus for your client application.
 It supports triggering and listening to events.
 
+It has some neat features including:
+1. Async triggering / binding
+2. Cloned event data
+3. Getting triggered events after they have already triggered
+
 ##Creation
-Events recieves a few parameters for it's constructor.
+Events receives a few parameters for it's constructor.
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
@@ -19,7 +24,7 @@ Example:
     cloneEventData : true,
     eventBufferLimit: 100
  });
-```
+ ```
 
 #API
 These are the exposed methods on an instance.
@@ -92,11 +97,52 @@ EventMetaData contains:
 
 
 ##unbind / unregister
+Supports getting the full reference that you subscribed with or the eventId that was returned on bind / register.
+
+| Parameter | Type | Description |  Defaults |
+| ---       | ---  | ---         | ---       |
+| appName | String | The name of the application | None |
+| eventName | String | The name of the event | None |
+| func | Function | The bound function | None |
+| context | Object | The execution context | None |
+
+Or
+
+| Parameter | Type | Description |  Defaults |
+| ---       | ---  | ---         | ---       |
+| eventId | String | The eventId returned when the bind /register occured | None |
 
 
+Example:
+
+```
+    events.unbind({
+        appName: "MyApp",
+        eventName: "Terminating",
+        func : function doCleanUp(){ //Clean up my stuff  },
+        context: myAppInstance,
+    });
+```
+
+Or
+
+```
+    events.unbind(eventId);
+```
 
 ##hasFired
+Returns already fired events if they still exist in the cache (see configuring events at the top).
 
+| Parameter | Type | Description |  Defaults |
+| ---       | ---  | ---         | ---       |
+| appName | String | The name of the application | default app name |
+| eventName | String | The name of the event | None |
 
+Example:
+
+```
+    var firedEvents = events.hasFired(appName, eventName);
+
+```
 
 
