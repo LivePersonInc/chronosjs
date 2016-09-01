@@ -47,12 +47,12 @@ Allows communication between cross domain IFRAMES "sharing" a [Channels](README/
 
 ### Package Contents
 The package holds a few artifacts in the dist folder:
-- Events.js: The events channel
-- Commands.js: The commands channel
-- Reqres.js: The request/response channel
-- Channels.js: Combination of all 3 channel options
-- PostMessageCourierNoDep.js: Channel transport over postmessage
-- PostMessageCourier.js: Combination of all 3 channel options with channel transport over postmessage
+- [Events.js](README/Events.md): The events channel
+- [Commands.js](README/Commands.md): The commands channel
+- [Reqres.js](README/ReqRes.md): The request/response channel
+- [Channels.js](README/Channels.md): Combination of all 3 channel options
+- [PostMessageCourierNoDep.js](README/Courier.md): Channel transport over postmessage
+- [PostMessageCourier.js](README/Courier.md): Combination of all 3 channel options with channel transport over postmessage
 
 <b>* Minified compressed versions exist in the min folder.</b>
 
