@@ -40,7 +40,8 @@ var channel = new Chronos.Channels({
 ```
 Exposed Instance API:
 
-```     once //From [Events](Events.md)
+```
+        once //From [Events](Events.md)
 
         hasFiredEvents //From [Events](Events.md)
 
