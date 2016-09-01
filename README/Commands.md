@@ -8,12 +8,14 @@ Commands receives a few parameters for it's constructor.
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
 | appName | String | A default application name for commands | "*" - trigger for all |
+| cloneEventData | Boolean | Defines if data is cloned per complyer, if ```true``` incurs minor performance penalty but promises unchanged command data | false |
 | eventBufferLimit | Number | Defines number of commands stored in history (retrievable by hasFired) | -1 , no limitation |
 
 Example:
 ```
  var commands = new Chronos.Commands({
     appName: "MyApp",
+    cloneEventData: true,
     eventBufferLimit: 100
  });
  ```
@@ -55,7 +57,7 @@ Parameters:
 | ---       | ---  | ---         | ---       |
 | appName | String | The name of the application| default app (from configuration) |
 | cmdName | String | The name of the command we're complying to | None - Required |
-| passDataByRef | Boolean | If to publish the event by reference | true |
+| passDataByRef | Boolean | If to publish the command by reference | true |
 | data | Object / String / Number / Boolean | The command data | None |
 | cb | Function | Function to call when compliance was completed |  None |
 
@@ -104,7 +106,7 @@ Example:
 
 ##hasFired
 
-Returns already fired events if they still exist in the cache (see configuring events at the top).
+Returns already fired commands if they still exist in the cache (see configuring commands at the top).
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
