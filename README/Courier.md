@@ -1,6 +1,6 @@
 #Overview
 
-Courier is a cross iFrame implementation of an event bus using [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) and [MessagChannel]((https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel)) APIs.
+Courier is a cross iFrame implementation of an event bus using [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) and [MessagChannel](https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel) APIs.
 
 It contains all three Event types we support in this Chronos: [Events](Events.md), [Commands](Commands.md) and [ReqRes](ReqRes.md).
 
