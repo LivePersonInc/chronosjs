@@ -54,7 +54,7 @@ The package holds a few artifacts in the <b>dist</b> folder:
 - [PostMessageCourierNoDep.js](README/Courier.md): Channel transport over postmessage
 - [PostMessageCourier.js](README/Courier.md): Combination of all 3 channel options with channel transport over postmessage
 
-<b>* Minified compressed versions exist in the <u>min</u> folder.</b>
+<b>* Minified compressed versions exist in the *min* folder.</b>
 
 Usage examples
 ---------------
