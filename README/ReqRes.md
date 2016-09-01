@@ -1,6 +1,6 @@
 #Overview
 
-ReqRes is an API to send requests and get responses for them from the client asked the request.
+ReqRes is an API to send requests and get responses for them.
 
 ##Creation
 Commands receives a few parameters for it's constructor.
