@@ -29,7 +29,7 @@ Allows multiple listeners on a single event and wildcards (`"*"`) support.
 
 ### [Chronos.Command](README/Commands.md)
 A command mechanism for complying and commanding and API call.
-Allows a single comelier per command.
+Allows a single complier per command.
 Supports async commands with an options to call a callback when done.
 
 ### [Chronos.ReqRes](README/ReqRes.md)
@@ -38,20 +38,23 @@ Allows a single replier per request.
 Supports async requests with an options to call a callback when done with a result.
 
 ### [Chronos.Channels](README/Channels.md)
-A Channel which includes all communication means (events, commands, requests). Implements the same API's as all means it contains
+A Channel which includes all communication means ([events](README/Events.md), [commands](README/Commands.md), [reqres](README/ReqRes.md)).
+Implements the same API's as all means it contains
 
 ### [Chronos.PostMessageCourier](README/Courier.md)
-A generic implementation of Channels over postMessage API.
-Allows communication between cross domain IFRAMES "sharing" Channels.
+A generic implementation of Channels over [postMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
+Allows communication between cross domain IFRAMES "sharing" a [Channels](README/Channels.md) instance.
 
 ### Package Contents
-The package holds a few artifacts:
+The package holds a few artifacts in the dist folder:
 - Events.js: The events channel
 - Commands.js: The commands channel
 - Reqres.js: The request/response channel
 - Channels.js: Combination of all 3 channel options
 - PostMessageCourierNoDep.js: Channel transport over postmessage
 - PostMessageCourier.js: Combination of all 3 channel options with channel transport over postmessage
+
+<b>* Minified compressed versions exist in the min folder.</b>
 
 Usage examples
 ---------------
