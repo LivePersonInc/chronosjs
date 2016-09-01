@@ -4,6 +4,7 @@ Events is an event bus for your client application.
 It supports triggering and listening to events.
 
 It has some neat features including:
+
 1. Async triggering / binding
 
 2. Cloned event data
