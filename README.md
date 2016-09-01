@@ -46,7 +46,7 @@ A generic implementation of Channels over [postMessage API](https://developer.mo
 Allows communication between cross domain IFRAMES "sharing" a [Channels](README/Channels.md) instance.
 
 ### Package Contents
-The package holds a few artifacts in the dist folder:
+The package holds a few artifacts in the <b>dist</b> folder:
 - [Events.js](README/Events.md): The events channel
 - [Commands.js](README/Commands.md): The commands channel
 - [Reqres.js](README/ReqRes.md): The request/response channel
@@ -54,7 +54,7 @@ The package holds a few artifacts in the dist folder:
 - [PostMessageCourierNoDep.js](README/Courier.md): Channel transport over postmessage
 - [PostMessageCourier.js](README/Courier.md): Combination of all 3 channel options with channel transport over postmessage
 
-<b>* Minified compressed versions exist in the min folder.</b>
+<b>* Minified compressed versions exist in the <u>min</u> folder.</b>
 
 Usage examples
 ---------------
