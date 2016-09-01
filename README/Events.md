@@ -5,8 +5,11 @@ It supports triggering and listening to events.
 
 It has some neat features including:
 1. Async triggering / binding
+
 2. Cloned event data
+
 3. Getting triggered events after they have already triggered
+
 
 ##Creation
 Events receives a few parameters for it's constructor.
