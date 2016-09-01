@@ -23,40 +23,43 @@ This library provides an ability to develop event driven applications using the 
 Together with Courier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication. An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues. Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
 
 
-### Chronos.Events
+### [Chronos.Events](README/Events.md)
 An events channel for binding and triggering events.
 Allows multiple listeners on a single event and wildcards (`"*"`) support.
 
-### Chronos.Commands
+### [Chronos.Command](README/Commands.md)
 A command mechanism for complying and commanding and API call.
-Allows a single comelier per command.
+Allows a single complier per command.
 Supports async commands with an options to call a callback when done.
 
-### Chronos.ReqRes
+### [Chronos.ReqRes](README/ReqRes.md)
 A request mechanism for replying and requesting and API call that returns a response.
 Allows a single replier per request.
 Supports async requests with an options to call a callback when done with a result.
 
-### Chronos.Channels
-A Channel which includes all communication means (events, commands, requests). Implements the same API's as all means it contains
+### [Chronos.Channels](README/Channels.md)
+A Channel which includes all communication means ([events](README/Events.md), [commands](README/Commands.md), [reqres](README/ReqRes.md)).
+Implements the same API's as all means it contains
 
-### Chronos.PostMessageCourier
-A generic implementation of Channels over postMessage API.
-Allows communication between cross domain IFRAMES "sharing" Channels.
+### [Chronos.PostMessageCourier](README/Courier.md)
+A generic implementation of Channels over [postMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
+Allows communication between cross domain IFRAMES "sharing" a [Channels](README/Channels.md) instance.
 
 ### Package Contents
-The package holds a few artifacts:
-- Events.js: The events channel
-- Commands.js: The commands channel
-- Reqres.js: The request/response channel
-- Channels.js: Combination of all 3 channel options
-- PostMessageCourierNoDep.js: Channel transport over postmessage
-- PostMessageCourier.js: Combination of all 3 channel options with channel transport over postmessage
+The package holds a few artifacts in the <b>dist</b> folder:
+- [Events.js](README/Events.md): The events channel
+- [Commands.js](README/Commands.md): The commands channel
+- [Reqres.js](README/ReqRes.md): The request/response channel
+- [Channels.js](README/Channels.md): Combination of all 3 channel options
+- [PostMessageCourierNoDep.js](README/Courier.md): Channel transport over postmessage
+- [PostMessageCourier.js](README/Courier.md): Combination of all 3 channel options with channel transport over postmessage
+
+<b>* Minified compressed versions exist in the *min* folder.</b>
 
 Usage examples
 ---------------
 
-### Events
+### [Events](README/Events.md)
 ```javascript
 var events = new Chronos.Events();
 
@@ -94,7 +97,7 @@ events.hasFired("Your App Name", "Your Event Name");
 
 There is an option to pass `"*"` as event name and `"*"` as app name on all APIs which is an ALL indicator.
 
-### Commands
+### [Commands](README/Commands.md)
 ```javascript
 var commands = new Chronos.Commands();
 
@@ -135,7 +138,7 @@ commands.hasFired("Your App Name", "Your Command Name");
 
 The callback on the command is optional.
 
-### ReqRes
+### [ReqRes](README/ReqRes.md)
 ```javascript
 var reqres = new Chronos.ReqRes();
 
@@ -177,7 +180,7 @@ reqres.hasFired("Your App Name", "Your Request Name");
 
 The callback on the request is optional.
 
-### PostMessageCourier
+### [PostMessageCourier](README/Courier.md)
 ```javascript
 // Initialize a new Courier
 var courier = Chronos.PostMessageCourier({
@@ -232,11 +235,11 @@ courier.request({
 });
 ```
 ###LIMITATIONS
-- Only supports browsers which implements postMessage API and have native JSON implementation (IE8+, Chrome, FF, Safari, Opera, IOS, Opera Mini, Android)
-- IE9-, FF & Opera Mini does not support MessageChannel and therefore we fallback to using basic postMessage. This makes the communication opened to any handler registered for messages on the same origin.
+- Only supports browsers which implements [postMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) and have native [JSON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON) implementation (IE8+, Chrome, FF, Safari, Opera, IOS, Opera Mini, Android)
+- IE9-, FF & Opera Mini does not support [MessageChannel](https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel) and therefore we fallback to using basic postMessage. This makes the communication opened to any handler registered for messages on the same origin.
 - All passDataByRef flags (in Channels) are obviously ignored
 - In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to PostMessageCourier, All data is serialized using JSON.stringify/JSON.parse which means that Object data is limited to JSON which supports types like: strings, numbers, null, arrays, and objects (and does not allow circular references). Trying to serialize other types, will result in conversion to null (like Infinity or NaN) or to a string (Dates), that must be manually deserialized on the other side
-- When IFRAME is managed outside of PostMessageCourier (passed by reference to the constructor), a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the PostMessageCourier at the IFRAME side, had also been initialized with a valid targetOrigin option)
+- When the IFRAME is managed outside of [PostMessageCourier](READMDE/Courier.md) (passed by reference to the constructor), a <b>targetOrigin</b> option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the IFRAME url (unless the [PostMessageCourier](READMDE/Courier.md) at the IFRAME side, had also been initialized with a valid <b>targetOrigin</b> option)
 
 Wrappers
 -----------
