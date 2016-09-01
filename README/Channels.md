@@ -4,7 +4,7 @@ Channels wraps Events, Commands and ReqRes as a single package.
 It's main use is to pass around when you'd like to share your events bus with multiple iFrames or have a single triggering engine.
 Such cases arise mainly when you'd like to trigger events between iFrames / Apps.
 
-Channels exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Channels.js</>.
+Channels exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Channels.js</b>.
 
 Example :
 ```

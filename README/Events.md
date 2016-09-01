@@ -11,7 +11,7 @@ It has some neat features including:
 
 3. Getting triggered events after they have already triggered
 
-Events exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Events.js</>.
+Events exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Events.js</b>.
 
 ##Creation
 Events receives a few parameters for it's constructor.

@@ -4,7 +4,13 @@ Courier is a cross iFrame implementation of an event bus using [postMessage](htt
 
 It contains all three Event types we support in this dist [Events](Events.md), [Commands](Commands.md) and [ReqREs](ReqRes.md).
 
-Courier functions in two main ways:
+Courier exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder in two version:
+
+1. <b>PostMessageCourierNoDep.js</b> - without it's dependencies included (Channels, Events, Commands, ReqRes)
+
+2. <b>PostMessageCourier.js</b> - as a complete package with all dependencies
+
+####Courier functions in two main ways:
 
 1. Spawning it's own private events engine
 
