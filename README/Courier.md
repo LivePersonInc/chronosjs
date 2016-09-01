@@ -25,7 +25,7 @@ Example (Private events channel):
 
 Example shared Events channel:
 ```
-    var channel = new Chronos.Channels(); //Private instance you can pass around to other couriers
+    var channel = new Chronos.Channels(); //Shared instance you can pass around to other couriers
     var courier = new new Chronos.PostMessageCourier({
         eventChannel: channel,
         target :  targetConfiguration
