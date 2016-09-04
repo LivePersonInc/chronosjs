@@ -33,6 +33,7 @@
     function Channels(options) {
 
         options = options || {};
+        var externalAPIS = [];
 
         var events = options.events || new Events(options.config && options.config.events);
         var commands = options.commands || new Commands(options.config && options.config.commands);
@@ -41,8 +42,12 @@
 
         this.once = events.once;
         this.hasFiredEvents = events.hasFired;
-        this.trigger = events.trigger;
-        this.publish = events.publish;
+        this.trigger = _wrapCalls({
+            func: events.trigger,
+            context: events,
+            triggerType: "trigger"
+        });
+        this.publish = this.trigger;
         this.bind = events.bind;
         this.register = events.register;
         this.unbind = events.unbind;
@@ -55,7 +60,42 @@
         this.request = reqres.request;
         this.reply = reqres.reply;
         this.stopReplying = reqres.stopReplying;
+        if (options.externalProxy === true) {
+            this.registerProxy = registerProxy;
+         }
 
+        /**
+         * Wraps API calls to trigger other registered functions
+         * @param options
+         * @returns {Function}
+         * @private
+         */
+        function _wrapCalls(options){
+            return function(){
+                var api;
+
+                options.func.apply(options.context, Array.prototype.slice.call(arguments, 0));
+
+                for(var i = 0; i < externalAPIS.length; i++){
+                    api = externalAPIS[i];
+                    if(api[options.triggerType]){
+                        try{
+                            api[options.triggerType].apply(api.context,Array.prototype.slice.call(arguments, 0));
+                        }catch (exc){}
+                    }
+                }
+            };
+        }
+
+        /**
+         * Registers external proxy for trigger of events
+         * @param external
+         */
+        function registerProxy(external){
+            if(typeof external === 'object' && external.trigger){
+                externalAPIS.push(external);
+            }
+        }
     }
 
     // attach properties to the exports object to define

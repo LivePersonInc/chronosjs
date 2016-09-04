@@ -19,9 +19,11 @@ Options can contain:
 | events | Events Instance | A [Chronos.Events](Events.md) instance | None |
 | commands | Commands Instance | A [Chronos.Commands](Commands.md) instance | None |
 | reqres | ReqRes Instance | A [Chronos.ReqRes](ReqRes.md) instance | None |
+| externalProxy | Boolean | Allows Courier to automatically trigger events to all iFrames that share Channels | false|
 
+<b>In order to share your events across iFrames you must set the "externalProxy" flag to true</b>.
 
-Config object options:
+<b>config</b> object options:
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
@@ -29,14 +31,14 @@ Config object options:
 | commands | Object | A [Chronos.Commands](Commands.md) configuration object| None |
 | reqres | Object | A [Chronos.ReqRes](ReqRes.md) configuration object| None |
 
-
 Sample Code:
 ```
 var channel = new Chronos.Channels({
+    externalProxy : true,
     config: {
         events: {},
         commands: {},
-        reqres: {}
+        reqres: {},
     }
 });
 ```
@@ -73,4 +75,33 @@ Exposed Instance API:
 15. reply //From [ReqRes](ReqRes.md)
 
 16. stopReplying //From [ReqRes](ReqRes.md)
+
+17. registerProxy
+
+##registerProxy
+If the <b>externalProxy</b> flag was set to true in the options, then this function is added.
+
+It allows triggering events to your proxy and automatically triggering events to any [PostMessageCourier](Courier.md) instances using the same Channels instance.
+
+This means your iFrames get your events for free.
+
+| Parameter | Type | Description |  Defaults |
+| ---       | ---  | ---         | ---       |
+| trigger| Function | The proxy function to call when an event triggers | None |
+| context | Function Context | The execution context of the function | undefined |
+
+Example:
+```
+    var channel = new Chronos.Channels({
+        externalProxy : true
+    });
+
+    channel.registerProxy({
+       trigger: function(){
+           //DO something with arguments
+       },
+       context: myContext
+    });
+
+```
 

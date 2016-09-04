@@ -148,6 +148,7 @@
              * @param {Number} [options.handshakeAttempts = 3] - optional number of retries handshake attempts
              * @param {String} [options.hostParam] - optional parameter of the host parameter name (default is lpHost)
              * @param {Function} onmessage - the handler for incoming messages
+             * @param {Boolean} [options.registerExternal] - allows registering external components for triggering to them as well
              * @param {Object} [options.eventChannel] - optional events channel to be used (if not supplied, a new one will be created OR optional events, optional commands, optional reqres to be used
              * @param {Number} [options.timeout = 30000] - optional milliseconds parameter for waiting before timeout to responses (default is 30 seconds)
              * @param {Number} [options.messureTime = 30000] - optional milliseconds parameter for time measurement indicating the time window to apply when implementing the internal fail fast mechanism (default is 30 seconds)
@@ -173,6 +174,8 @@
                     // Init the fail fast mechanism which monitors responses
                     _initializeFailFast.call(this, options);
 
+                    _registerProxy.call(this, this.eventChannel);
+
                     // Dumb Proxy methods
                     this.once = this.eventChannel.once;
                     this.hasFiredEvents = this.eventChannel.hasFiredEvents;
@@ -187,6 +190,22 @@
                     this.reply = this.eventChannel.reply;
                     this.stopReplying = this.eventChannel.stopReplying;
                     this.initialized = true;
+                }
+            }
+
+            /**
+             * Registers an external call to trigger for events to propagate calls to Channels.trigger automatically
+             * @param eventChannel
+             * @private
+             */
+            function _registerProxy(eventChannel){
+                if(eventChannel && eventChannel.registerProxy){
+                    eventChannel.registerProxy({
+                        trigger: function(){
+                            _postMessage.call(this, Array.prototype.slice.apply(arguments), ACTION_TYPE.TRIGGER);
+                        },
+                        context: this
+                    });
                 }
             }
 
