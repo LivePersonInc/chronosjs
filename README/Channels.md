@@ -21,7 +21,7 @@ Options can contain:
 | reqres | ReqRes Instance | A [Chronos.ReqRes](ReqRes.md) instance | None |
 | externalProxy | Boolean | Allows Courier to automatically trigger events to all iFrames that share Channels | false|
 
-<b>In order to share your events across iFrames you must set the "externalProxy" flag toi true</b>.
+<b>In order to share your events across iFrames you must set the "externalProxy" flag to true</b>.
 
 <b>config</b> object options:
 
