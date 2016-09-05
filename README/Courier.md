@@ -14,18 +14,18 @@ Courier exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder in t
 
 1. Spawning it's own private events engine
 
-2. Receiving an event engine (Channels externally) it can share across iFrames / same Page Apps
+2. Receiving an event engine ([Channels](Channels.md) externally) it can share across iFrames / same Page Apps (*see [Channels](Channels.md) for <b>externalProxy</b> flag)
 
 It is important to note the use case you want when creating a Courier instance.
 
 Example (Private events channel):
-```
+```javascript
     var courier = new new Chronos.PostMessageCourier({ target :  targetConfiguration });
 ```
 
 Example shared Events channel:
-```
-    var channel = new Chronos.Channels(); //Shared instance you can pass around to other couriers
+```javascript
+    var channel = new Chronos.Channels(); //Shared instance you can pass around to other couriers and share Events triggers
     var courier = new new Chronos.PostMessageCourier({
         eventChannel: channel,
         target :  targetConfiguration
@@ -42,7 +42,7 @@ In order to set up iFrames you have two options:
 
 
 ##Creating your own iFrame
-```
+```javascript
     function createIFrame(options) {
         var src ,
         frame = document.createElement("IFRAME");
@@ -73,7 +73,7 @@ In order to set up iFrames you have two options:
 ```
 After you have created your own iFrame you need to create a courier instance and pass it to the Courier.
 
-```
+```javascript
     var frame = createIFrame({
         url: "https://mysite.com/integration/index.html",
         attrs: {
@@ -100,7 +100,7 @@ After you have created your own iFrame you need to create a courier instance and
 The other option is to let Courier create the iFrame and pass it back to you.
 ###Please note if you dont set any attributes the iFrame will be hidden from view.
 
-```
+```javascript
      var courier = new Chronos.PostMessageCourier({
         target: {
             url: protocol + hostname + port + "/MYPATH/index.html",
@@ -172,7 +172,7 @@ Example:
 ##How to use Courier
 Once you have a courier instance you can use all the methods supported just like events:
 
- ```
+ ```javascript
  // Initialize a new Courier
  var courier = Chronos.PostMessageCourier({
      target: {

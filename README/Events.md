@@ -23,7 +23,7 @@ Events receives a few parameters for it's constructor.
 | eventBufferLimit | Number | Defines number of events stored in history (retrievable by hasFired) | -1 , no limitation |
 
 Example:
-```
+```javascript
  var events = new Chronos.Events({
     appName: "MyApp",
     cloneEventData : true,
@@ -51,7 +51,7 @@ Parameters:
 | once | Boolean | Triggers this function only once and unbinds it| false |
 
 Example:
-```
+```javascript
    var eventId = events.bind({
         appName: "MyApp",
         eventName: "Terminating",
@@ -76,7 +76,7 @@ Parameters:
 | aSync | Boolean | Trigger as none blocking | false |
 
 Example:
-```
+```javascript
     events.trigger({
         appName: "MyApp",
         eventName: "Terminating",
@@ -87,7 +87,7 @@ Example:
 ```
 
 Example data listener gets:
-```
+```javascript
     listener(
              EventData, //Whatever the event publisher sent
              EventMetaData //Event meta data : { eventName, appName }
@@ -120,18 +120,18 @@ Or
 
 Example:
 
-```
+```javascript
     events.unbind({
         appName: "MyApp",
         eventName: "Terminating",
-        func : function doCleanUp(){ //Clean up my stuff  },
+        func : function doCleanUp(){ /*Clean up my stuff*/  },
         context: myAppInstance,
     });
 ```
 
 Or
 
-```
+```javascript
     events.unbind(eventId);
 ```
 
@@ -145,7 +145,7 @@ Returns already fired events if they still exist in the cache (see configuring e
 
 Example:
 
-```
+```javascript
     var firedEvents = events.hasFired(appName, eventName);
 
 ```

@@ -7,7 +7,7 @@ Such cases arise mainly when you'd like to trigger events between iFrames / Apps
 Channels exists in the <b>/dist/</b> folder and the <b>/dist/min/</b> folder as <b>Channels.js</b>.
 
 Example :
-```
+```javascript
 var channel = new Chronos.Channels(options);
 ```
 
@@ -32,7 +32,7 @@ Options can contain:
 | reqres | Object | A [Chronos.ReqRes](ReqRes.md) configuration object| None |
 
 Sample Code:
-```
+```javascript
 var channel = new Chronos.Channels({
     externalProxy : true,
     config: {
@@ -79,11 +79,11 @@ Exposed Instance API:
 17. registerProxy
 
 ##registerProxy
-If the <b>externalProxy</b> flag was set to true in the options, then this function is added.
+If the <b>externalProxy</b> flag was set to true in the options, then this method is added.
 
-It allows triggering events to your proxy and automatically triggering events to any [PostMessageCourier](Courier.md) instances using the same Channels instance.
+It allows triggering events to your proxy and automatically triggers <b>[Events](Events.md)</b> to any [PostMessageCourier](Courier.md) instances using the same Channels instance.
 
-This means your iFrames get your events for free.
+This means your iFrames can get your <b>[Events](Events.md)</b> for free.
 
 | Parameter | Type | Description |  Defaults |
 | ---       | ---  | ---         | ---       |
@@ -91,7 +91,7 @@ This means your iFrames get your events for free.
 | context | Function Context | The execution context of the function | undefined |
 
 Example:
-```
+```javascript
     var channel = new Chronos.Channels({
         externalProxy : true
     });
@@ -102,6 +102,5 @@ Example:
        },
        context: myContext
     });
-
 ```
 
