@@ -258,4 +258,6 @@ Credits
 -------
 Thanks to [Danielle Dimenshtein](http://cargocollective.com/danielledim) for the logo
 
-Session on this subject with code examples can be found [here](http://webyoda.github.io/choose-your-channels/#/)
+Session on this subject with code examples can be found [here](http://webyoda.github.io/choose-your-channels/#/).
+
+[Demo using Angular and Chronos](http://webyoda.github.io/choose-your-channels/demo/platform/app/index.html#/earth).
