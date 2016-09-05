@@ -19,8 +19,13 @@ Run ```npm install chronosjs```
 Overview
 -------------
 
-This library provides an ability to develop event driven applications using the included submodules of events, commands and request/response.
-Together with Courier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication. An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues. Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
+This library provides an ability to develop event driven applications using the included sub-modules of events, commands and request/response.
+
+Together with Courier, one can integrate multiple applications into one, by allowing cross domain cross application event driven communication.
+
+An application developer can integrate/embed a 3rd party application (provided the application uses courier as well) seamlessly and securely without worrying about cross domain issues.
+
+Another use case is for building multi module application where each module can be it's own application and a developer will want to mix and match between them.
 
 
 ### [Chronos.Events](README/Events.md)

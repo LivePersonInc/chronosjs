@@ -14,7 +14,7 @@ ReqRes receives a few parameters for it's constructor.
 | eventBufferLimit | Number | Defines number of requests stored in history (retrievable by hasFired) | -1 , no limitation |
 
 Example:
-```
+```javascript
  var reqres = new Chronos.ReqRes({
     appName: "MyApp",
     eventBufferLimit: 100
@@ -36,7 +36,7 @@ Parameters:
 | context | Object | Execution context for the function | None |
 
 Example:
-```
+```javascript
    var replyId = reqres.reply({
         appName: "MyApp",
         reqName: "WhatsTheTime",
@@ -57,7 +57,7 @@ Callback functions get called with two parameters:
 | callback | Function | Function to call when request was completed with the data |  None |
 
 Example reply function
-```
+```javascript
    function requestCallback(requestData, callback){
      if(data){
         //Do something...
@@ -83,7 +83,7 @@ Parameters:
 | cb | Function | Function to call when request was completed |  None |
 
 Example:
-```
+```javascript
    reqres.request({
         appName: "MyApp",
         reqName: "WhatsTheTime",
@@ -105,7 +105,7 @@ Parameters:
 | context | Object | Execution context for the function | None |
 
 Example:
-```
+```javascript
    reqres.stopReplying({
         appName: "MyApp",
         reqName: "Terminating",
@@ -121,7 +121,7 @@ OR
 | replyId | String | The id of the registration to reply | None |
 
 Example:
-```
+```javascript
    reqres.stopReplying(replyId);
 ```
 
@@ -136,9 +136,8 @@ Returns already fired requests as an Array if they still exist in the cache (see
 
 Example:
 
-```
+```javascript
     var firedEvents = reqres.hasFired(appName, reqName );
-
 ```
 
 

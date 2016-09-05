@@ -14,7 +14,7 @@ Commands receives a few parameters for it's constructor.
 | eventBufferLimit | Number | Defines number of commands stored in history (retrievable by hasFired) | -1 , no limitation |
 
 Example:
-```
+```javascript
  var commands = new Chronos.Commands({
     appName: "MyApp",
     cloneEventData: true,
@@ -40,7 +40,7 @@ Parameters:
 | context | Object | Execution context for the function | None |
 
 Example:
-```
+```javascript
    var commandId = commands.comply({
         appName: "MyApp",
         cmdName: "Terminating",
@@ -64,7 +64,7 @@ Parameters:
 | cb | Function | Function to call when compliance was completed |  None |
 
 Example:
-```
+```javascript
    commands.command({
         appName: "MyApp",
         cmdName: "Terminating",
@@ -86,7 +86,7 @@ Parameters:
 | context | Object | Execution context for the function | None |
 
 Example:
-```
+```javascript
    commands.stopComplying({
         appName: "MyApp",
         cmdName: "Terminating",
@@ -102,7 +102,7 @@ OR
 | commandId | String | The name of the application sending the command| default app (from configuration) |
 
 Example:
-```
+```javascript
    commands.stopComplying(commandId);
 ```
 
@@ -117,7 +117,7 @@ Returns already fired commands if they still exist in the cache (see configuring
 
 Example:
 
-```
+```javascript
     var firedEvents = commands.hasFired(appName, commandName );
 
 ```
