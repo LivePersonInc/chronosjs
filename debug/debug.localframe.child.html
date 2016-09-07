@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Child - Same Domain Testing</title>
+    <style type="text/css">
+        pre.local {
+            color: darkgreen;
+            background-color: lightblue;
+        }
+    </style>
+    <script type="text/javascript" src="../dist/PostMessageCourier.js"></script>
+    <script type="text/javascript">
+        var appName = "test",
+            courier,
+            logDiv,
+            lastElement;
+
+        function log(eventType, eventName, lineData, className){
+            var logJSON = {
+               type: eventType,
+               name: eventName,
+               line: lineData
+            };
+            var logLine = getTime() + " - " + JSON.stringify(logJSON, null, 4);
+            var pre = document.createElement("PRE");
+            pre.innerHTML = logLine;
+            if(className){
+                pre.className = className;
+            }
+            if(lastElement){
+                logDiv.insertBefore(pre, lastElement);
+            }else{
+                logDiv.appendChild(pre);
+            }
+            lastElement = pre;
+        }
+
+        function getTime(){
+            var date = new Date();
+            return date.getHours() + ":" + pad(date.getMinutes()) + ":"  + pad(date.getSeconds()) + "." + date.getMilliseconds();
+        }
+
+        function pad(num){
+            if(num < 10){
+                return '0' + num;
+            }else{
+                return num;
+            }
+        }
+
+        function bindEvent(selector, eventName, callback, context) {
+            var element;
+            if (typeof selector !== "string" &&
+                (selector === window || typeof selector.nodeType !== "undefined")) {
+                element = selector;
+            } else {
+                element = document.querySelector(selector);
+            }
+            if (element) {
+                element.addEventListener(eventName, function () {
+                    callback.apply(context || window, Array.prototype.slice.call(arguments, 0));
+                }, true);
+            }
+        }
+
+        bindEvent(window, "load", function () {
+            logDiv = document.getElementById("log");
+            courierSetup();
+            DomBinding();
+        }, window);
+
+        function courierSetup(){
+            debugger;
+            courier = new Chronos.PostMessageCourier({
+                callback: log.bind("Courier", "loaded")
+            });
+
+            courier.bind({
+                appName: appName,
+                eventName : "click",
+                func : log.bind("event", "click")
+            });
+
+            courier.comply({
+                appName: appName,
+                cmdName: "comply",
+                func : log.bind("command", "comply")
+            });
+
+            courier.reply({
+                appName: appName,
+                reqName: "respond",
+                func : log.bind("request", "respond")
+            });
+        }
+
+        function DomBinding(){
+            bindEvent("#sendEvent", "click", function () {
+                courier.trigger({
+                    eventName: "click",
+                    appName: appName,
+                    data: arguments
+                });
+                log("event", "trigger", "Sent event to parent","local");
+            });
+
+            bindEvent("#sendCommand", "click", function () {
+                courier.command({
+                    cmdName: "comply",
+                    appName: appName,
+                    data: arguments
+                });
+                log("command", "comply", "Sent command to parent","local");
+            });
+
+            bindEvent("#sendRequest", "click", function () {
+                courier.request({
+                    reqName: "respond",
+                    appName: appName,
+                    data: arguments
+                });
+                log("request", "respond", "Sent request to parent","local");
+            });
+        }
+
+    </script>
+</head>
+<body style="overflow:hidden;">
+    <h3>Child - Same Domain iFrames</h3>
+    <button id="sendEvent">Send Event</button>
+    <button id="sendCommand">Send Command</button>
+    <button id="sendRequest">Send Request</button>
+    <div id="log" style="overflow-y:scroll; overflow-x: hidden; max-height: 400px;">
+
+    </div>
+</body>
+</html>

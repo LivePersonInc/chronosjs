@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        pre.local {
+            color: darkgreen;
+            background-color: lightblue;
+        }
+    </style>
+    <script type="text/javascript" src="../dist/PostMessageCourier.js"></script>
+
+    <script type="text/javascript">
+        var appName = "test",
+            courier,
+            logDiv,
+            lastElement;
+
+        function log(eventType, eventName, lineData, className){
+            var logJSON = {
+                type: eventType,
+                name: eventName,
+                line: lineData
+            };
+            var logLine = getTime() + " - " + JSON.stringify(logJSON, null, 4);
+            var pre = document.createElement("PRE");
+            pre.innerHTML = logLine;
+            if(className){
+                pre.className = className;
+            }
+            if(lastElement){
+                logDiv.insertBefore(pre, lastElement);
+            }else{
+                logDiv.appendChild(pre);
+            }
+            lastElement = pre;
+        }
+
+        function getTime(){
+            var date = new Date();
+            return date.getHours() + ":" + pad(date.getMinutes()) + ":"  + pad(date.getSeconds()) + "." + date.getMilliseconds();
+        }
+
+        function pad(num){
+            if(num < 10){
+                return '0' + num;
+            }else{
+                return num;
+            }
+        }
+        function bindEvent(selector, eventName, callback, context) {
+            var element;
+            if (typeof selector !== "string" &&
+                (selector === window || typeof selector.nodeType !== "undefined")) {
+                element = selector;
+            } else {
+                element = document.querySelector(selector);
+            }
+            if (element) {
+                element.addEventListener(eventName, function () {
+                    callback.apply(context || window, Array.prototype.slice.call(arguments, 0));
+                }, true);
+            }
+        }
+
+        bindEvent(window, "load", function () {
+            logDiv = document.getElementById("log");
+
+            setUpCourierParent();
+            bindDomEvents();
+
+        }, window);
+
+        function setUpCourierParent(){
+            var parts = location.pathname.split("/");
+            parts[parts.length - 1] = "debug.localframe.child.html";
+            var iFramePath = location.protocol + "//" + location.hostname + parts.join("/");
+
+            courier = new Chronos.PostMessageCourier({
+                target: {
+                    url: iFramePath,
+                    style: {
+                        position: "fixed",
+                        left: "10px",
+                        width: "45%",
+                        height: "70%",
+                        overflow: "hidden"
+                    },
+                    attributes: {
+                        name: "test child frame"
+                    }
+                },
+                callback: log.bind("courier", "load")
+            });
+        }
+
+        function bindDomEvents(){
+            bindEvent("#sendEvent", "click", function () {
+                courier.trigger({
+                    eventName: "click",
+                    appName: appName,
+                    data: "Hello from parent"
+                });
+                log("event", "click", "Sent event to child", "local");
+            });
+
+            bindEvent("#sendCommand", "click", function () {
+                courier.command({
+                    cmdName: "comply",
+                    appName: appName,
+                    data: "Do as you're told"
+                }, function(err, data){
+                    log("command", "comply", { msg: "response from child", data: data, err: err});
+                });
+                log("command", "comply", "Sent command to child","local");
+            });
+
+            bindEvent("#sendRequest", "click", function () {
+                courier.request({
+                    reqName: "respond",
+                    appName: appName,
+                    data: "PLEASE Do as you're told..."
+                }, function(err, data){
+                    log("request", "respond", { msg: "response from child", data: data, err: err });
+                });
+                log("request", "respond", "Sent event to child", "local");
+            });
+        }
+
+
+    </script>
+    <title>Same Domain Testing</title>
+</head>
+<body>
+    <h1>Parent - Same Domain IFrames</h1>
+    <div>
+        <button id="sendEvent">Send Event</button>
+        <button id="sendCommand">Send Command</button>
+        <button id="sendRequest">Send Request</button>
+        <div id="log" style="width: 50%; position: fixed; right: 0; border: solid 1px black; height: 70%; margin-right: 10px; overflow: auto;">
+
+        </div>
+    </div>
+</body>
+</html>
