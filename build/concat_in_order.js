@@ -1,11 +1,11 @@
 module.exports = function (grunt, options) {
-    var path = require('path');
+    const path = require('path');
 
     return {
-        "release": {
-            "options": {
-                "extractRequired": function (filepath, filecontent) {
-                    var workingdir = path.normalize(filepath).split(path.sep);
+        release: {
+            options: {
+                extractRequired: function(filepath, filecontent) {
+                    const workingdir = path.normalize(filepath).split(path.sep);
                     workingdir.pop();
 
                     var deps = this.getMatches(/\*\s*@depend\s(.*\.js)/g, filecontent);
@@ -15,17 +15,15 @@ module.exports = function (grunt, options) {
                     });
                     return deps;
                 },
-                extractDeclared: function (filepath) {
-                    return [filepath];
-                },
+                extractDeclared: filepath => [filepath],
                 onlyConcatRequiredFiles: true
             },
-            "files": {
-                "dist/Events.js": ["src/Events.js"],
-                "dist/Commands.js": ["src/Commands.js"],
-                "dist/Reqres.js": ["src/Reqres.js"],
-                "dist/Channels.js": ["src/Channels.js"],
-                "dist/PostMessageCourier.js": ["src/courier/PostMessageCourier.js"]
+            files: {
+                "dist/Events.js": ['src/Events.js'],
+                "dist/Commands.js": ['src/Commands.js'],
+                "dist/Reqres.js": ['src/Reqres.js'],
+                "dist/Channels.js": ['src/Channels.js'],
+                "dist/PostMessageCourier.js": ['src/courier/PostMessageCourier.js']
             }
         }
     };

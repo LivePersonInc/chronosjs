@@ -1,67 +1,68 @@
 {
-    "name": "chronosjs",
-    "description": "JS Channels Mechanism",
-    "version": "0.0.21",
-    "author": {
-        "name": "LivePersonInc",
-        "email": "fe-infra-lp@liveperson.com"
+  "name": "chronosjs",
+  "description": "JS Channels Mechanism",
+  "version": "0.0.21",
+  "author": {
+    "name": "LivePersonInc",
+    "email": "fe-infra-lp@liveperson.com"
+  },
+  "contributors": [
+    {
+      "name": "Michael Dimenshtein",
+      "email": "michaeld@liveperson.com"
     },
-    "contributors": [
-        {
-            "name": "Michael Dimenshtein",
-            "email": "michaeld@liveperson.com"
-        },
-        {
-            "name": "Itai Koren",
-            "email": "itaik@liveperson.com"
-        }
-    ],
-    "dependencies": {
-        "cacherjs": "~0.0.7",
-        "circuit-breakerjs": "~0.0.5"
-    },
-    "devDependencies": {
-        "chai": "~3.0.0",
-        "grunt": "~0.4.5",
-        "grunt-available-tasks": "~0.5.7",
-        "grunt-concat-in-order": "~0.1.6",
-        "grunt-contrib-concat": "~0.5.1",
-        "grunt-contrib-connect": "~0.10.1",
-        "grunt-contrib-jshint": "~0.11.2",
-        "grunt-contrib-uglify": "^0.9.1",
-        "grunt-env": "~0.4.4",
-        "grunt-istanbul": "~0.5.0",
-        "grunt-mocha": "~0.4.12",
-        "grunt-node-version": "~1.0.0",
-        "grunt-replace": "~0.9.2",
-        "load-grunt-config": "~0.17.1",
-        "mkdirp": "~0.5.1",
-        "mocha": "~2.2.5",
-        "requirejs": "~2.1.18",
-        "sinon": "~1.14.1",
-        "time-grunt": "~1.2.1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/LivePersonInc/chronosjs/"
-    },
-    "keywords": [
-        "liveperson",
-        "events",
-        "commands",
-        "request",
-        "response",
-        "courier",
-        "postmessage",
-        "chronos"
-    ],
-    "main": "./Chronos.js",
-    "engines": {
-        "node": ">=0.10.36",
-        "npm": ">=1.4"
-    },
-    "scripts": {
-        "test": "grunt default --verbose"
-    },
-    "license": "MIT"
+    {
+      "name": "Itai Koren",
+      "email": "itaik@liveperson.com"
+    }
+  ],
+  "dependencies": {
+    "cacherjs": "~0.1.0",
+    "circuit-breakerjs": "~0.0.5"
+  },
+  "devDependencies": {
+    "body-parser": "^1.17.1",
+    "chai": "~3.5.0",
+    "grunt": "~1.0.1",
+    "grunt-available-tasks": "~0.6.3",
+    "grunt-concat-in-order": "~0.2.6",
+    "grunt-contrib-concat": "~1.0.1",
+    "grunt-contrib-connect": "~1.0.2",
+    "grunt-contrib-jshint": "~1.1.0",
+    "grunt-contrib-uglify": "^2.2.1",
+    "grunt-env": "~0.4.4",
+    "grunt-istanbul": "~0.7.2",
+    "grunt-mocha": "~1.0.4",
+    "grunt-node-version": "~1.0.2",
+    "grunt-replace": "~1.0.1",
+    "load-grunt-config": "~0.19.2",
+    "mkdirp": "~0.5.1",
+    "mocha": "~3.2.0",
+    "requirejs": "~2.3.3",
+    "sinon": "~2.1.0",
+    "time-grunt": "~1.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LivePersonInc/chronosjs/"
+  },
+  "keywords": [
+    "liveperson",
+    "events",
+    "commands",
+    "request",
+    "response",
+    "courier",
+    "postmessage",
+    "chronos"
+  ],
+  "main": "./Chronos.js",
+  "engines": {
+    "node": ">=0.10.36",
+    "npm": ">=1.4"
+  },
+  "scripts": {
+    "test": "grunt default --verbose"
+  },
+  "license": "MIT"
 }
