@@ -8,7 +8,7 @@
             "timeout": 10000,
             "--web-security" : false,
             "urls": [
-                "http://localhost:8000/test/resources/events_test_base.html"
+                "http://localhost:8001/test/resources/events_test_base.html"
             ]
         }
     }

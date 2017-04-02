@@ -660,23 +660,32 @@
                             params.push(data);
                         }
 
+                        // Call the mapping method to receive the message structure
                         retMsg = this.mapper.toMessage.apply(this.mapper, params);
+
+                        // Post the message
                         _returnMessage.call(this, retMsg, message.source);
                     }.bind(this), function (data) {
                         params = [id, ACTION_TYPE.RETURN, data];
 
+                        // Call the mapping method to receive the message structure
                         retMsg = this.mapper.toMessage.apply(this.mapper, params);
+
+                        // Post the message
                         _returnMessage.call(this, retMsg, message.source);
                     }.bind(this));
                 }
                 else {
-                    if (result.error) {
+                    if (result && result.error) {
                         params = [id, ACTION_TYPE.RETURN, result];
 
                         // Call the mapping method to receive the message structure
                         retMsg = this.mapper.toMessage.apply(this.mapper, params);
+
+                        // Post the message
+                        _returnMessage.call(this, retMsg, message.source);
                     }
-                    else {
+                    else if ("undefined" !== typeof result) {
                         params = [id, ACTION_TYPE.RETURN, null];
 
                         if (ACTION_TYPE.REQUEST === name) {
@@ -685,10 +694,10 @@
 
                         // Call the mapping method to receive the message structure
                         retMsg = this.mapper.toMessage.apply(this.mapper, params);
-                    }
 
-                    // Post the message
-                    _returnMessage.call(this, retMsg, message.source);
+                        // Post the message
+                        _returnMessage.call(this, retMsg, message.source);
+                    }
                 }
             }
             /**
