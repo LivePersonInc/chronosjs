@@ -317,7 +317,8 @@
             this.targetOrigin = options.targetOrigin;
             this.maxConcurrency = PostMessageUtilities.parseNumber(options.maxConcurrency, DEFAULT_CONCURRENCY);
             this.handshakeInterval = PostMessageUtilities.parseNumber(options.handshakeInterval, DEFAULT_HANDSHAKE_RETRY_INTERVAL);
-            this.handshakeAttempts = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
+            this.handshakeAttemptsOrig = PostMessageUtilities.parseNumber(options.handshakeAttempts, DEFAULT_HANDSHAKE_RETRY_ATTEMPTS);
+            this.handshakeAttempts = this.handshakeAttemptsOrig;
             this.hostParam = options.hostParam;
             this.channel = "undefined" !== typeof options.channel ? options.channel : _getChannelUrlIndicator();
             this.useObjects = options.useObjects;
@@ -564,6 +565,10 @@
             if (!this.disposed && !this.ready) {
                 this.ready = true;
 
+                // Handshake was successful, Channel is ready for messages
+                // Set the counter back to original value for dealing with iframe reloads
+                this.handshakeAttempts = this.handshakeAttemptsOrig;
+
                 // Process queued messages if any
                 if (this.messageQueue && this.messageQueue.length) {
                     PostMessageUtilities.delay(function() {
@@ -638,7 +643,9 @@
          * @private
          */
         function _createIFrame(options, container) {
+            var frame = document.createElement("IFRAME");
             var name = PostMessageUtilities.createUniqueSequence(IFRAME_PREFIX + PostMessageUtilities.SEQUENCE_FORMAT);
+            var delay = options.delayLoad;
             var defaultAttributes = {
                 "id": name,
                 "name" :name,
@@ -647,23 +654,22 @@
                 "title":  "",           // Adding an empty title for accessibility
                 "role": "presentation", // Adding a presentation role http://yahoodevelopers.tumblr.com/post/59489724815/easy-fixes-to-common-accessibility-problems
                 "allowTransparency":"true"
-            },
-            defaultStyle = {
+            };
+            var defaultStyle = {
                 width :"0px",
                 height : "0px",
                 position :"absolute",
                 top : "-1000px",
                 left : "-1000px"
             };
-            var frame = document.createElement("IFRAME");
-            var delay = options.delayLoad;
 
             options.attributes = options.attributes || defaultAttributes;
-            for(var key in options.attributes){
+            for (var key in options.attributes){
                 if (options.attributes.hasOwnProperty(key)) {
                     frame.setAttribute(key, options.attributes[key]);
                 }
             }
+
             options.style = options.style || defaultStyle;
             if (options.style) {
                 for (var attr in options.style) {
@@ -695,6 +701,12 @@
         function _addLoadHandler(frame) {
             var load = function() {
                 this.loading = false;
+
+                if (this.handshakeAttempts === this.handshakeAttemptsOrig) {
+                    // Probably a first try for handshake or a reload of the iframe,
+                    // Either way, we'll need to perform handshake, so ready flag should be set to false (if not already)
+                    this.ready = false;
+                }
 
                 _handshake.call(this, this.handshakeInterval);
             }.bind(this);
