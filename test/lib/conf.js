@@ -1,11 +1,11 @@
 define("conf", function() {
     return {
-        "blanket": true,
+        "blanket": true, //false,
         "blanketCoverOnly": "['../../src/','../../src/courier/']",
         "blanketCoverNever": "['../lib/','../../src/../node_modules/','//^\w+test\.js$/gi']",
         "requireConfig": {
             //By default load any module IDs from src directory
-            baseUrl: "../coverage/instrument/src",
+            baseUrl: "../coverage/instrument/src", //"../../src",
             paths: {
                 chai: "../../../../node_modules/chai/chai",
                 sinon: "../../../../node_modules/sinon/pkg/sinon",

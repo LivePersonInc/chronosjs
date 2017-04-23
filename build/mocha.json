@@ -1,11 +1,13 @@
 {
     "test": {
         "options": {
+            "run": false,
             "log": true,
+            "logErrors": true,
             "quiet": false,
             "threshold": 80,
             "globalThreshold": 84,
-            "timeout": 10000,
+            "timeout": 60000,
             "--web-security" : false,
             "urls": [
                 "http://localhost:8001/test/resources/events_test_base.html"
