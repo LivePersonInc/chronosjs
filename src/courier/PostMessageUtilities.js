@@ -71,7 +71,12 @@
             }, "*");
         }
         catch(ex) {
-            hasObjectsSupport = false;
+            // Browsers which has postMessage Objects support sends messages using
+            // the structured clone algorithm - https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
+            // In which Error and Function objects cannot be duplicated by the structured clone algorithm; attempting to do so will throw a DATA_CLONE_ERR exception.
+            if (ex && 'DataCloneError' !== ex.name) {
+                hasObjectsSupport = false;
+            }
         }
 
         return hasObjectsSupport;
