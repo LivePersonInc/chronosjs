@@ -4,13 +4,13 @@
  * 2) IE9-, FF & Opera Mini does not support MessageChannel and therefore we fallback to using basic postMessage.
  *    This makes the communication opened to any handler registered for messages on the same origin.
  * 3) All passDataByRef flags (in LPEventChannel) are obviously ignored
- * 4) In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to LPPostMessageCourier,
+ * 4) In case the browser does not support passing object using postMessage (IE8+, Opera Mini), and no special serialize/deserialize methods are supplied to PostMessageCourier,
  *    All data is serialized using JSON.stringify/JSON.parse which means that Object data is limited to JSON which supports types like:
  *    strings, numbers, null, arrays, and objects (and does not allow circular references).
  *    Trying to serialize other types, will result in conversion to null (like Infinity or NaN) or to a string (Dates)
  *    that must be manually deserialized on the other side
- * 5) When Iframe is managed outside of LPPostMessageCourier (passed by reference to the constructor),
- *    a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lphost" is expected on the iframe url (unless the LPPostMessageCourier
+ * 5) When Iframe is managed outside of PostMessageCourier (passed by reference to the constructor),
+ *    a targetOrigin option is expected to be passed to the constructor, and a query parameter with the name "lpHost" is expected on the iframe url (unless the PostMessageCourier
  *    at the iframe side, had also been initialized with a valid targetOrigin option)
  */
 // TODO: Add Support for target management when there is a problem that requires re-initialization of the target
@@ -198,10 +198,10 @@
              * @param eventChannel
              * @private
              */
-            function _registerProxy(eventChannel){
-                if(eventChannel && eventChannel.registerProxy){
+            function _registerProxy(eventChannel) {
+                if (eventChannel && "function" === typeof eventChannel.registerProxy) {
                     eventChannel.registerProxy({
-                        trigger: function(){
+                        trigger: function () {
                             _postMessage.call(this, Array.prototype.slice.apply(arguments), ACTION_TYPE.TRIGGER);
                         },
                         context: this
@@ -550,7 +550,7 @@
 
             /**
              * Method for checking two way communication for action
-             * @param {LPPostMessageCourier.ACTION_TYPE} action - the action type name
+             * @param {PostMessageCourier.ACTION_TYPE} action - the action type name
              * @returns {Boolean} flag to indicate whether the action is two way (had return call)
              * @private
              */
