@@ -1,11 +1,11 @@
 define("conf", function() {
     return {
-        "blanket": true, //false,
+        "blanket": true, //false, // For Debug when blanket and instrumentation should be skipped
         "blanketCoverOnly": "['../../src/','../../src/courier/']",
         "blanketCoverNever": "['../lib/','../../src/../node_modules/','//^\w+test\.js$/gi']",
         "requireConfig": {
             //By default load any module IDs from src directory
-            baseUrl: "../coverage/instrument/src", //"../../src",
+            baseUrl: "../coverage/instrument/src", //"../../src", // For Debug when blanket and instrumentation should be skipped
             paths: {
                 chai: "../../../../node_modules/chai/chai",
                 sinon: "../../../../node_modules/sinon/pkg/sinon",
