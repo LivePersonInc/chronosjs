@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 module.exports = {
     server: {
         options: {
+            //keepalive: true,
             port: 8001,
             base: ".",
             middleware: (connect, options, middlewares) => {
@@ -29,7 +30,7 @@ module.exports = {
                     }
                 });
 
-                middlewares.unshift(bodyParser.json());
+                middlewares.unshift(bodyParser.json({ limit: '5mb' }));
 
                 return middlewares;
             }
