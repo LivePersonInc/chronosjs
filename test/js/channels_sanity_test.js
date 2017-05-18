@@ -4,8 +4,8 @@ describe('Channels Sanity Tests', function () {
 
     before(function (done) {
         if ("undefined" !== typeof define) {
-            require(["Chronos.Channels"], function(Channels) {
-                Channels = Channels;
+            require(["Chronos.Channels"], function(_Channels) {
+                Channels = _Channels;
                 done();
             });
         }
@@ -46,18 +46,22 @@ describe('Channels Sanity Tests', function () {
 
     describe("check response on named channels", function () {
         var res;
-        var namedChannels = new Channels({ appName: "NamedReqRes" });
+        var namedChannels;
+
+        before(function() {
+            namedChannels = new Channels({ appName: "NamedChannels" });
+        });
 
         it("should respond with 1", function () {
-            var reqId = namedChannels.reply({
-                reqName: "get",
+            var reqId = namedChannels.comply({
+                cmdName: "get",
                 func: function () {
                     return 1;
                 }
             });
 
             res = namedChannels.command({
-                reqName: "get",
+                cmdName: "get",
                 data: {}
             });
             expect(reqId).not.to.be.null;
