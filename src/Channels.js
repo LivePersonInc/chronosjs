@@ -62,7 +62,11 @@
                 context: events,
                 triggerType: "trigger"
             });
-            this.publish = this.trigger;
+            this.publish = _wrapCalls({
+                func: events.publish,
+                context: events,
+                triggerType: "trigger"
+            });
             this.registerProxy = registerProxy;
         }
 
