@@ -1,10 +1,14 @@
 module.exports = function (grunt, options) {
 
-    var testTasks = ['env', 'instrument', 'connect', 'mocha', 'makeReport'];
-    var tasks = [].concat(['node_version', 'jshint'], testTasks, ['concat', 'concat_in_order', 'uglify']);
+    var validate = ['node_version', 'jshint'];
+    var test = ['env', 'instrument', 'connect', 'mocha:test', 'makeReport'];
+    var unitTest = ['simplemocha:unittest'];
+    var pack = ['concat', 'concat_in_order', 'uglify'];
+    var tasks = [].concat(validate, unitTest, test, pack);
     return {
         'tasks': ['availabletasks'],
         'default': tasks,
-        'test': testTasks
+        'test': test,
+        'unittest': unitTest
     };
 };
