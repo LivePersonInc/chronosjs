@@ -35,6 +35,7 @@
     "grunt-mocha": "~1.0.4",
     "grunt-node-version": "~1.0.2",
     "grunt-replace": "~1.0.1",
+    "grunt-simple-mocha": "^0.4.1",
     "load-grunt-config": "~0.19.2",
     "mkdirp": "~0.5.1",
     "mocha": "~3.2.0",
