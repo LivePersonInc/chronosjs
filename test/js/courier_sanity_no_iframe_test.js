@@ -338,8 +338,6 @@ function createIFrame(options) {
         }
     }.bind(this));
 
-    document.body.appendChild(frame);
-
     if (options && options.target && options.target.url) {
         var src = options.target.url + (0 < options.target.url.indexOf("?") ? "&bust=" : "?bust=");
         src += (new Date()).getTime();
