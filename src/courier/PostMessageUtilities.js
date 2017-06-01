@@ -70,7 +70,7 @@
                 }
             }, "*");
         }
-        catch(ex) {
+        catch (ex) {
             // Browsers which has postMessage Objects support sends messages using
             // the structured clone algorithm - https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
             // In which Error and Function objects cannot be duplicated by the structured clone algorithm; attempting to do so will throw a DATA_CLONE_ERR exception.
@@ -146,15 +146,37 @@
     }
 
     /**
+     * Method to resolve the needed origin parameters from url
+     * @param {String} [hostParam] - string to represent the name of the host parameter in querystring
+     * @param {String} [url] - string to represent the url to resolve parameters from
+     * @returns {String} the parameter from the url
+     */
+    function resolveParameters(hostParam, url) {
+        var param;
+        var value = getURLParameter("lpHost", url);
+
+        if (!value) {
+            param = getURLParameter("hostParam", url) || hostParam;
+
+            if (param) {
+                value = getURLParameter(param, url);
+            }
+        }
+
+        return value;
+    }
+
+    /**
      * Method to resolve the needed origin
      * @param {Object} [target] - the target to resolve the host for
      * @param {Boolean} [top] - boolean indication for using helper of the top window if needed
+     * @param {String} [hostParam] - string to represent the name of the host parameter in querystring
      * @returns {String} the origin for the target
      */
-    function resolveOrigin(target, top) {
+    function resolveOrigin(target, top, hostParam) {
         var origin;
         var url;
-        var param;
+        var ref;
 
         try {
             url = target && target.contentWindow && "undefined" !== typeof Window && !(target instanceof Window) && target.getAttribute && target.getAttribute("src");
@@ -163,23 +185,20 @@
 
         try {
             if (!url) {
-                url = getURLParameter("lpHost");
-
-                if (!url) {
-                    param = getURLParameter("hostParam");
-
-                    if (param) {
-                        url = getURLParameter(param);
-                    }
-                }
+                url = resolveParameters(hostParam);
             }
 
             if (!url) {
                 url = document.referrer;
+                ref = true;
             }
 
             if (url) {
                 url = decodeURIComponent(url);
+
+                if (ref) {
+                    url = resolveParameters(hostParam, url);
+                }
             }
 
             origin = getHost(url, target, top);
@@ -194,10 +213,11 @@
     /**
      * Method to retrieve a url parameter from querystring by name
      * @param {String} name - the name of the parameter
+     * @param {String} [url] - optional url to parse
      * @returns {String} the url parameter value
      */
-    function getURLParameter(name) {
-        return decodeURIComponent((new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(document.location.search) || [void 0, ""])[1].replace(/\+/g, "%20")) || null;
+    function getURLParameter(name, url) {
+        return decodeURIComponent((new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(url || document.location.search) || [void 0, ""])[1].replace(/\+/g, "%20")) || null;
     }
 
     /**

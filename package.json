@@ -1,7 +1,7 @@
 {
   "name": "chronosjs",
   "description": "JS Channels Mechanism",
-  "version": "0.0.23",
+  "version": "0.1.0",
   "author": {
     "name": "LivePersonInc",
     "email": "fe-infra-lp@liveperson.com"
@@ -21,25 +21,26 @@
     "circuit-breakerjs": "~0.0.5"
   },
   "devDependencies": {
-    "body-parser": "^1.17.1",
-    "chai": "~3.5.0",
+    "body-parser": "~1.17.2",
+    "chai": "~4.0.1",
     "grunt": "~1.0.1",
     "grunt-available-tasks": "~0.6.3",
     "grunt-concat-in-order": "~0.2.6",
     "grunt-contrib-concat": "~1.0.1",
     "grunt-contrib-connect": "~1.0.2",
     "grunt-contrib-jshint": "~1.1.0",
-    "grunt-contrib-uglify": "^2.2.1",
+    "grunt-contrib-uglify": "^3.0.1",
     "grunt-env": "~0.4.4",
     "grunt-istanbul": "~0.7.2",
     "grunt-mocha": "~1.0.4",
     "grunt-node-version": "~1.0.2",
     "grunt-replace": "~1.0.1",
+    "grunt-simple-mocha": "~0.4.1",
     "load-grunt-config": "~0.19.2",
     "mkdirp": "~0.5.1",
-    "mocha": "~3.2.0",
+    "mocha": "~3.4.2",
     "requirejs": "~2.3.3",
-    "sinon": "~2.1.0",
+    "sinon": "~2.3.2",
     "time-grunt": "~1.4.0"
   },
   "repository": {

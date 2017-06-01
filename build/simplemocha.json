@@ -1,0 +1,7 @@
+{
+    "unittest": {
+        "src": [
+            "./unittest/**/*_test.js"
+        ]
+    }
+}

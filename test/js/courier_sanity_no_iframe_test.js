@@ -33,6 +33,7 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
         // create a sandbox
         sandbox = sinon.sandbox.create();
 
+        var completed = false;
         var target = {
             url: url + (0 < url.indexOf("?") ? "&" : "?") + "_d=" + buster++,
             callback: function() {
@@ -43,7 +44,11 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
                 });
                 msgChannel = courierLocal.getMessageChannel();
                 evChannel = courierLocal.getEventChannel();
-                done();
+
+                if (!completed) {
+                    completed = true;
+                    done();
+                }
             }
         };
         var frame = createIFrame({ target: target });
@@ -259,6 +264,35 @@ describe("PostMessageCourier Sanity Tests with iFrame creation from the outside"
             expect(request).to.be.undefined;
         });
     });
+
+    describe("check can run request on iframe and get async response after an iframe redirect", function () {
+
+        it("run request on iframe and get async response after an iframe redirect", function (done) {
+            var request = courierLocal.request({
+                appName: "host",
+                reqName: "Redirect"
+            }, function (err, data) {
+                expect(err).to.be.null;
+                expect(data).to.be.equal("Going to Redirect...");
+
+                setTimeout(function() {
+                    var request2 = courierLocal.request({
+                        appName: "host",
+                        reqName: "Async Ma Shlomha?",
+                        data: {
+                            text: "TODA!"
+                        }
+                    }, function (err, data) {
+                        expect(err).to.be.null;
+                        expect(data).to.be.equal("TODA!");
+                        done();
+                    });
+                }, 300);
+            });
+
+            expect(request).to.be.undefined;
+        });
+    });
 });
 
 function addElementEventListener(element, event, callback) {
@@ -304,12 +338,10 @@ function createIFrame(options) {
         }
     }.bind(this));
 
-    document.body.appendChild(frame);
-
     if (options && options.target && options.target.url) {
         var src = options.target.url + (0 < options.target.url.indexOf("?") ? "&bust=" : "?bust=");
         src += (new Date()).getTime();
-        src += ("&host=" + document.location.protocol + "//" + document.location.host);
+        src += ("&lpHost=" + document.location.protocol + "//" + document.location.host);
         frame.setAttribute("src", src);
     }
 

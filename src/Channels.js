@@ -31,23 +31,18 @@
     }
 }(typeof ChronosRoot === "undefined" ? this : ChronosRoot, function (root, exports, Events, Commands, ReqRes, hide) {
     function Channels(options) {
-
         options = options || {};
+
         var externalAPIS = [];
 
         var events = options.events || new Events(options.config && options.config.events);
         var commands = options.commands || new Commands(options.config && options.config.commands);
         var reqres = options.reqres || new ReqRes(options.config && options.config.reqres);
 
-
         this.once = events.once;
         this.hasFiredEvents = events.hasFired;
-        this.trigger = _wrapCalls({
-            func: events.trigger,
-            context: events,
-            triggerType: "trigger"
-        });
-        this.publish = this.trigger;
+        this.trigger = events.trigger;
+        this.publish = events.publish;
         this.bind = events.bind;
         this.register = events.register;
         this.unbind = events.unbind;
@@ -60,9 +55,20 @@
         this.request = reqres.request;
         this.reply = reqres.reply;
         this.stopReplying = reqres.stopReplying;
+
         if (options.externalProxy === true) {
+            this.trigger = _wrapCalls({
+                func: events.trigger,
+                context: events,
+                triggerType: "trigger"
+            });
+            this.publish = _wrapCalls({
+                func: events.publish,
+                context: events,
+                triggerType: "trigger"
+            });
             this.registerProxy = registerProxy;
-         }
+        }
 
         /**
          * Wraps API calls to trigger other registered functions
@@ -76,12 +82,13 @@
 
                 options.func.apply(options.context, Array.prototype.slice.call(arguments, 0));
 
-                for(var i = 0; i < externalAPIS.length; i++){
+                for (var i = 0; i < externalAPIS.length; i++) {
                     api = externalAPIS[i];
-                    if(api[options.triggerType]){
-                        try{
+                    if (api[options.triggerType]) {
+                        try {
                             api[options.triggerType].apply(api.context,Array.prototype.slice.call(arguments, 0));
-                        }catch (exc){}
+                        }
+                        catch (exc) {}
                     }
                 }
             };
@@ -92,7 +99,7 @@
          * @param external
          */
         function registerProxy(external){
-            if(typeof external === 'object' && external.trigger){
+            if (typeof external === 'object' && external.trigger) {
                 externalAPIS.push(external);
             }
         }

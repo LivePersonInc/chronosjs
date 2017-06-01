@@ -33,6 +33,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 });
             }
         };
+        var completed = false;
         var target2 = {
             url: target.url,
             bust: false,
@@ -48,7 +49,10 @@ describe("PostMessageCourier Sanity Tests", function () {
                     appName: "host",
                     eventName: "Hello"
                 });
-                done();
+                if (!completed) {
+                    completed = true;
+                    done();
+                }
             },
             channel: withChannel
         };
@@ -805,6 +809,7 @@ describe("PostMessageCourier Sanity Tests", function () {
                 cmdName: "command",
                 data: {success: true}
             }, function (err, callback) {
+                err = err || void 0;
                 expect(err).to.be.undefined;
                 counting();
                 callback();
@@ -822,6 +827,35 @@ describe("PostMessageCourier Sanity Tests", function () {
                 callback();
             });
             expect(res).to.be.undefined;
+        });
+    });
+
+    describe("check can run request on iframe and get async response after an iframe redirect", function () {
+
+        it("run request on iframe and get async response after an iframe redirect", function (done) {
+            var request = courierGlobal.request({
+                appName: "host",
+                reqName: "Redirect"
+            }, function (err, data) {
+                expect(err).to.be.null;
+                expect(data).to.be.equal("Going to Redirect...");
+
+                setTimeout(function() {
+                    var request2 = courierGlobal.request({
+                        appName: "host",
+                        reqName: "Async Ma Shlomha?",
+                        data: {
+                            text: "TODA!"
+                        }
+                    }, function (err, data) {
+                        expect(err).to.be.null;
+                        expect(data).to.be.equal("TODA!");
+                        done();
+                    });
+                }, 300);
+            });
+
+            expect(request).to.be.undefined;
         });
     });
 });

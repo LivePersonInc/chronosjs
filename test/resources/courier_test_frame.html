@@ -98,6 +98,20 @@
             }
         });
 
+        courier.reply({
+            appName: "host",
+            reqName: "Redirect",
+            func: function(data, callback) {
+                setTimeout(function() {
+                    callback(null, "Going to Redirect...");
+
+                    setTimeout(function() {
+                        redirect();
+                    }, 100);
+                }, 0);
+            }
+        });
+
         ///// ---- TRIGGERS ------ ////
         function multiply(data) {
             courier.trigger({
@@ -146,6 +160,32 @@
             else {
                 throw new Error("Error in command");
             }
+        }
+
+        function redirect() {
+            var page = document.location.pathname.split("/").pop();
+            var lpHost = getQueryVariable('lpHost');
+            var bust = getQueryVariable('bust');
+            var polyfill = getQueryVariable('lpPMCPolyfill');
+
+            if (bust) {
+                bust = (new Date()).getTime();
+            }
+
+            var redirect = page + ((bust || lpHost || polyfill) ? "?" : "") + (bust ? "bust=" + bust : "") + (lpHost ? (bust ? "&" : "") + "lpHost=" + lpHost : "") + (polyfill ? (bust || lpHost ? "&" : "") + "lpPMCPolyfill=" + polyfill : "");
+            document.location.href = redirect;
+        }
+
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) === variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            console.log('Query variable ' + variable + ' not found');
         }
 
         if ("true" === Chronos.PostMessageUtilities.getURLParameter("syncTrigger")) {
